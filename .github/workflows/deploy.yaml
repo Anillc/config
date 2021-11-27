@@ -13,15 +13,25 @@ jobs:
         ips: 10.127.20.114/32
         allowed_ips: 0.0.0.0/0, ::/0
         private_key: ${{ secrets.WG_PRIVATE_KEY }}
-    - name: test
+    - name: setup network
       run: |
-        sudo apt install -y dnsutils traceroute iproute2
+        sudo apt install -y iproute2
         sudo tee /etc/resolv.conf <<EOF
         nameserver 172.20.0.53
         nameserver 172.23.0.53
         EOF
-        sudo wg
         sudo ip route add 172.16.0.0/12 dev deploy
         sudo ip route add 10.0.0.0/8 dev deploy
-        traceroute 172.20.0.53
-        dig whois.dn42
+    - uses: actions/checkout@v2
+    - uses: cachix/install-nix-action@v15
+    - uses: cachix/cachix-action@v10
+      with:
+        name: anillc
+        authToken: '${{ secrets.CACHIX_TOKEN }}'
+    - uses: shimataro/ssh-key-action@v2
+      with:
+        key: '${{ secrets.DEPLOY_KEY }}'
+        known_hosts: unnecessary
+    - name: deploy
+      run: |
+        nix develop -c deploy -s
