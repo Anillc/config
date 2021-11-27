@@ -1,0 +1,27 @@
+name: deploy
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: setup wiretguard
+      uses: Anillc/setup-wireguard@v2
+      with:
+        endpoint: ${{ secrets.WG_ENDPOINT }}
+        endpoint_public_key: NQfs6evQLemuJcdcvpO4ds1wXwUHTlzlQXWTJv+WCXY=
+        ips: 10.127.20.114/32
+        allowed_ips: 0.0.0.0/0, ::/0
+        private_key: ${{ secrets.WG_PRIVATE_KEY }}
+    - name: test
+      run: |
+        sudo apt install -y dnsutils traceroute iproute2
+        sudo tee /etc/resolv.conf <<EOF
+        nameserver 172.20.0.53
+        nameserver 172.23.0.53
+        EOF
+        sudo wg
+        sudo ip route add 172.16.0.0/12 dev deploy
+        sudo ip route add 10.0.0.0/8 dev deploy
+        traceroute 172.20.0.53
+        dig whois.dn42
