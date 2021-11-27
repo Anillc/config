@@ -93,7 +93,7 @@
             exten => _42402526XXXX,3,Playback(im-sorry&check-number-dial-again)
 
             exten => _42401332XXXX,2,Dial(PJSIP/''${EXTEN}@yang)
-            exten => _4242421353XXXX,2,Dial(PJSIP/4242421353''${EXTEN}@hertz)
+            exten => _42401353XXXX,2,Dial(PJSIP/''${EXTEN}@hertz)
         '';
     };
 }
