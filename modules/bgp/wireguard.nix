@@ -67,10 +67,10 @@ in {
             enable = true;
             interfaces = intranet // internet // dn42;
         };
-        systemd.services = foldl' (acc: x: acc // (if x.meta.inNat then x else {
+        systemd.services = builtins.foldl' (acc: x: acc // (if x.meta.inNat then {} else {
             "wireguard-i${x.meta.name}-peer-${keyToUnitName x.meta.wg-public-key}" = {
                 preStart = ''
-                    ENDPOINT=$(${pkgs.jq}/bin/jq .\"${x.meta.id}\" ${config.sops.secrets.endpoints})
+                    ENDPOINT=$(${pkgs.jq}/bin/jq -r '."${x.meta.id}"' ${config.sops.secrets.endpoints.path})
                     ${pkgs.wireguard-tools}/bin/wg set i${x.meta.name} peer "${x.meta.wg-public-key}" endpoint "$ENDPOINT:110${cfg.meta.id}"
                 '';
             };
