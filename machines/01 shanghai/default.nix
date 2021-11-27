@@ -16,6 +16,11 @@ rec {
             (import ./bgp.nix meta)
         ];
         sops.secrets.wg-shanghai-private-key.sopsFile = ./secrets.yaml;
+        sops.secrets = {
+            cllina-uin.sopsFile = ./secrets.yaml;
+            cllina-password.sopsFile = ./secrets.yaml;
+            cllina-device.sopsFile = ./secrets.yaml;
+        };
         networking.hostName = meta.name;
         services.go-cqhttp = {
             enable = true;

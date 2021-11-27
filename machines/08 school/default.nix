@@ -4,7 +4,6 @@ rec {
         name = "school";
         address = "jx.an.dn42";
         inNat = true;
-        port = 22;
         system = "x86_64-linux";
         wg-private-key = config: config.sops.secrets.wg-school-private-key.path;
         wg-public-key = "2YSajirzbCUK4h3NbuBgpZPOypjrhtrLnT5pJp2K9HU=";

@@ -52,11 +52,7 @@
         deploy.nodes = builtins.foldl' (acc: x: acc // {
             "${x.meta.name}" = {
                 sshUser = "root";
-                sshOpts = let
-                    params = [ "-4" "-o" "ServerAliveInterval=30" "-o" "StrictHostKeyChecking=no" ];
-                in if x.meta.inNat
-                    then params ++ [ "-p" (builtins.toString x.meta.port) ]
-                    else params;
+                sshOpts = [ "-4" "-o" "ServerAliveInterval=30" "-o" "StrictHostKeyChecking=no" ];
                 hostname = x.meta.address;
                 profiles.system.path = deploy-rs.lib.${x.meta.system}.activate.nixos self.nixosConfigurations.${x.meta.name};
             };

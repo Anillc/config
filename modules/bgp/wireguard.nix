@@ -1,6 +1,6 @@
 { pkgs, config, lib, ... }: with lib; let
     cfg = config.bgp;
-    intranet =  builtins.foldl' (acc: x: acc // {
+    intranet = builtins.foldl' (acc: x: acc // {
         "i${x.meta.name}" = {
             privateKeyFile = cfg.meta.wg-private-key config;
             listenPort = if cfg.meta.inNat then null else pkgs.lib.toInt "110${x.meta.id}";
@@ -12,7 +12,6 @@
             peers = [{
                 publicKey = x.meta.wg-public-key;
                 persistentKeepalive = 25;
-                endpoint = if x.meta.inNat then null else "${x.meta.address}:110${cfg.meta.id}";
                 allowedIPs = [
                     "0.0.0.0/0"
                     "::/0"
@@ -59,11 +58,22 @@
             }];
         };
     }) {} cfg.bgpSettings.dn42.peers;
+    keyToUnitName = replaceChars
+        [ "/" "-"    " "     "+"     "="      ]
+        [ "-" "\\x2d" "\\x20" "\\x2b" "\\x3d" ];
 in {
     config = mkIf cfg.enable {
         networking.wireguard = {
             enable = true;
             interfaces = intranet // internet // dn42;
         };
+        systemd.services = foldl' (acc: x: acc // (if x.meta.inNat then x else {
+            "wireguard-i${x.meta.name}-peer-${keyToUnitName x.meta.wg-public-key}" = {
+                preStart = ''
+                    ENDPOINT=$(${pkgs.jq}/bin/jq .\"${x.meta.id}\" ${config.sops.secrets.endpoints})
+                    ${pkgs.wireguard-tools}/bin/wg set i${x.meta.name} peer "${x.meta.wg-public-key}" endpoint "$ENDPOINT:110${cfg.meta.id}"
+                '';
+            };
+        })) {} cfg.connect;
     };
 }

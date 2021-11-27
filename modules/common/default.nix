@@ -20,11 +20,7 @@
     ];
     sops = {
         age.keyFile = "/var/lib/sops.key";
-        defaultSopsFile = ../../secrets.yaml;
-        secrets = {
-            cllina-uin = {};
-            cllina-password = {};
-            cllina-device = {};
-        };
+        defaultSopsFile = ./secrets.yaml;
+        secrets.endpoints = {};
     };
 }
