@@ -54,6 +54,7 @@
                 sshUser = "root";
                 sshOpts = [ "-4" "-o" "ServerAliveInterval=30" "-o" "StrictHostKeyChecking=no" ];
                 hostname = x.meta.address;
+                magicRollback = x.meta.name != "de";
                 profiles.system.path = deploy-rs.lib.${x.meta.system}.activate.nixos self.nixosConfigurations.${x.meta.name};
             };
         }) {} machines;
