@@ -95,13 +95,6 @@ in {
                     export where source = RTS_STATIC;
                 };
             }
-
-            protocol static {
-                ipv6 {
-                    table igp_table_v6;
-                };
-                route 2602:feda:da0:64::/96 via "nat64";
-            }
         '';
         inherit meta;
     };
