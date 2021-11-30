@@ -36,6 +36,7 @@ rec {
             uin = config.sops.secrets.cllina-uin.path;
             password = config.sops.secrets.cllina-password.path;
             device = config.sops.secrets.cllina-device.path;
+            config.message.remove-reply-at = true;
         };
         services.mysql = {
             enable = true;
