@@ -19,6 +19,16 @@ rec {
             cllina-uin.sopsFile = ./secrets.yaml;
             cllina-password.sopsFile = ./secrets.yaml;
             cllina-device.sopsFile = ./secrets.yaml;
+            bot-sql = {
+                format = "binary";
+                owner = "mysql";
+                group = "mysql";
+                sopsFile = ./bot.sql;
+            };
+            bot-env = {
+                format = "binary";
+                sopsFile = ./bot.env;
+            };
         };
         nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         services.go-cqhttp = {
@@ -26,6 +36,25 @@ rec {
             uin = config.sops.secrets.cllina-uin.path;
             password = config.sops.secrets.cllina-password.path;
             device = config.sops.secrets.cllina-device.path;
+        };
+        services.mysql = {
+            enable = true;
+            package = pkgs.mariadb;
+            initialDatabases = [{
+                name = "bot";
+                schema = config.sops.secrets.bot-sql.path;
+            }];
+        };
+        virtualisation.oci-containers = {
+            backend = "podman";
+            containers.bot = {
+                image = "docker.io/anillc/cllina:7fcd9d4";
+                volumes = [
+                    "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
+                    "${config.sops.secrets.bot-env.path}:/root/cllina/.env"
+                ];
+                extraOptions = [ "--network=host" ];
+            };
         };
     };
 }
