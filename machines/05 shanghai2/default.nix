@@ -13,8 +13,19 @@ rec {
             ./hardware.nix
             (import ./bgp.nix meta)
         ];
-        nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
-        sops.secrets.wg-shanghai2-private-key.sopsFile = ./secrets.yaml;
         networking.hostName = meta.name;
+        sops.secrets.wg-shanghai2-private-key.sopsFile = ./secrets.yaml;
+        sops.secrets = {
+            cllina-uin.sopsFile = ./secrets.yaml;
+            cllina-password.sopsFile = ./secrets.yaml;
+            cllina-device.sopsFile = ./secrets.yaml;
+        };
+        nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+        services.go-cqhttp = {
+            enable = true;
+            uin = config.sops.secrets.cllina-uin.path;
+            password = config.sops.secrets.cllina-password.path;
+            device = config.sops.secrets.cllina-device.path;
+        };
     };
 }

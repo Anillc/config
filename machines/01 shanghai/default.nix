@@ -17,16 +17,16 @@ rec {
         ];
         sops.secrets.wg-shanghai-private-key.sopsFile = ./secrets.yaml;
         sops.secrets = {
-            cllina-uin.sopsFile = ./secrets.yaml;
-            cllina-password.sopsFile = ./secrets.yaml;
-            cllina-device.sopsFile = ./secrets.yaml;
+            anillc-uin.sopsFile = ./secrets.yaml;
+            anillc-password.sopsFile = ./secrets.yaml;
+            anillc-device.sopsFile = ./secrets.yaml;
         };
         networking.hostName = meta.name;
         services.go-cqhttp = {
             enable = true;
-            uin = config.sops.secrets.cllina-uin.path;
-            password = config.sops.secrets.cllina-password.path;
-            device = config.sops.secrets.cllina-device.path;
+            uin = config.sops.secrets.anillc-uin.path;
+            password = config.sops.secrets.anillc-password.path;
+            device = config.sops.secrets.anillc-device.path;
         };
         networking.wireguard.interfaces.phone = {
             privateKeyFile = meta.wg-private-key config;
