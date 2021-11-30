@@ -55,6 +55,7 @@ in {
         systemd.services.bird2 = {
             reloadIfChanged = mkForce false;
             preStart = "${roa} && ${ptp}";
+            after = [ "network-online.target" ];
         };
     };
 }

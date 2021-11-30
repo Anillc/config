@@ -1,5 +1,4 @@
 { pkgs, ... }: {
-    boot.kernelPackages = pkgs.linuxPackages_latest;
     users = {
         mutableUsers = false;
         users.root.openssh.authorizedKeys.keys = [

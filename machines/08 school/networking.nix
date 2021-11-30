@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: let
+{ config, pkgs, lib, ... }: let
     connect = pkgs.writeScript "connect" ''
         export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
             curl
@@ -39,7 +39,7 @@ in {
     #     "net.ipv4.ip_forward" = 1;
     #     "net.ipv6.conf.all.forwarding" = 1;
     # };
-    networking.resolvconf.useLocalResolver = false;
+    networking.resolvconf.useLocalResolver = lib.mkForce false;
     services.dnsmasq = {
         enable = true;
         servers = [ "223.5.5.5" ];
@@ -67,5 +67,5 @@ in {
             rsn_pairwise=CCMP
         '';
     };
-    networking.nameservers = [ "223.5.5.5" ];
+    networking.nameservers = lib.mkForce [ "223.5.5.5" ];
 }

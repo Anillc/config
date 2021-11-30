@@ -6,7 +6,6 @@
     boot.extraModulePackages = [ config.boot.kernelPackages.rtl88x2bu ];
     boot.loader.grub.enable = true;
     boot.loader.grub.devices = [ "/dev/sda" ];
-    boot.kernelPackages = lib.mkForce pkgs.linuxPackages;
     fileSystems."/" = {
         device = "/dev/disk/by-uuid/c9d0d3cf-690e-4665-a201-b231aa417d48";
         fsType = "ext4";

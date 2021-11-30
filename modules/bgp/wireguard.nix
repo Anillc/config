@@ -74,6 +74,10 @@ in {
                     ${pkgs.wireguard-tools}/bin/wg set i${x.meta.name} peer "${x.meta.wg-public-key}" endpoint "$ENDPOINT:110${cfg.meta.id}"
                 '';
             };
-        })) {} cfg.connect;
+        }) // {
+            "wireguard-i${x.meta.name}" = {
+                requiredBy = [ "bird2.service" ];
+            };
+        }) {} cfg.connect;
     };
 }
