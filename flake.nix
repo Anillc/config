@@ -54,7 +54,7 @@
                 sshUser = "root";
                 sshOpts = [ "-4" "-o" "ServerAliveInterval=30" "-o" "StrictHostKeyChecking=no" ];
                 hostname = x.meta.address;
-                confirmTimeout = 120;
+                confirmTimeout = 300;
                 profiles.system.path = deploy-rs.lib.${x.meta.system}.activate.nixos self.nixosConfigurations.${x.meta.name};
             };
         }) {} machines;

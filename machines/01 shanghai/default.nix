@@ -28,6 +28,7 @@ rec {
         #    password = config.sops.secrets.anillc-password.path;
         #    device = config.sops.secrets.anillc-device.path;
         #};
+        # TODO
         networking.wireguard.interfaces.phone = {
             privateKeyFile = meta.wg-private-key config;
             listenPort = 11451;

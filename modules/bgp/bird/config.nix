@@ -6,7 +6,7 @@ pkgs: cfg: ''
     }
     protocol kernel {
         scan time 20;
-        persist;
+        learn;
         ipv4 {
             import all;
             export all;
@@ -14,7 +14,7 @@ pkgs: cfg: ''
     }
     protocol kernel {
         scan time 20;
-        persist;
+        learn;
         ipv6 {
             import all;
             export all;

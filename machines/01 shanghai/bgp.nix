@@ -27,21 +27,6 @@ in {
                 }];
             };
         };
-        extraBirdConfig = ''
-            protocol static {
-                route 2602:feda:da1::1/128 via "phone";
-                route fd10:127:cc:1::1/128 via "phone";
-                ipv6 {
-                    table igp_table_v6;
-                };
-            }
-            protocol static {
-                route 172.22.167.110/32 via "phone";
-                ipv4 {
-                    table igp_table_v4;
-                };
-            }
-        '';
         inherit meta;
     };
 } 

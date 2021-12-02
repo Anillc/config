@@ -23,5 +23,18 @@ rec {
             };
         };
         networking.hostName = meta.name;
+        systemd.services.school-network = {
+            wantedBy = [ "multi-user.target" ];
+            partOf = [ "dummy.service" ];
+            requires = [ "network-online.target" ];
+            script = ''
+                ${pkgs.iproute2}/bin/ip route del 10.127.20.128/25 || true
+                ${pkgs.iproute2}/bin/ip route del 2602:feda:da1:1::/96 || true
+                ${pkgs.iproute2}/bin/ip route del fd10:127:cc:1:1::/96 || true
+                ${pkgs.iproute2}/bin/ip route add 10.127.20.128/25 dev br0 proto 114
+                ${pkgs.iproute2}/bin/ip route add 2602:feda:da1:1::/96 dev br0 proto 114
+                ${pkgs.iproute2}/bin/ip route add fd10:127:cc:1:1::/96 dev br0 proto 114
+            '';
+        };
     };
 }

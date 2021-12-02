@@ -21,8 +21,8 @@ rec {
             cllina-device.sopsFile = ./secrets.yaml;
             bot-sql = {
                 format = "binary";
-                owner = "mysql";
-                group = "mysql";
+                #owner = "mysql";
+                #group = "mysql";
                 sopsFile = ./bot.sql;
             };
             bot-env = {

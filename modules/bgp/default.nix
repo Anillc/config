@@ -3,7 +3,8 @@
 in {
     imports = [
         ./bird
-        ./wireguard.nix
+        ./wireguard
+        ./babeld.nix
     ];
     options.bgp = {
         enable = mkEnableOption "enable bgp";
@@ -103,7 +104,7 @@ in {
         };
     };
     config = mkIf cfg.enable {
-        boot.kernel.sysctl = {
+        boot.kernel.sysctl = lib.mkForce {
             "net.ipv4.ip_forward" = 1;
             "net.ipv6.conf.all.forwarding" = 1;
             "net.ipv4.conf.all.rp_filter" = 0;
@@ -119,6 +120,10 @@ in {
                 ip addr add 2602:feda:da0::${cfg.meta.id}/128 dev dummy2526
                 ip addr add ${cfg.bgpSettings.dn42.v4}/32 dev dummy2526
                 ip addr add ${cfg.bgpSettings.dn42.v6}/128 dev dummy2526
+                
+                ip route add 2602:feda:da0::${cfg.meta.id}/128 dev dummy2526 proto 114
+                ip route add ${cfg.bgpSettings.dn42.v4}/32 dev dummy2526 proto 114
+                ip route add ${cfg.bgpSettings.dn42.v6}/128 dev dummy2526 proto 114
             '';
             stop = ''
                 export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
@@ -132,10 +137,6 @@ in {
             after = [ "network.target" ];
             script = start;
             preStop = stop;
-            reload = ''
-                ${stop}
-                ${start}
-            '';
             serviceConfig = {
                 Type = "oneshot";
                 RemainAfterExit = "yes";

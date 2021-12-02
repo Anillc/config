@@ -218,13 +218,6 @@ in {
                 direct;
                 neighbor fe80::604%emoecast as 141237;
             }
-
-            protocol static {
-                route 10.127.20.114/32 via "deploy";
-                ipv4 {
-                    table igp_table_v4;
-                };
-            }
         '';
         inherit meta;
     };
