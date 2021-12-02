@@ -42,7 +42,7 @@ in {
     networking.resolvconf.useLocalResolver = lib.mkForce false;
     services.dnsmasq = {
         enable = true;
-        servers = [ "223.5.5.5" ];
+        servers = [ "223.5.5.5" "172.20.0.53" ];
         extraConfig = ''
             interface=br0
             bogus-priv

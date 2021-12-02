@@ -22,12 +22,12 @@ rec {
             anillc-device.sopsFile = ./secrets.yaml;
         };
         networking.hostName = meta.name;
-        #services.go-cqhttp = {
-        #    enable = true;
-        #    uin = config.sops.secrets.anillc-uin.path;
-        #    password = config.sops.secrets.anillc-password.path;
-        #    device = config.sops.secrets.anillc-device.path;
-        #};
+        services.go-cqhttp = {
+            enable = true;
+            uin = config.sops.secrets.anillc-uin.path;
+            password = config.sops.secrets.anillc-password.path;
+            device = config.sops.secrets.anillc-device.path;
+        };
         # TODO
         networking.wireguard.interfaces.phone = {
             privateKeyFile = meta.wg-private-key config;

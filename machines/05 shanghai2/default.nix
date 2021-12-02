@@ -31,31 +31,31 @@ rec {
             };
         };
         nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
-        # services.go-cqhttp = {
-        #     enable = true;
-        #     uin = config.sops.secrets.cllina-uin.path;
-        #     password = config.sops.secrets.cllina-password.path;
-        #     device = config.sops.secrets.cllina-device.path;
-        #     config.message.remove-reply-at = true;
-        # };
-        # services.mysql = {
-        #     enable = true;
-        #     package = pkgs.mariadb;
-        #     initialDatabases = [{
-        #         name = "bot";
-        #         schema = config.sops.secrets.bot-sql.path;
-        #     }];
-        # };
-        # virtualisation.oci-containers = {
-        #     backend = "podman";
-        #     containers.bot = {
-        #         image = "docker.io/anillc/cllina:7fcd9d4";
-        #         volumes = [
-        #             "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
-        #             "${config.sops.secrets.bot-env.path}:/root/cllina/.env"
-        #         ];
-        #         extraOptions = [ "--network=host" ];
-        #     };
-        # };
+        services.go-cqhttp = {
+            enable = true;
+            uin = config.sops.secrets.cllina-uin.path;
+            password = config.sops.secrets.cllina-password.path;
+            device = config.sops.secrets.cllina-device.path;
+            config.message.remove-reply-at = true;
+        };
+        services.mysql = {
+            enable = true;
+            package = pkgs.mariadb;
+            initialDatabases = [{
+                name = "bot";
+                schema = config.sops.secrets.bot-sql.path;
+            }];
+        };
+        virtualisation.oci-containers = {
+            backend = "podman";
+            containers.bot = {
+                image = "docker.io/anillc/cllina:7fcd9d4";
+                volumes = [
+                    "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
+                    "${config.sops.secrets.bot-env.path}:/root/cllina/.env"
+                ];
+                extraOptions = [ "--network=host" ];
+            };
+        };
     };
 }
