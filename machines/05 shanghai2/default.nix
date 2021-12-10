@@ -16,8 +16,6 @@ rec {
         networking.hostName = meta.name;
         sops.secrets.wg-shanghai2-private-key.sopsFile = ./secrets.yaml;
         sops.secrets = {
-            cllina-uin.sopsFile = ./secrets.yaml;
-            cllina-password.sopsFile = ./secrets.yaml;
             cllina-device.sopsFile = ./secrets.yaml;
             bot-sql = {
                 format = "binary";
@@ -33,8 +31,6 @@ rec {
         nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         services.go-cqhttp = {
             enable = true;
-            uin = config.sops.secrets.cllina-uin.path;
-            password = config.sops.secrets.cllina-password.path;
             device = config.sops.secrets.cllina-device.path;
             config.message.remove-reply-at = true;
         };
@@ -46,16 +42,16 @@ rec {
                 schema = config.sops.secrets.bot-sql.path;
             }];
         };
-        virtualisation.oci-containers = {
-            backend = "podman";
-            containers.bot = {
-                image = "docker.io/anillc/cllina:7fcd9d4";
-                volumes = [
-                    "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
-                    "${config.sops.secrets.bot-env.path}:/root/cllina/.env"
-                ];
-                extraOptions = [ "--network=host" ];
-            };
-        };
+        #virtualisation.oci-containers = {
+        #    backend = "podman";
+        #    containers.bot = {
+        #        image = "docker.io/anillc/cllina:843e492";
+        #        volumes = [
+        #            "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
+        #            "${config.sops.secrets.bot-env.path}:/root/cllina/.env"
+        #        ];
+        #        extraOptions = [ "--network=host" ];
+        #    };
+        #};
     };
 }

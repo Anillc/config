@@ -16,5 +16,29 @@ rec {
         nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         sops.secrets.wg-beijing-private-key.sopsFile = ./secrets.yaml;
         networking.hostName = meta.name;
+        virtualisation.oci-containers = {
+            backend = "podman";
+            containers.xxqg = {
+                image = "docker.mirror.aliyuncs.com/techxuexi/techxuexi-amd64";
+                environment = {
+                    ZhuanXiang = "True";
+                    Pushmode = "6";
+                };
+                ports = [ "8080:80" ];
+                extraOptions = [ "--shm-size=2g" ];
+            };
+        };
+        services.nginx = {
+            enable = true;
+            virtualHosts = {
+                "xxqg.anillc.cn" = {
+                    forceSSL = true;
+                    enableACME = true;
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:8080";
+                    };
+                };
+            };
+        };
     };
 }

@@ -17,15 +17,11 @@ rec {
         ];
         sops.secrets.wg-shanghai-private-key.sopsFile = ./secrets.yaml;
         sops.secrets = {
-            anillc-uin.sopsFile = ./secrets.yaml;
-            anillc-password.sopsFile = ./secrets.yaml;
             anillc-device.sopsFile = ./secrets.yaml;
         };
         networking.hostName = meta.name;
         services.go-cqhttp = {
             enable = true;
-            uin = config.sops.secrets.anillc-uin.path;
-            password = config.sops.secrets.anillc-password.path;
             device = config.sops.secrets.anillc-device.path;
         };
         # TODO

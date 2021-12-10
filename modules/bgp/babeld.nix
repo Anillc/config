@@ -16,6 +16,8 @@ in {
                 };
             }) {} cfg.connect;
             extraConfig = ''
+                import-table 114
+                export-table 32766
                 redistribute proto 114 allow
                 redistribute local deny
                 install pref-src ${cfg.bgpSettings.dn42.v4}

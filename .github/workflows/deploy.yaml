@@ -34,4 +34,4 @@ jobs:
         known_hosts: unnecessary
     - name: deploy
       run: |
-        nix develop -c deploy -s
+        nix develop -c deploy-all

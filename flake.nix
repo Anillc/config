@@ -32,7 +32,24 @@
         };
     in {
         devShell = pkgs.mkShell {
-            nativeBuildInputs = [ pkgs.deploy-rs.deploy-rs pkgs.sops ];
+            nativeBuildInputs = [
+                pkgs.deploy-rs.deploy-rs pkgs.sops
+                (pkgs.writeScriptBin "deploy-all" ''
+                    deploy() {
+                        #${pkgs.deploy-rs.deploy-rs}/bin/deploy -s .#$1 --auto-rollback false --magic-rollback false 2>&1
+                        log=$(${pkgs.deploy-rs.deploy-rs}/bin/deploy -s .#$1 2>&1)
+                        echo $log
+                    }
+                    ms="${builtins.foldl' (acc: x: acc + x.meta.name + " ") "" machines}"
+                    for m in $ms; do
+                        deploy $m &
+                        pids[$!]=$!
+                    done
+                    for pid in ''${pids[*]}; do
+                        wait $pid
+                    done
+                '')
+            ];
         };
     }) // {
         nixosConfigurations = builtins.foldl' (acc: x: acc // {

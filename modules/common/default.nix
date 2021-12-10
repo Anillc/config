@@ -22,4 +22,6 @@
         defaultSopsFile = ./secrets.yaml;
         secrets.endpoints = {};
     };
+    security.acme.email = "acme@anillc.cn";
+    security.acme.acceptTerms = true;
 }

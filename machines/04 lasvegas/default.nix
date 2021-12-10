@@ -31,8 +31,8 @@ rec {
             partOf = [ "dummy.service" ];
             requires = [ "wireguard-deploy.service" "network-online.target" ];
             script = ''
-                ${pkgs.iproute2}/bin/ip route del 10.127.20.114/32 || true
-                ${pkgs.iproute2}/bin/ip route add 10.127.20.114/32 dev deploy proto 114
+                ${pkgs.iproute2}/bin/ip route del 10.127.20.114/32 table 114 || true
+                ${pkgs.iproute2}/bin/ip route add 10.127.20.114/32 dev deploy proto 114 table 114
             '';
         };
     };
