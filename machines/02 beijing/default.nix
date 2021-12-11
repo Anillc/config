@@ -32,8 +32,6 @@ rec {
             enable = true;
             virtualHosts = {
                 "xxqg.anillc.cn" = {
-                    forceSSL = true;
-                    enableACME = true;
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:8080";
                     };

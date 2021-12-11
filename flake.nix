@@ -36,7 +36,6 @@
                 pkgs.deploy-rs.deploy-rs pkgs.sops
                 (pkgs.writeScriptBin "deploy-all" ''
                     deploy() {
-                        #${pkgs.deploy-rs.deploy-rs}/bin/deploy -s .#$1 --auto-rollback false --magic-rollback false 2>&1
                         log=$(${pkgs.deploy-rs.deploy-rs}/bin/deploy -s .#$1 2>&1)
                         echo $log
                     }
