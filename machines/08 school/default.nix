@@ -26,7 +26,7 @@ rec {
         systemd.services.school-network = {
             wantedBy = [ "multi-user.target" ];
             partOf = [ "dummy.service" ];
-            requires = [ "network-online.target" ];
+            after = [ "network-online.target" ];
             script = ''
                 ${pkgs.iproute2}/bin/ip route del 10.127.20.128/25 table 114 || true
                 ${pkgs.iproute2}/bin/ip route del 2602:feda:da1:1::/96 table 114 || true

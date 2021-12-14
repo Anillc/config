@@ -3,7 +3,7 @@
     boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usbhid" "uas" "sd_mod" "rtsx_usb_sdmmc" ];
     boot.initrd.kernelModules = [ ];
     boot.kernelModules = [ "kvm-intel" ];
-    boot.extraModulePackages = [ config.boot.kernelPackages.rtl88x2bu ];
+    boot.extraModulePackages = with config.boot.kernelPackages; [ rtl88x2bu zfs ];
     boot.loader.grub.enable = true;
     boot.loader.grub.devices = [ "/dev/sda" ];
     fileSystems."/" = {
