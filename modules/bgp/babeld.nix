@@ -2,6 +2,9 @@
     cfg = config.bgp;
 in {
     config = lib.mkIf cfg.enable {
+        networking.firewall.extraCommands = ''
+            ${pkgs.iptables}/bin/ip6tables -A nixos-fw -d ff02::1:6/128 -j nixos-fw-accept
+        '';
         services.babeld = {
             enable = true;
             interfaces = builtins.foldl' (acc: x: acc // {

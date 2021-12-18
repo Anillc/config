@@ -3,7 +3,8 @@ meta: { config, ... }: let
 in {
     bgp = {
         enable = true;
-        connect = [ machines.shanghai machines.shanghai2 machines.beijing ];
+        #connect = [ machines.shanghai machines.shanghai2 machines.beijing ];
+        connect = [ machines.shanghai machines.beijing ];
         bgpSettings = {
             dn42.v4 = "172.22.167.103";
             dn42.v6 = "fdc9:83c1:d0ce::7";

@@ -28,6 +28,7 @@ rec {
                 extraOptions = [ "--shm-size=2g" ];
             };
         };
+        networking.firewall.allowedTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
             virtualHosts = {

@@ -40,6 +40,8 @@ in {
     #     "net.ipv6.conf.all.forwarding" = 1;
     # };
     networking.resolvconf.useLocalResolver = lib.mkForce false;
+    networking.firewall.allowedTCPPorts = [ 53 ];
+    networking.firewall.allowedUDPPorts = [ 53 ];
     services.dnsmasq = {
         enable = true;
         servers = [ "223.5.5.5" "172.20.0.53" ];

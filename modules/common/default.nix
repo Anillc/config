@@ -13,7 +13,7 @@
         dates = "Sun 6:00";
     };
     services.openssh.enable = true;
-    networking.firewall.enable = false;
+    #networking.firewall.enable = false;
     environment.systemPackages = with pkgs; [
         vim traceroute tcpdump dig
     ];

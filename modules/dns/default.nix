@@ -13,6 +13,8 @@ in {
     };
     config = mkIf cfg.enable {
         networking.resolvconf.useLocalResolver = false;
+        networking.firewall.allowedTCPPorts = [ 53 ];
+        networking.firewall.allowedUDPPorts = [ 53 ];
         services.bind = {
             enable = true;
             configFile = pkgs.writeText "named.conf" ''

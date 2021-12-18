@@ -11,6 +11,9 @@ in {
             enable = true;
             interfaces = intranet // internet // dn42;
         };
+        networking.firewall.allowedUDPPorts = builtins.foldl' (acc: x: acc ++ (if x.listenPort == null then [] else [
+            x.listenPort
+        ])) [] (builtins.attrValues config.networking.wireguard.interfaces);
         systemd.services = builtins.foldl' (acc: x: acc // (if x.meta.inNat then {} else {
             "wireguard-i${x.meta.name}-peer-${keyToUnitName x.meta.wg-public-key}" = {
                 preStart = ''
@@ -18,10 +21,6 @@ in {
                     ${pkgs.wireguard-tools}/bin/wg set i${x.meta.name} peer "${x.meta.wg-public-key}" endpoint "$ENDPOINT:110${config.bgp.meta.id}"
                 '';
             };
-        }) // {
-            "wireguard-i${x.meta.name}" = {
-                requiredBy = [ "babeld.service" ];
-            };
-        }) {} config.bgp.connect;
+        })) {} config.bgp.connect;
     };
 }

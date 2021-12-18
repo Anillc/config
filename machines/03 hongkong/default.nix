@@ -29,6 +29,7 @@ rec {
                 }];
             };
         };
+        networking.firewall.allowedTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
             virtualHosts."dav.anillc.cn" = {
