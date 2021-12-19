@@ -2,7 +2,10 @@
     cfg = config.bgp;
 in {
     config = lib.mkIf cfg.enable {
+        # TODO: move to another place
         networking.firewall.extraCommands = ''
+            ${pkgs.iptables}/bin/iptables -D PREROUTING -t raw -j nixos-fw-rpfilter
+            ${pkgs.iptables}/bin/ip6tables -D PREROUTING -t raw -j nixos-fw-rpfilter
             ${pkgs.iptables}/bin/ip6tables -A nixos-fw -d ff02::1:6/128 -j nixos-fw-accept
         '';
         services.babeld = {

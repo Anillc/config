@@ -12,8 +12,8 @@
                 mem = {};
             };
             outputs.influxdb_v2 = {
-                urls = ["http://172.22.167.97:8086"];
-                token = "nn_M03qlDIfI_2zkyv5Cf3rXCuLfLKqKR8UK0jx3999MT4OjBIIVTfuv26cDiWx1X3wcYVWodg7U89mP2yBm_Q==";
+                urls = ["http://172.22.167.105:8086"];
+                token = "d2r575_TnHszNBVnApmX9-wwSFvpf0CQlCT85x8XGSa8hAMia6sjm4DCDwFhY42_oJR0_ie-ju1CYn8iYHI0HQ==";
                 organization = "AnillcNetwork";
                 bucket = "servers";
             };
