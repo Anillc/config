@@ -110,6 +110,16 @@ in {
             "net.ipv4.conf.all.rp_filter" = 0;
         };
         services.cron.enable = true;
+        systemd.services.bgp-firewall-rpfilter = {
+            wantedBy = [ "multi-user.target" ];
+            partOf = [ "firewall.service" ];
+            requires = [ "firewall.service" ];
+            after = [ "firewall.service" "network-online.target" ];
+            script = ''
+                ${pkgs.iptables}/bin/iptables -D PREROUTING -t raw -j nixos-fw-rpfilter || true
+                ${pkgs.iptables}/bin/ip6tables -D PREROUTING -t raw -j nixos-fw-rpfilter || true
+            '';
+        };
         systemd.services.dummy = let
             start = ''
                 export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [

@@ -37,5 +37,8 @@ rec {
                 ${pkgs.iproute2}/bin/ip route add fd10:127:cc:1:1::/96 dev br0 proto 114 table 114
             '';
         };
+        networking.firewall.extraCommands = ''
+            ${pkgs.iptables}/bin/iptables -A nixos-fw -s 0.0.0.0/32 -j nixos-fw-accept
+        '';
     };
 }
