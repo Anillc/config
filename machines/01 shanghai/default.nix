@@ -24,7 +24,6 @@ rec {
             enable = true;
             device = config.sops.secrets.anillc-device.path;
         };
-        # TODO
         networking.wireguard.interfaces.phone = {
             privateKeyFile = meta.wg-private-key config;
             listenPort = 11451;
@@ -37,6 +36,20 @@ rec {
                     "::/0"
                 ];
             }];
+        };
+        systemd.services.phone-network = {
+            wantedBy = [ "multi-user.target" ];
+            partOf = [ "dummy.service" ];
+            requires = [ "wireguard-phone.service" "network-online.target" ];
+            after = [ "wireguard-phone.service" "network-online.target" ];
+            script = ''
+                ${pkgs.iproute2}/bin/ip route del 172.22.167.110/32 table 114 || true
+                ${pkgs.iproute2}/bin/ip route del 2602:feda:da1::1/128 table 114 || true
+                ${pkgs.iproute2}/bin/ip route del fd10:127:cc:1::1/128 table 114 || true
+                ${pkgs.iproute2}/bin/ip route add 172.22.167.110/32 dev phone proto 114 table 114
+                ${pkgs.iproute2}/bin/ip route add 2602:feda:da1::1/128 dev phone proto 114 table 114
+                ${pkgs.iproute2}/bin/ip route add fd10:127:cc:1::1/128 dev phone proto 114 table 114
+            '';
         };
     };
 }
