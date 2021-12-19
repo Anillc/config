@@ -50,8 +50,6 @@ rec {
                 ${pkgs.iptables}/bin/iptables -A nixos-fw -j nixos-fw-log-refuse
             '';
         };
-        services.influxdb2 = {
-            enable = true;
-        };
+        services.influxdb2.enable = true;
     };
 }
