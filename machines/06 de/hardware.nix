@@ -18,4 +18,7 @@
         address = "2a0f:9400:7a00::1";
         interface = "ens160";
     };
+    swapDevices = [{
+        device = "/var/swapfile";
+    }];
 }
