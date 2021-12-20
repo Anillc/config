@@ -23,6 +23,12 @@ rec {
         services.go-cqhttp = {
             enable = true;
             device = config.sops.secrets.anillc-device.path;
+            config.servers = [{
+                ws = {
+                    host = "0.0.0.0";
+                    port = 6700;
+                };
+            }];
         };
         networking.wireguard.interfaces.phone = {
             privateKeyFile = meta.wg-private-key config;
@@ -54,6 +60,9 @@ rec {
         networking.firewall.extraCommands = ''
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8086 -s 172.22.167.96/27 -j nixos-fw-accept
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8086 -s 10.127.20.0/24 -j nixos-fw-accept
+
+            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 6700 -s 172.22.167.96/27 -j nixos-fw-accept
+            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 6700 -s 10.127.20.0/24 -j nixos-fw-accept
         '';
         services.influxdb2.enable = true;
     };
