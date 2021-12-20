@@ -10,6 +10,9 @@
                     report_active = false;
                 };
                 mem = {};
+                disk.ignore_fs = [ "tmpfs" "devtmpfs" "devfs" "iso9660" "overlay" "aufs" "squashfs" ];
+                diskio = {};
+                net = {};
             };
             outputs.influxdb_v2 = {
                 urls = ["http://172.22.167.105:8086"];
