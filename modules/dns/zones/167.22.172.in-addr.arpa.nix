@@ -1,5 +1,5 @@
 { pkgs, dns, ... }: let
-    name = "167.22.172.in-addr.arpa";
+    name = "96/27.167.22.172.in-addr.arpa";
     zone = with dns.lib.combinators; {
         SOA = {
             nameServer = "ns1.an.dn42.";
