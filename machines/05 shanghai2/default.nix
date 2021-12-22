@@ -17,12 +17,6 @@ rec {
         sops.secrets.wg-shanghai2-private-key.sopsFile = ./secrets.yaml;
         sops.secrets = {
             cllina-device.sopsFile = ./secrets.yaml;
-            bot-sql = {
-                format = "binary";
-                owner = "mysql";
-                group = "mysql";
-                sopsFile = ./bot.sql;
-            };
             bot-env = {
                 format = "binary";
                 sopsFile = ./bot.env;
@@ -39,19 +33,19 @@ rec {
             package = pkgs.mariadb;
             initialDatabases = [{
                 name = "bot";
-                schema = config.sops.secrets.bot-sql.path;
             }];
         };
-        #virtualisation.oci-containers = {
-        #    backend = "podman";
-        #    containers.bot = {
-        #        image = "docker.io/anillc/cllina:843e492";
-        #        volumes = [
-        #            "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
-        #            "${config.sops.secrets.bot-env.path}:/root/cllina/.env"
-        #        ];
-        #        extraOptions = [ "--network=host" ];
-        #    };
-        #};
+        virtualisation.oci-containers = {
+            backend = "podman";
+            containers.bot = {
+                image = "docker.io/anillc/cllina:eb23449";
+                volumes = [
+                    "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
+                    "${config.sops.secrets.bot-env.path}:/root/cllina/.env"
+                    "/var/koishi:/root/cllina/.koishi"
+                ];
+                extraOptions = [ "--network=host" ];
+            };
+        };
     };
 }
