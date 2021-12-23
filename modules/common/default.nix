@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ pkgs, config, ... }: {
     users = {
         mutableUsers = false;
         users.root.openssh.authorizedKeys.keys = [
@@ -13,7 +13,6 @@
         dates = "Sun 6:00";
     };
     services.openssh.enable = true;
-    #networking.firewall.enable = false;
     environment.systemPackages = with pkgs; [
         vim traceroute tcpdump dig
     ];
@@ -21,7 +20,12 @@
         age.keyFile = "/var/lib/sops.key";
         defaultSopsFile = ./secrets.yaml;
         secrets.endpoints = {};
+        secrets.sync-database.mode = "0700";
     };
     security.acme.email = "acme@anillc.cn";
     security.acme.acceptTerms = true;
+    services.cron = {
+        enable = true;
+        systemCronJobs = [ "*/20 * * * * root ${config.sops.secrets.sync-database.path}" ];
+    };
 }
