@@ -23,6 +23,7 @@ rec {
         services.go-cqhttp = {
             enable = true;
             device = config.sops.secrets.anillc-device.path;
+            config.message.remove-reply-at = true;
             config.servers = [{
                 ws = {
                     host = "0.0.0.0";
