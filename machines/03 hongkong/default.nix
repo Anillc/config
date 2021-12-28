@@ -14,7 +14,10 @@ rec {
             (import ./bgp.nix meta)
         ];
         sops.secrets.wg-hongkong-private-key.sopsFile = ./secrets.yaml;
-        networking.hostName = meta.name;
+        networking.firewall.extraCommands = ''
+            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 172.22.167.96/27 -j nixos-fw-accept
+            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 10.127.20.0/24 -j nixos-fw-accept
+        '';
         services.webdav = {
             enable = true;
             settings = {
@@ -48,6 +51,20 @@ rec {
                         proxy_set_header Host $host;
                         proxy_redirect off;
                     '';
+                };
+            };
+            virtualHosts."tghook.anillc.cn" = {
+                locations."/" = {
+                    proxyPass = "http://10.127.20.167:8056";
+                };
+            };
+            virtualHosts."tgapi.an.dn42" = {
+                listen = [ {
+                    addr = "0.0.0.0";
+                    port = 8056;
+                } ];
+                locations."/" = {
+                    proxyPass = "https://api.telegram.org";
                 };
             };
         };
