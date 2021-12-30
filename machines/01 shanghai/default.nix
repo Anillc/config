@@ -20,6 +20,7 @@ rec {
             anillc-device.sopsFile = ./secrets.yaml;
         };
         networking.hostName = meta.name;
+        services.influxdb2.enable = true;
         services.go-cqhttp = {
             enable = true;
             device = config.sops.secrets.anillc-device.path;
@@ -30,6 +31,17 @@ rec {
                     port = 6700;
                 };
             }];
+        };
+        networking.firewall.allowedTCPPorts = [ 80 ];
+        services.nginx = {
+            enable = true;
+            virtualHosts = {
+                "lg.anillc.cn" = {
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:5000";
+                    };
+                };
+            };
         };
         networking.wireguard.interfaces.phone = {
             privateKeyFile = meta.wg-private-key config;
@@ -65,6 +77,5 @@ rec {
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 6700 -s 172.22.167.96/27 -j nixos-fw-accept
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 6700 -s 10.127.20.0/24 -j nixos-fw-accept
         '';
-        services.influxdb2.enable = true;
     };
 }

@@ -1,6 +1,14 @@
 meta: { ... }: let
     machines = (import ./..).set;
 in {
+    networking.nameservers = [
+        "172.20.0.53"
+    ];
+    services.bird-lg-go-frontend = {
+        enable = true;
+        domain = "an.dn42";
+        servers = [ "las" "bj" "hk" "de" "wh" "sh" "sh2" "jx" ];
+    };
     bgp = {
         enable = true;
         connect = [ machines.beijing machines.hongkong machines.shanghai2 machines.wuhan machines.school ];

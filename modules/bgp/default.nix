@@ -110,7 +110,8 @@ in {
             "net.ipv4.conf.all.rp_filter" = 0;
         };
         services.cron.enable = true;
-        systemd.services.bgp-firewall-rpfilter = {
+        services.bird-lg-go.enable = true;
+        systemd.services.bgp-firewall = {
             wantedBy = [ "multi-user.target" ];
             partOf = [ "firewall.service" ];
             requires = [ "firewall.service" ];
@@ -118,6 +119,17 @@ in {
             script = ''
                 ${pkgs.iptables}/bin/iptables -D PREROUTING -t raw -j nixos-fw-rpfilter || true
                 ${pkgs.iptables}/bin/ip6tables -D PREROUTING -t raw -j nixos-fw-rpfilter || true
+
+                ${pkgs.iptables}/bin/iptables  -D nixos-fw -j nixos-fw-log-refuse || true
+                ${pkgs.iptables}/bin/ip6tables -D nixos-fw -j nixos-fw-log-refuse || true
+
+                ${pkgs.iptables}/bin/iptables  -D nixos-fw -p tcp --dport 8000 -s 172.22.167.96/27 -j nixos-fw-accept || true
+                ${pkgs.iptables}/bin/ip6tables -D nixos-fw -p tcp --dport 8000 -s fdc9:83c1:d0ce::/48 -j nixos-fw-accept || true
+                ${pkgs.iptables}/bin/iptables  -A nixos-fw -p tcp --dport 8000 -s 172.22.167.96/27 -j nixos-fw-accept
+                ${pkgs.iptables}/bin/ip6tables -A nixos-fw -p tcp --dport 8000 -s fdc9:83c1:d0ce::/48 -j nixos-fw-accept
+
+                ${pkgs.iptables}/bin/iptables  -A nixos-fw -j nixos-fw-log-refuse
+                ${pkgs.iptables}/bin/ip6tables -A nixos-fw -j nixos-fw-log-refuse
             '';
         };
         systemd.services.dummy = let

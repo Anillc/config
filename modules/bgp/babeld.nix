@@ -31,7 +31,7 @@ in {
             requires = [ "firewall.service" ];
             after = [ "firewall.service" "network-online.target" ];
             script = ''
-                ${pkgs.iptables}/bin/ip6tables -D nixos-fw -j nixos-fw-log-refuse
+                ${pkgs.iptables}/bin/ip6tables -D nixos-fw -j nixos-fw-log-refuse || true
                 ${pkgs.iptables}/bin/ip6tables -D nixos-fw -d ff02::1:6/128 -j nixos-fw-accept || true
                 ${pkgs.iptables}/bin/ip6tables -A nixos-fw -d ff02::1:6/128 -j nixos-fw-accept
                 ${pkgs.iptables}/bin/ip6tables -A nixos-fw -j nixos-fw-log-refuse
