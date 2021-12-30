@@ -12,7 +12,6 @@ rec {
         nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
-            ./asterisk.nix
             (import ./bgp.nix meta)
         ];
         sops.secrets.wg-shanghai-private-key.sopsFile = ./secrets.yaml;
