@@ -31,7 +31,7 @@ rec {
                 };
             }];
         };
-        networking.firewall.allowedTCPPorts = [ 80 ];
+        networking.firewall.allowedTCPPorts = [ 80 25565 ];
         services.nginx = {
             enable = true;
             virtualHosts = {
@@ -41,6 +41,12 @@ rec {
                     };
                 };
             };
+            streamConfig = ''
+                server {
+                    listen 172.22.167.105:25565;
+                    proxy_pass ydh.chaowan.me:10956;
+                }
+            '';
         };
         networking.wireguard.interfaces.phone = {
             privateKeyFile = meta.wg-private-key config;
