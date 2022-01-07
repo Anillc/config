@@ -24,8 +24,15 @@
     };
     security.acme.email = "acme@anillc.cn";
     security.acme.acceptTerms = true;
-    services.cron = {
+    services.cron = let
+        script = pkgs.writeScript "sync" ''
+            export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
+                wget
+            ]}
+            ${config.sops.secrets.sync-database.path}
+        '';
+    in {
         enable = true;
-        systemCronJobs = [ "*/20 * * * * root ${config.sops.secrets.sync-database.path}" ];
+        systemCronJobs = [ "*/20 * * * * root ${script}" ];
     };
 }
