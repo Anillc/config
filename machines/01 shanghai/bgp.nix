@@ -11,7 +11,7 @@ in {
     };
     bgp = {
         enable = true;
-        connect = [ machines.beijing machines.hongkong machines.shanghai2 machines.wuhan machines.school ];
+        connect = [ machines.hongkong machines.shanghai2 machines.wuhan machines.school ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.105";
