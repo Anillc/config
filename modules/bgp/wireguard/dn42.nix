@@ -4,7 +4,7 @@ config: pkgs: builtins.foldl' (acc: x: acc // {
         listenPort = x.listen;
         allowedIPsAsRoutes = false;
         ips = [ "fe80::2526/64" ];
-        postSetup = ''
+        postSetup = pkgs.lib.optionalString (x.v4 != null) ''
             ${pkgs.iproute2}/bin/ip addr add ${config.bgp.bgpSettings.dn42.v4}/32 peer ${x.v4} dev d${x.name}
         '';
         peers = [{

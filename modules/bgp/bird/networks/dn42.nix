@@ -1,4 +1,4 @@
-cfg: ''
+pkgs: cfg: ''
     ipv4 table dn42_table_v4;
     ipv6 table dn42_table_v6;
 
@@ -63,6 +63,20 @@ cfg: ''
         ${acc}
         protocol bgp d${x.name} from dn42_peers {
             neighbor ${x.linkLocal}%d${x.name} as ${x.asn};
+            ${pkgs.lib.optionalString x.extendedNextHop ''
+                ipv4 {
+                    table dn42_table_v4;
+                    igp table master4;
+                    next hop self;
+                    extended next hop;
+                    import filter {
+                        dn42_peers_filter();
+                        accept;
+                    };
+                    export all;
+                    import limit 1000 action block;
+                };
+            ''}
         }
     '') "" cfg.bgpSettings.dn42.peers}
 ''

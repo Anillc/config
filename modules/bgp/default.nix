@@ -40,7 +40,8 @@ in {
                         description = "listen port";
                     };
                     v4 = mkOption {
-                        type = types.str;
+                        type = types.nullOr types.str;
+                        default = null;
                         description = "peer v4";
                     };
                     publicKey = mkOption {
@@ -59,6 +60,11 @@ in {
                     linkLocal = mkOption {
                         type = types.str;
                         description = "peer link local address";
+                    };
+                    extendedNextHop = mkOption {
+                        type = types.bool;
+                        default = false;
+                        description = "enable extended next hop";
                     };
                 };
             };

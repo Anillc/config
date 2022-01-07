@@ -32,7 +32,7 @@ pkgs: cfg: ''
 
     include "/var/bird/ptp.conf";
     ${import ./utils.nix}
-    ${import ./networks/dn42.nix cfg}
+    ${import ./networks/dn42.nix pkgs cfg}
     ${import ./networks/internet.nix cfg}
     ${import ./networks/intranet.nix pkgs cfg}
 
