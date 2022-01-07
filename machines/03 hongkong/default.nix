@@ -17,6 +17,8 @@ rec {
         networking.firewall.extraCommands = ''
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 172.22.167.96/27 -j nixos-fw-accept
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 10.127.20.0/24 -j nixos-fw-accept
+            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8233 -s 172.22.167.96/27 -j nixos-fw-accept
+            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8233 -s 10.127.20.0/24 -j nixos-fw-accept
         '';
         services.webdav = {
             enable = true;
@@ -30,6 +32,13 @@ rec {
                     password = "{bcrypt}$2a$10$xP5yTZsZvRcyOKdRHSpmyOD1.jupaU5gCiXwDY7/TYInIDZoqPl62";
                     modify = true;
                 }];
+            };
+        };
+        virtualisation.oci-containers = {
+            backend = "podman";
+            containers.deepl = {
+                image = "docker.io/zu1k/deepl";
+                ports = [ "8233:80" ];
             };
         };
         networking.firewall.allowedTCPPorts = [ 80 ];
