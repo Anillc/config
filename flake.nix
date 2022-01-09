@@ -67,7 +67,7 @@
             inherit (x.meta) system;
         };
         }) {} machines;
-        deploy.nodes = builtins.foldl' (acc: x: acc // {
+        deploy.nodes = builtins.foldl' (acc: x: if x ? disabled && x.disabled then acc else acc // {
             "${x.meta.name}" = {
                 sshUser = "root";
                 sshOpts = [ "-4" "-o" "ServerAliveInterval=30" "-o" "StrictHostKeyChecking=no" ];

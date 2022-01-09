@@ -7,6 +7,7 @@ rec {
         system = "x86_64-linux";
         wg-private-key = config: config.sops.secrets.wg-school-private-key.path;
         wg-public-key = "2YSajirzbCUK4h3NbuBgpZPOypjrhtrLnT5pJp2K9HU=";
+        disabled = true;
     };
     configuration = { config, pkgs, ... }: {
         imports = [
