@@ -47,5 +47,32 @@ rec {
                 extraOptions = [ "--network=host" ];
             };
         };
+
+        # Xiao Jin
+        networking.wireguard.interfaces.xiaojin = {
+            privateKeyFile = meta.wg-private-key config;
+            allowedIPsAsRoutes = false;
+            ips = [ "192.168.2.23/24" "fe80::2526/64" ];
+            peers = [{
+                endpoint = "shanghai-1.mchosts.com.cn:51820";
+                publicKey = "EKU0tuuMyBSdbD95Z8f4J6BZt93UQbiEzHR+84DTcSk=";
+                persistentKeepalive = 25;
+                allowedIPs = [ "0.0.0.0/0" "::/0" ];
+            }];
+        };
+        systemd.services.xiaojin-network = {
+            wantedBy = [ "multi-user.target" ];
+            partOf = [ "dummy.service" ];
+            requires = [ "wireguard-xiaojin.service" "network-online.target" ];
+            after = [ "wireguard-xiaojin.service" "network-online.target" ];
+            script = ''
+                ${pkgs.iproute2}/bin/ip route del 10.0.0.0/16         table 114 || true
+                ${pkgs.iproute2}/bin/ip route del 192.168.2.0/24      table 114 || true
+                ${pkgs.iproute2}/bin/ip route del 2a0e:b107:1171::/48 table 114 || true
+                ${pkgs.iproute2}/bin/ip route add 10.0.0.0/16    via 192.168.2.19  proto 114 table 114
+                ${pkgs.iproute2}/bin/ip route add 192.168.2.0/24 via 192.168.2.19  proto 114 table 114
+                ${pkgs.iproute2}/bin/ip route add 2a0e:b107:1171::/48 dev xiaojin  proto 114 table 114
+            '';
+        };
     };
 }

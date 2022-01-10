@@ -30,6 +30,8 @@ pkgs: cfg: ''
         utils_reject_long_aspaths();
         utils_dn42_reject_bogon();
         utils_dn42_roa();
+        # Xiao Jin
+        if net ~ [10.0.0.0/16+,192.168.2.0/24+] then reject;
     }
 
     template bgp dn42_peers {
