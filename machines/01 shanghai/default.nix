@@ -33,15 +33,7 @@ rec {
         };
         virtualisation.oci-containers = {
             backend = "podman";
-            containers.xxqg = {
-                image = "docker.mirror.aliyuncs.com/techxuexi/techxuexi-amd64";
-                environment = {
-                    ZhuanXiang = "True";
-                    Pushmode = "6";
-                };
-                ports = [ "8080:80" ];
-                extraOptions = [ "--shm-size=2g" ];
-            };
+            
         };
         networking.firewall.allowedTCPPorts = [ 80 25565 ];
         services.nginx = {
@@ -50,11 +42,6 @@ rec {
                 "lg.anillc.cn" = {
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:5000";
-                    };
-                };
-                "xxqg.anillc.cn" = {
-                    locations."/" = {
-                        proxyPass = "http://127.0.0.1:8080";
                     };
                 };
             };
