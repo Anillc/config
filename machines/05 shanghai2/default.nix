@@ -11,10 +11,12 @@ rec {
     configuration = { config, pkgs, ... }: {
         imports = [
             ./hardware.nix
+            ./nanahira.nix
             (import ./bgp.nix meta)
         ];
         networking.hostName = meta.name;
         sops.secrets.wg-shanghai2-private-key.sopsFile = ./secrets.yaml;
+        sops.secrets.wg-nanahira-private-key.sopsFile  = ./secrets.yaml;
         sops.secrets = {
             cllina-device.sopsFile = ./secrets.yaml;
             bot-env = {
