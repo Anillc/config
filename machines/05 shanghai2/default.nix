@@ -76,10 +76,12 @@ rec {
             requires = [ "wireguard-xiaojin.service" "network-online.target" ];
             after = [ "wireguard-xiaojin.service" "network-online.target" ];
             script = ''
-                ${pkgs.iproute2}/bin/ip route del 10.0.0.0/16    table 114 || true
-                ${pkgs.iproute2}/bin/ip route del 192.168.2.0/24 table 114 || true
-                ${pkgs.iproute2}/bin/ip route add 10.0.0.0/16    via 192.168.1.1 proto 114 table 114
-                ${pkgs.iproute2}/bin/ip route add 192.168.2.0/24 via 192.168.1.1 proto 114 table 114
+                ${pkgs.iproute2}/bin/ip route del 10.0.0.0/16     table 114 || true
+                ${pkgs.iproute2}/bin/ip route del 192.168.2.0/24  table 114 || true
+                ${pkgs.iproute2}/bin/ip route del 192.168.22.0/24 table 114 || true
+                ${pkgs.iproute2}/bin/ip route add 10.0.0.0/16     src 172.22.167.106 via 192.168.1.1 proto 114 table 114
+                ${pkgs.iproute2}/bin/ip route add 192.168.2.0/24  src 172.22.167.106 via 192.168.1.1 proto 114 table 114
+                ${pkgs.iproute2}/bin/ip route add 192.168.22.0/24 src 172.22.167.106 via 192.168.1.1 proto 114 table 114
             '';
         };
     };
