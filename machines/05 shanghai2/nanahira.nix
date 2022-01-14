@@ -72,7 +72,7 @@
                     ${pkgs.iproute2}/bin/ip route del 172.22.167.96/27 || true
                     ${pkgs.iproute2}/bin/ip route del 10.127.20.0/24   || true
                     ${pkgs.iproute2}/bin/ip route add 172.22.167.96/27 via 192.168.114.1 proto 114
-                    ${pkgs.iproute2}/bin/ip route add 10.127.20.0/24   via 192.168.114.1 eth0 proto 114
+                    ${pkgs.iproute2}/bin/ip route add 10.127.20.0/24   via 192.168.114.1 proto 114
                 '';
             };
         };
