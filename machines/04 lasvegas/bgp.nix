@@ -182,6 +182,15 @@ meta: { config, ... }: let
             asn = "4242423914";
             linkLocal = "fe80::ade0";
         }
+        {
+            name = "moe233";
+            endpoint = "64.227.97.100:22526";
+            listen = 20253;
+            publicKey = "C3SneO68SmagisYQ3wi5tYI2R9g5xedKkB56Y7rtPUo=";
+            asn = "4242420253";
+            linkLocal = "fe80::253";
+            extendedNextHop = true;
+        }
     ];
 in {
     bgp = {
