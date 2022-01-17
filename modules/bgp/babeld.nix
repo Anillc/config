@@ -7,12 +7,12 @@ in {
             interfaces = builtins.foldl' (acc: x: acc // {
                 "i${x.meta.name}" = {
                     type = "tunnel";
-                    link-quality = true;
-                    max-rtt-penalty = 1024;
-                    rtt-max = 1024;
-                    split-horizon = false;
-                    hello-interval = 20;
-                    rxcost = 32;
+                    # link-quality = true;
+                    # max-rtt-penalty = 1024;
+                    # rtt-max = 1024;
+                    # split-horizon = false;
+                    # hello-interval = 20;
+                    # rxcost = 32;
                 };
             }) {} cfg.connect;
             extraConfig = ''
