@@ -13,6 +13,7 @@ rec {
             ./hardware.nix
             (import ./bgp.nix meta)
         ];
+        networking.hostName = meta.name;
         sops.secrets.wg-hongkong-private-key.sopsFile = ./secrets.yaml;
         networking.firewall.extraCommands = ''
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 172.22.167.96/27 -j nixos-fw-accept
