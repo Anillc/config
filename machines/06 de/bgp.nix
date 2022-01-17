@@ -51,6 +51,21 @@ in {
                     import limit 1000 action block;
                 };
             }
+            protocol bgp dKSKB from dn42_peers {
+                neighbor fe80::2d1:d5ff:fe65:d8d4%ens160 as 4242421817;
+                ipv4 {
+                    table dn42_table_v4;
+                    igp table master4;
+                    next hop self;
+                    extended next hop;
+                    import filter {
+                        dn42_peers_filter();
+                        accept;
+                    };
+                    export all;
+                    import limit 1000 action block;
+                };
+            }
             protocol bgp dKAI from dn42_peers {
                 neighbor fe80::2f0:80ff:fe11:f048%ens192 as 4242421488;
             }

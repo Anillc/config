@@ -191,6 +191,15 @@ meta: { config, ... }: let
             linkLocal = "fe80::253";
             extendedNextHop = true;
         }
+        {
+            name = "kskb";
+            endpoint = "us.kskb.eu.org:22526";
+            listen = 21817;
+            publicKey = "dZzVdXbQPnWPpHk8QfW/p+MfGzAkMBuWpxEIXzQCggY=";
+            asn = "4242421817";
+            linkLocal = "fe80::1817";
+            extendedNextHop = true;
+        }
     ];
 in {
     bgp = {
