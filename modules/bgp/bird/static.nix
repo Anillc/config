@@ -35,13 +35,6 @@
     }
 
     protocol static {
-        route 2a0e:b107:1171::/48 reject;
-        ipv6 {
-            table internet_table_v6;
-        };
-    }
-
-    protocol static {
         route 2a0e:b107:df5::/48 reject;
         ipv6 {
             table internet_table_v6;

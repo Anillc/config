@@ -195,7 +195,7 @@ meta: { config, ... }: let
 in {
     bgp = {
         enable = true;
-        connect = [ machines.hongkong machines.de ];
+        connect = [ machines.hongkong machines.de machines.shanghai ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.97";
@@ -210,6 +210,12 @@ in {
             password = "yfAnvncg";
         };
         extraBirdConfig = ''
+            protocol static {
+                route 2a0e:b107:1171::/48 reject;
+                ipv6 {
+                    table internet_table_v6;
+                };
+            }
             protocol static { 
                 ipv6;
                 route 2605:6400:ffff::2/128 via "ens3" {
