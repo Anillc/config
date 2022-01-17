@@ -32,9 +32,10 @@ in {
                 ipv6;
                 route 2a0f:9400:7a00:3333::/64 via "ens192";
             }
-            protocol bgp eHZIX from internet_peers {
-                neighbor 2a0f:9400:7a00:3333:1111::1 as 64555;
-            }
+            # collapse
+            # protocol bgp eHZIX from internet_peers {
+            #     neighbor 2a0f:9400:7a00:3333:1111::1 as 64555;
+            # }
             protocol bgp dDAVIDLIU from dn42_peers {
                 neighbor fe80::291:dff:fe12:5051%ens192 as 4242421876;
                 ipv4 {
