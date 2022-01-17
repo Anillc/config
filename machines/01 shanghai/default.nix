@@ -79,6 +79,7 @@ rec {
                 ${pkgs.iproute2}/bin/ip route add fd10:127:cc:1::1/128 dev phone proto 114 table 114
             '';
         };
+        # influxdb and go-cqhttp
         networking.firewall.extraCommands = ''
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8086 -s 172.22.167.96/27 -j nixos-fw-accept
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8086 -s 10.127.20.0/24 -j nixos-fw-accept

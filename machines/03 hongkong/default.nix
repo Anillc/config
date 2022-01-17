@@ -15,6 +15,7 @@ rec {
         ];
         networking.hostName = meta.name;
         sops.secrets.wg-hongkong-private-key.sopsFile = ./secrets.yaml;
+        # tgapi and deepl
         networking.firewall.extraCommands = ''
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 172.22.167.96/27 -j nixos-fw-accept
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 10.127.20.0/24 -j nixos-fw-accept
