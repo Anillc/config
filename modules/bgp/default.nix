@@ -122,6 +122,10 @@ in {
             ${pkgs.iptables}/bin/iptables  -A nixos-fw -p tcp --dport 8000 -s 172.22.167.96/27    -j nixos-fw-accept
             ${pkgs.iptables}/bin/ip6tables -A nixos-fw -p tcp --dport 8000 -s fdc9:83c1:d0ce::/48 -j nixos-fw-accept
         '';
+        networking.firewall.extraStopCommands = ''
+            ${pkgs.iptables}/bin/iptables  -D nixos-fw -p tcp --dport 8000 -s 172.22.167.96/27    -j nixos-fw-accept
+            ${pkgs.iptables}/bin/ip6tables -D nixos-fw -p tcp --dport 8000 -s fdc9:83c1:d0ce::/48 -j nixos-fw-accept
+        '';
         services.cron.enable = true;
         services.bird-lg-go.enable = true;
         systemd.services.dummy = let

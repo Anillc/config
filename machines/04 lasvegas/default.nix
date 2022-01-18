@@ -63,5 +63,10 @@ rec {
             ${pkgs.iptables}/bin/iptables -A FORWARD -s 10.127.3.0/24 -j DROP
             ${pkgs.iptables}/bin/iptables -A FORWARD -j ACCEPT
         '';
+        networking.firewall.extraStopCommands = ''
+            ${pkgs.iptables}/bin/iptables -D FORWARD -s 10.127.3.0/24 -d 172.22.167.96/27 -j ACCEPT || true
+            ${pkgs.iptables}/bin/iptables -D FORWARD -s 10.127.3.0/24 -j DROP                       || true
+            ${pkgs.iptables}/bin/iptables -D FORWARD -j ACCEPT                                      || true
+        '';
     };
 }
