@@ -200,6 +200,15 @@ meta: { config, ... }: let
             linkLocal = "fe80::1817";
             extendedNextHop = true;
         }
+        {
+            name = "mika";
+            endpoint = "lax1-us.bugsur.xyz:22526";
+            listen = 23743;
+            publicKey = "x8nuSiQ4B9fyV/Qe7htgsjeuPMQPziAvOigOt+FWIgs=";
+            asn = "4242423743";
+            linkLocal = "fe80::2434";
+            extendedNextHop = true;
+        }
     ];
 in {
     bgp = {

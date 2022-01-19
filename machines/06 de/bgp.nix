@@ -8,14 +8,24 @@ in {
             dn42 = {
                 v4 = "172.22.167.102";
                 v6 = "fdc9:83c1:d0ce::6";
-                peers = [{
-                    name = "baoshuo";
-                    endpoint = "eu1.dn42.as141776.net:42526";
-                    v4 = "172.23.250.91";
-                    publicKey = "edTGR6Fs0rwAmGzWx/Zl6xxksYveRo+d75wWjxQYN0g=";
-                    asn = "4242420247";
-                    linkLocal = "fe80::247";
-                }];
+                peers = [
+                    {
+                        name = "baoshuo";
+                        endpoint = "eu1.dn42.as141776.net:42526";
+                        v4 = "172.23.250.91";
+                        publicKey = "edTGR6Fs0rwAmGzWx/Zl6xxksYveRo+d75wWjxQYN0g=";
+                        asn = "4242420247";
+                        linkLocal = "fe80::247";
+                    }
+                    {
+                        name = "mika";
+                        endpoint = "zrh1-ch.bugsur.xyz:22526";
+                        publicKey = "MUShSTyApCSU7Rc1TLCGKiyyOBAIkLzEEVCpOf6wbQ0=";
+                        asn = "4242423743";
+                        linkLocal = "fe80::2434";
+                        extendedNextHop = true;
+                    }
+                ];
             };
         };
         bgpTransit = {
