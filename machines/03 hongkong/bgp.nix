@@ -44,6 +44,7 @@ meta: { ... }: let
             publicKey = "LNpOdAZMc2RszmMB/JrvGoqLt8aE+p9JyYODKphzyyw=";
             asn = "4242422330";
             linkLocal = "fe80::2330:5";
+            refresh = 60 * 60;
         }
     ];
 in {

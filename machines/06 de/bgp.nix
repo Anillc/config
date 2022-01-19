@@ -24,6 +24,7 @@ in {
                         asn = "4242423743";
                         linkLocal = "fe80::2434";
                         extendedNextHop = true;
+                        refresh = 60 * 60;
                     }
                 ];
             };

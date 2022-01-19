@@ -10,6 +10,7 @@ config: pkgs: builtins.foldl' (acc: x: acc // {
         peers = [{
             inherit (x) publicKey endpoint presharedKey;
             persistentKeepalive = 25;
+            dynamicEndpointRefreshSeconds = x.refresh;
             allowedIPs = [
                 "0.0.0.0/0"
                 "::/0"

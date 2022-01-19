@@ -66,6 +66,11 @@ in {
                         default = false;
                         description = "enable extended next hop";
                     };
+                    refresh = mkOption {
+                        type = types.int;
+                        default = 0;
+                        description = "dynamicEndpointRefreshSeconds";
+                    };
                 };
             };
         in {
