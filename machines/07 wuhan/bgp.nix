@@ -1,5 +1,16 @@
 meta: { config, ... }: let
     machines = (import ./..).set;
+    peers = [
+        {
+            name = "real186";
+            endpoint = "cn-wuhan-01.edge.186526.xyz:11014";
+            listen = 23764;
+            publicKey = "WH89Ci8LqAgmFTAP+EquxSauDCPsxguwR7JmrUjlGTM=";
+            asn = "4242423764";
+            linkLocal = "fe80::3764";
+            extendedNextHop = true;
+        }
+    ];
 in {
     bgp = {
         enable = true;
