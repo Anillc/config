@@ -209,6 +209,15 @@ meta: { config, ... }: let
             linkLocal = "fe80::2434";
             extendedNextHop = true;
         }
+        {
+            name = "real186";
+            endpoint = "us-losangls-01.edge.186526.xyz:22526";
+            listen = 23764;
+            publicKey = "lqZ+0q3K+Ju2RQUOPNmAxleRUdtnsxvBu1TAtUqUAHM=";
+            asn = "4242423764";
+            linkLocal = "fe80::3764";
+            extendedNextHop = true;
+        }
     ];
 in {
     bgp = {
