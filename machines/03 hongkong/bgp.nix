@@ -46,6 +46,16 @@ meta: { ... }: let
             linkLocal = "fe80::2330:5";
             refresh = 60 * 60;
         }
+        {
+            name = "real186";
+            endpoint = "cn-hongkong-01.edge.186526.xyz:22526";
+            listen = 23764;
+            publicKey = "hqYjyfevUoKhyVrRkKL04bcREE4MKEHo/qVtW3iGGAQ=";
+            asn = "4242423764";
+            linkLocal = "fe80::3764";
+            extendedNextHop = true;
+            refresh = 60 * 60;
+        }
     ];
 in {
     bgp = {
