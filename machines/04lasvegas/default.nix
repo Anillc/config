@@ -14,8 +14,15 @@ rec {
             (import ./bgp.nix meta)
         ];
         sops.secrets.wg-lasvegas-private-key.sopsFile = ./secrets.yaml;
+        sops.secrets.traefik.sopsFile = ./secrets.yaml;
         networking.hostName = meta.name;
         dns.enable = true;
+
+        traefik = {
+            enable = true;
+            configFile = config.sops.secrets.traefik.path;
+        };
+
         networking.wireguard.interfaces.deploy = {
             privateKeyFile = meta.wg-private-key config;
             listenPort = 12001;
