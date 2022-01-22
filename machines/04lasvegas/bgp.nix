@@ -1,4 +1,4 @@
-meta: { config, ... }: let
+meta: { config, pkgs, ... }: let
     machines = (import ./..).set;
     # TODO:yang 
     peers = [
@@ -28,15 +28,6 @@ meta: { config, ... }: let
             publicKey = "v3MmT35p23jdEEFbwpa5Us6JfS1yjec3XiFBcFrErzA=";
             asn = "4242422032";
             linkLocal = "fe80::2032";
-        }
-        {
-            name = "baoshuo";
-            endpoint = "us1.dn42.as141776.net:42526";
-            listen = 20247;
-            v4 = "172.23.250.81";
-            publicKey = "tRRiOqYhTsygV08ltrWtMkfJxCps1+HUyN4tb1J7Yn4=";
-            asn = "4242420247";
-            linkLocal = "fe80::247";
         }
         {
             name = "ccp";
@@ -147,15 +138,6 @@ meta: { config, ... }: let
             linkLocal = "fe80::3088:193";
         }
         {
-            name = "tech9";
-            endpoint = "us-dal01.dn42.tech9.io:51061";
-            listen = 21588;
-            v4 = "172.20.16.140";
-            publicKey = "iEZ71NPZge6wHKb6q4o2cvCopZ7PBDqn/b3FO56+Hkc=";
-            asn = "4242421588";
-            linkLocal = "fe80::1588";
-        }
-        {
             name = "tnull";
             endpoint = "173.82.121.213:22526";
             listen = 22006;
@@ -173,14 +155,6 @@ meta: { config, ... }: let
             presharedKey = "UJm9WF6n2zqEfwX/AgIsVnMD1jqZklj0oA9VATdUyXk=";
             asn = "4242422980";
             linkLocal = "fe80::2980";
-        }
-        {
-            name = "gload";
-            endpoint = "us2.g-load.eu:22526";
-            v4 = "172.20.53.98";
-            publicKey = "6Cylr9h1xFduAO+5nyXhFI1XJ0+Sw9jCpCDvcqErF1s=";
-            asn = "4242423914";
-            linkLocal = "fe80::ade0";
         }
         {
             name = "moe233";
@@ -260,10 +234,29 @@ in {
                 direct;
                 neighbor fe80::604%emoecast as 141237;
             }
+            protocol bgp dkioubit from dn42_peers {
+                neighbor fe80::ade0%dkioubit as 4242423914;
+                ipv4 {
+                    table dn42_table_v4;
+                    igp table master4;
+                    next hop self;
+                    extended next hop;
+                    import filter {
+                        dn42_peers_filter();
+                        accept;
+                    };
+                    export all;
+                    import limit 1000 action block;
+                };
+            }
+            protocol bgp dtech9 from dn42_peers {
+                neighbor fe80::1588%dtech9 as 4242421588;
+                default bgp_local_pref 50;
+            }
         '';
         inherit meta;
     };
-    networking.wireguard.interfaces."emoecast" = {
+    networking.wireguard.interfaces.emoecast = {
         privateKeyFile = meta.wg-private-key config;
         listenPort = 10002;
         allowedIPsAsRoutes = false;
@@ -272,6 +265,30 @@ in {
             publicKey = "1dJpFLegKHKButkXqbv1KLLMTmS6KtFkWBz6GRo2uxE=";
             persistentKeepalive = 25;
             endpoint = "fmt1.dn42.cas7.moe:32526";
+            allowedIPs = [ "0.0.0.0/0" "::/0" ];
+        }];
+    };
+    networking.wireguard.interfaces.dkioubit = {
+        privateKeyFile = meta.wg-private-key config;
+        allowedIPsAsRoutes = false;
+        ips = [ "fe80::ade1/64" ];
+        peers = [{
+            publicKey = "6Cylr9h1xFduAO+5nyXhFI1XJ0+Sw9jCpCDvcqErF1s=";
+            persistentKeepalive = 25;
+            endpoint = "us2.g-load.eu:22526";
+            allowedIPs = [ "0.0.0.0/0" "::/0" ];
+        }];
+    };
+    networking.wireguard.interfaces.dtech9 = {
+        privateKeyFile = meta.wg-private-key config;
+        listenPort = 21588;
+        allowedIPsAsRoutes = false;
+        ips = [ "fe80::100/64" ];
+        postSetup = "${pkgs.iproute2}/bin/ip addr add ${config.bgp.bgpSettings.dn42.v4}/32 peer 172.20.16.140 dev dtech9";
+        peers = [{
+            publicKey = "iEZ71NPZge6wHKb6q4o2cvCopZ7PBDqn/b3FO56+Hkc=";
+            persistentKeepalive = 25;
+            endpoint = "us-dal01.dn42.tech9.io:51061";
             allowedIPs = [ "0.0.0.0/0" "::/0" ];
         }];
     };

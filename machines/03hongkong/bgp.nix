@@ -11,15 +11,6 @@ meta: { ... }: let
             linkLocal = "fe80::1888";
         }
         {
-            name = "burble";
-            endpoint = "103.73.66.189:22526";
-            listen = 22601;
-            v4 = "172.23.32.5";
-            publicKey = "0E6G2hADdSKbE4XUX3cUph0GHIiohr2dwN2jURdoeGY=";
-            asn = "4242422601";
-            linkLocal = "fe80::42:2601:23:1";
-        }
-        {
             name = "testnet";
             listen = 23308;
             v4 = "172.23.99.70";
