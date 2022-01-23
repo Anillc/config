@@ -9,16 +9,25 @@ in {
             dn42 = {
                 v4 = "172.22.167.103";
                 v6 = "fdc9:83c1:d0ce::7";
-                peers = [{
-                    name = "real186";
-                    endpoint = "cn-wuhan-01.edge.186526.xyz:11014";
-                    listen = 23764;
-                    publicKey = "WH89Ci8LqAgmFTAP+EquxSauDCPsxguwR7JmrUjlGTM=";
-                    asn = "4242423764";
-                    linkLocal = "fe80::3764";
-                    extendedNextHop = true;
-                    refresh = 60 * 60;
-                }];
+                peers = [
+                    {
+                        name = "real186";
+                        endpoint = "cn-wuhan-01.edge.186526.xyz:11014";
+                        publicKey = "WH89Ci8LqAgmFTAP+EquxSauDCPsxguwR7JmrUjlGTM=";
+                        asn = "4242423764";
+                        linkLocal = "fe80::3764";
+                        extendedNextHop = true;
+                        refresh = 60 * 60;
+                    }
+                    {
+                        name = "dgy";
+                        endpoint = "v4.bj.dn42.dgy.xyz:22526";
+                        publicKey = "68jYn1Z0cBaIxFswSWFbkRvQIioEhMcThvJQ86LxkX8=";
+                        asn = "4242420826";
+                        linkLocal = "fe80::a0e:fb02";
+                        extendedNextHop = true;
+                    }
+                ];
             };
         };
         extraBirdConfig = ''
