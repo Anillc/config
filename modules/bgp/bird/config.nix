@@ -30,7 +30,6 @@ pkgs: cfg: ''
     define INTERNET_SRC_v4 = 0.0.0.0;
     define INTERNET_SRC_v6 = 2602:feda:da0::${cfg.meta.id};
 
-    include "/var/bird/ptp.conf";
     ${import ./utils.nix}
     ${import ./networks/dn42.nix pkgs cfg}
     ${import ./networks/internet.nix cfg}
