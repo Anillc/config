@@ -47,4 +47,11 @@
             table internet_table_v6;
         };
     }
+
+    protocol static {
+        route 2a0d:2587:8100::/41 reject;
+        ipv6 {
+            table internet_table_v6;
+        };
+    }
 ''
