@@ -68,7 +68,7 @@ rec {
             };
             virtualHosts."tghook.anillc.cn" = {
                 locations."/" = {
-                    proxyPass = "http://172.22.167.110:8056";
+                    proxyPass = "http://172.22.167.106:8056";
                 };
             };
         };

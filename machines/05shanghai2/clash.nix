@@ -1,15 +1,12 @@
 { config, pkgs, ... }: let
     sync-clash = pkgs.writeScript "sync-clash" ''
         export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
-            wget
+            wget gnused
         ]}
         ${config.sops.secrets.sync-clash.path}
+        sed -i "0,/type: select/{s/type: select/type: url-test\n  url: http:\/\/api.telegram.org\n  interval: 300/}" /var/sync/clash/config.yaml
     '';
 in {
-    services.cron = {
-        enable = true;
-        systemCronJobs = [ "0 * * * * root ${sync-clash}" ];
-    };
     systemd.services.clash = {
         wantedBy = [ "multi-user.target" ];
         after = [ "network-online.target" ];
