@@ -17,14 +17,10 @@ rec {
         sops.secrets.wg-hongkong-private-key.sopsFile = ./secrets.yaml;
         # tgapi and deepl
         networking.firewall.extraCommands = ''
-            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 172.22.167.96/27 -j nixos-fw-accept
-            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 10.127.20.0/24 -j nixos-fw-accept
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8233 -s 172.22.167.96/27 -j nixos-fw-accept
             ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8233 -s 10.127.20.0/24 -j nixos-fw-accept
         '';
         networking.firewall.extraStopCommands = ''
-            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 8056 -s 172.22.167.96/27 -j nixos-fw-accept || true
-            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 8056 -s 10.127.20.0/24 -j nixos-fw-accept   || true
             ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 8233 -s 172.22.167.96/27 -j nixos-fw-accept || true
             ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 8233 -s 10.127.20.0/24 -j nixos-fw-accept   || true
         '';
@@ -73,15 +69,6 @@ rec {
             virtualHosts."tghook.anillc.cn" = {
                 locations."/" = {
                     proxyPass = "http://172.22.167.110:8056";
-                };
-            };
-            virtualHosts."tgapi.an.dn42" = {
-                listen = [ {
-                    addr = "0.0.0.0";
-                    port = 8056;
-                } ];
-                locations."/" = {
-                    proxyPass = "https://api.telegram.org";
                 };
             };
         };
