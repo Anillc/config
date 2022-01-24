@@ -12,11 +12,16 @@ rec {
         imports = [
             ./hardware.nix
             ./nanahira.nix
+            ./clash.nix
             (import ./bgp.nix meta)
         ];
         networking.hostName = meta.name;
         sops.secrets.wg-shanghai2-private-key.sopsFile = ./secrets.yaml;
         sops.secrets.wg-nanahira-private-key.sopsFile  = ./secrets.yaml;
+        sops.secrets.sync-clash = {
+            sopsFile  = ./secrets.yaml;
+            mode = "0700";
+        };
         sops.secrets = {
             cllina-device.sopsFile = ./secrets.yaml;
             bot-env = {
