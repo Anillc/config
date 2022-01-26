@@ -88,14 +88,16 @@ cfg: ''
         graceful restart on;
         local as INTERNET_ASN;
         ipv4 {
-            table internet_table_v4;
-            igp table master4;
-            next hop self;
-            import filter {
-                internet_transits_filter_v4();
-                accept;
-            };
-            export where source = RTS_STATIC;
+            #table internet_table_v4;
+            #igp table master4;
+            #next hop self;
+            #import filter {
+            #    internet_transits_filter_v4();
+            #    accept;
+            #};
+            #export where source = RTS_STATIC;
+            import none;
+            export none;
         };
         ipv6{
             table internet_table_v6;
@@ -116,7 +118,7 @@ cfg: ''
             graceful restart on;
             local as INTERNET_ASN;
             ${if cfg.bgpTransit.password == null then "" else ''
-                password "${cfg.bgpTransit.password}";
+                password ${cfg.bgpTransit.password};
             ''}
         }
     ''}

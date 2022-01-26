@@ -7,6 +7,12 @@
     '';
 in {
     config = mkIf cfg.enable {
+        sops.secrets.bird-conf = {
+            sopsFile = ./secrets.yaml;
+            owner = "bird2";
+            group = "bird2";
+            mode = "0600";
+        };
         services.cron.systemCronJobs = [
             "*/15 * * * * root ${roa} && ${pkgs.bird2}/bin/birdc c"
         ];
@@ -15,7 +21,7 @@ in {
             enable = true;
             checkConfig = false;
             config = ''
-                ${import ./config.nix pkgs cfg}
+                ${import ./config.nix pkgs config}
                 ${cfg.extraBirdConfig}
             '';
         };

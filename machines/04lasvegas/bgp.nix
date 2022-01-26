@@ -208,7 +208,7 @@ in {
             enable = true;
             asn = "53667";
             address = "2605:6400:ffff::2";
-            password = "yfAnvncg";
+            password = "BUYVM_PASSWORD";
         };
         extraBirdConfig = ''
             protocol static {
