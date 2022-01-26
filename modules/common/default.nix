@@ -22,6 +22,7 @@
         secrets.endpoints = {};
         secrets.sync-database.mode = "0700";
     };
+    documentation.enable = false;
     security.acme.defaults.email = "acme@anillc.cn";
     security.acme.acceptTerms = true;
     services.cron = let
