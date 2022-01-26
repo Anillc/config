@@ -15,5 +15,6 @@ rec {
         ];
         sops.secrets.wg-jp-private-key.sopsFile = ./secrets.yaml;
         networking.hostName = meta.name;
+        networking.nameservers = [ "8.8.8.8" "8.8.4.4" ];
     };
 }
