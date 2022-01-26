@@ -9,7 +9,7 @@
         NS = [ "ns1.an.dn42." ];
         subdomains = {
             "97".PTR  = [ "las.an.dn42." ];
-            "99".PTR  = [ "bj.an.dn42."  ];
+            "99".PTR  = [ "jp.an.dn42."  ];
             "100".PTR = [ "hk.an.dn42."  ];
             "102".PTR = [ "de.an.dn42."  ];
             "103".PTR = [ "wh.an.dn42."  ];
