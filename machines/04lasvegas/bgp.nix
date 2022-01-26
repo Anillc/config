@@ -222,6 +222,9 @@ in {
                 route 2605:6400:ffff::2/128 via "ens3" {
                     krt_prefsrc = 2605:6400:20:677::;
                 };
+                route 2605:6400:20:25d0:a5b7:c93a:873d:d27c/128 via "ens3" {
+                    krt_prefsrc = 2605:6400:20:677::;
+                };
                 route 2605:6400:ffff::/64 via fe80::4e96:1400:c8a8:5ff0%ens3;            # Buyvm Router
                 route 2604:4d40:2000::/64 via fe80::4e96:1400:c8a8:5ff0%ens3;            # Buyvm Gateway
                 route 2605:6400:20::/48 via fe80::4e96:1400:c8a8:5ff0%ens3;              # Buyvm Customers
@@ -252,6 +255,9 @@ in {
             protocol bgp dtech9 from dn42_peers {
                 neighbor fe80::1588%dtech9 as 4242421588;
                 default bgp_local_pref 50;
+            }
+            protocol bgp enyaa from internet_peers {
+                neighbor 2605:6400:20:25d0:a5b7:c93a:873d:d27c as 142553;
             }
         '';
         inherit meta;
