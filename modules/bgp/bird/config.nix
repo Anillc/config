@@ -8,7 +8,11 @@ pkgs: config: ''
         scan time 20;
         learn;
         ipv4 {
-            import all;
+            import filter {
+                # igp metric
+                babel_metric = krt_metric;
+                accept;
+            };
             export all;
         };
     }
@@ -16,7 +20,11 @@ pkgs: config: ''
         scan time 20;
         learn;
         ipv6 {
-            import all;
+            import filter {
+                # igp metric
+                babel_metric = krt_metric;
+                accept;
+            };
             export all;
         };
     }
