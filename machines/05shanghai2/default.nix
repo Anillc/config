@@ -22,37 +22,21 @@ rec {
             sopsFile  = ./secrets.yaml;
             mode = "0700";
         };
-        sops.secrets = {
-            cllina-device.sopsFile = ./secrets.yaml;
-            bot-env = {
-                format = "binary";
-                sopsFile = ./bot.env;
-            };
-        };
+        sops.secrets.cllina-device.sopsFile = ./secrets.yaml;
         nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         services.go-cqhttp = {
             enable = true;
             device = config.sops.secrets.cllina-device.path;
             config.message.remove-reply-at = true;
-        };
-        services.mysql = {
-            enable = true;
-            package = pkgs.mariadb;
-            initialDatabases = [{
-                name = "bot";
+            config.servers = [{
+                ws = {
+                    host = "0.0.0.0";
+                    port = 6700;
+                };
             }];
         };
         virtualisation.oci-containers = {
             backend = "podman";
-            containers.bot = {
-                image = "docker.io/anillc/cllina:7092cdb";
-                volumes = [
-                    "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
-                    "${config.sops.secrets.bot-env.path}:/root/cllina/.env"
-                    "/var/koishi:/root/cllina/.koishi"
-                ];
-                extraOptions = [ "--network=host" ];
-            };
             containers.xxqg = {
                 image = "docker.mirror.aliyuncs.com/techxuexi/techxuexi-amd64";
                 environment = {
@@ -76,14 +60,14 @@ rec {
             };
         };
 
-        # bot telegram
+        # gocq
         networking.firewall.extraCommands = ''
-            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 172.22.167.96/27 -j nixos-fw-accept
-            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8056 -s 10.127.20.0/24 -j nixos-fw-accept
+            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 6700 -s 172.22.167.96/27 -j nixos-fw-accept
+            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 6700 -s 10.127.20.0/24 -j nixos-fw-accept
         '';
         networking.firewall.extraStopCommands = ''
-            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 8056 -s 172.22.167.96/27 -j nixos-fw-accept || true
-            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 8056 -s 10.127.20.0/24 -j nixos-fw-accept   || true
+            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 6700 -s 172.22.167.96/27 -j nixos-fw-accept || true
+            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 6700 -s 10.127.20.0/24 -j nixos-fw-accept   || true
         '';
 
         # Xiao Jin
