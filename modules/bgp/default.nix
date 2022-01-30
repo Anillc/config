@@ -147,13 +147,15 @@ in {
                 ip route add 2602:feda:da0::${cfg.meta.id}/128 dev dummy2526 proto 114 table 114
                 ip route add ${cfg.bgpSettings.dn42.v4}/32 dev dummy2526 proto 114 table 114
                 ip route add ${cfg.bgpSettings.dn42.v6}/128 dev dummy2526 proto 114 table 114
-                ip rule add table 114
+                ip    rule add table 114
+                ip -6 rule add table 114
             '';
             stop = ''
                 export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
                     iproute2
                 ]}
-                ip rule del table 114
+                ip    rule del table 114
+                ip -6 rule del table 114
                 ip route flush table 114
                 ip link del dummy2526
             '';
