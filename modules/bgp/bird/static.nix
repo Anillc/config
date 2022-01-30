@@ -12,6 +12,13 @@
             table dn42_table_v4;
         };
     }
+    
+    protocol static {
+        route 10.127.3.0/24 reject;
+        ipv4 {
+            table dn42_table_v4;
+        };
+    }
 
     protocol static {
         route fd10:127:cc::/48 reject;
