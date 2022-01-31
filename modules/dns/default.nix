@@ -5,7 +5,8 @@
         "an.neo"  = import ./zones/an.neo.nix  pkgs;
         "96/27.167.22.172.in-addr.arpa" = import ./zones/167.22.172.in-addr.arpa.nix pkgs;
         "e.c.0.d.1.c.3.8.9.c.d.f.ip6.arpa" = import ./zones/e.c.0.d.1.c.3.8.9.c.d.f.ip6.arpa.nix pkgs;
-        "a.d.0.a.d.e.f.2.0.6.2.ip6.arpa" = import ./zones/a.d.0.a.d.e.f.2.0.6.2.ip6.arpa.nix pkgs;
+        "0.a.d.0.a.d.e.f.2.0.6.2.ip6.arpa" = import ./zones/0.a.d.0.a.d.e.f.2.0.6.2.ip6.arpa.nix pkgs;
+        "f.a.d.0.a.d.e.f.2.0.6.2.ip6.arpa" = import ./zones/f.a.d.0.a.d.e.f.2.0.6.2.ip6.arpa.nix pkgs;
     };
 in {
     options.dns = {
