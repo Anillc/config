@@ -1,5 +1,7 @@
 { pkgs, config, ... }: {
     time.timeZone = "Asia/Shanghai";
+    nix.autoOptimiseStore = true;
+    nix.optimise.automatic = true;
     users = {
         mutableUsers = false;
         users.root.openssh.authorizedKeys.keys = [
