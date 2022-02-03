@@ -30,6 +30,10 @@ rec {
                 };
             }];
         };
+        services.cron = {
+            enable = true;
+            systemCronJobs = [ "0 0 * * * root ${pkgs.systemd}/bin/systemctl restart podman-xxqg" ];
+        };
         virtualisation.oci-containers = {
             backend = "podman";
             containers.xxqg = {
