@@ -1,4 +1,5 @@
 { pkgs, config, ... }: {
+    time.timeZone = "Asia/Shanghai";
     users = {
         mutableUsers = false;
         users.root.openssh.authorizedKeys.keys = [
