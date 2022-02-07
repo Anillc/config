@@ -88,11 +88,11 @@ in {
                     igp table master6;
                     next hop self;
                     import filter {
-                    internet_transits_filter_v6();
-                    if is_chinese_routes() then {
-                        bgp_local_pref = 200;
-                    }
-                    accept;
+                        internet_transits_filter_v6();
+                        if is_chinese_routes() then {
+                            bgp_local_pref = 200;
+                        }
+                        accept;
                     };
                     export where source = RTS_STATIC;
                 };

@@ -21,11 +21,6 @@ in {
                 ];
             };
         };
-        bgpTransit = {
-            enable = true;
-            asn = "135395";
-            address = "2a0f:9400:7a00::1";
-        };
         extraBirdConfig = ''
             protocol static {
                 ipv6;
@@ -71,6 +66,22 @@ in {
             }
             protocol bgp dKAI from dn42_peers {
                 neighbor fe80::2f0:80ff:fe11:f048%ens192 as 4242421488;
+            }
+            protocol bgp TRANSIT from internet_transits {
+                neighbor 2a0f:9400:7a00::1 as 135395;
+                ipv6 {
+                    table internet_table_v6;
+                    igp table master6;
+                    next hop self;
+                    import filter {
+                        internet_transits_filter_v6();
+                        if bgp_path ~ [ 24940 ] then {
+                            bgp_local_pref = 200;
+                        }
+                        accept;
+                    };
+                    export where source = RTS_STATIC;
+                };
             }
         '';
         inherit meta;
