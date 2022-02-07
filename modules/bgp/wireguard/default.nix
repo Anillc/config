@@ -11,7 +11,7 @@ in {
             enable = true;
             interfaces = intranet // internet // dn42;
         };
-        networking.firewall.allowedUDPPorts = builtins.foldl' (acc: x: acc ++ (if x.listenPort == null then [] else [
+        firewall.publicUDPPorts = builtins.foldl' (acc: x: acc ++ (if x.listenPort == null then [] else [
             x.listenPort
         ])) [] (builtins.attrValues config.networking.wireguard.interfaces);
         systemd.services = builtins.foldl' (acc: x: acc // (if x.meta.inNat then {} else {

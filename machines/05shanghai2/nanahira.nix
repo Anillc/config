@@ -1,9 +1,6 @@
 { config, pkgs, ... }: {
-    networking.nat = {
-        enable = true;
-        internalInterfaces = [ "ve-nanahira" ];
-        externalInterface  = "ens18";
-    };
+    firewall.extraNatRules = "meta iif ve-nanahira meta oif ens18 masquerade";
+    systemd.services.nftables.requires = [ "container@nanahira.service" ];
     systemd.services.nanahira-network = {
         wantedBy = [ "multi-user.target" ];
         partOf = [ "dummy.service" ];

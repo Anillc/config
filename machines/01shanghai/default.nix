@@ -35,7 +35,7 @@ rec {
             backend = "podman";
             
         };
-        networking.firewall.allowedTCPPorts = [ 80 25565 ];
+        firewall.publicTCPPorts = [ 80 25565 ];
         services.nginx = {
             enable = true;
             virtualHosts = {
@@ -80,19 +80,6 @@ rec {
             '';
         };
         # influxdb and go-cqhttp
-        networking.firewall.extraCommands = ''
-            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8086 -s 172.22.167.96/27 -j nixos-fw-accept
-            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 8086 -s 10.127.20.0/24 -j nixos-fw-accept
-
-            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 6700 -s 172.22.167.96/27 -j nixos-fw-accept
-            ${pkgs.iptables}/bin/iptables -A nixos-fw -p tcp --dport 6700 -s 10.127.20.0/24 -j nixos-fw-accept
-        '';
-        networking.firewall.extraStopCommands = ''
-            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 8086 -s 172.22.167.96/27 -j nixos-fw-accept || true
-            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 8086 -s 10.127.20.0/24 -j nixos-fw-accept   || true
-
-            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 6700 -s 172.22.167.96/27 -j nixos-fw-accept || true
-            ${pkgs.iptables}/bin/iptables -D nixos-fw -p tcp --dport 6700 -s 10.127.20.0/24 -j nixos-fw-accept   || true
-        '';
+        firewall.internalTCPPorts = [ 8086 6700 ];
     };
 }

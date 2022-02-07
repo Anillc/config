@@ -2,6 +2,7 @@
     time.timeZone = "Asia/Shanghai";
     nix.autoOptimiseStore = true;
     nix.optimise.automatic = true;
+    firewall.publicTCPPorts = [ 22 ];
     users = {
         mutableUsers = false;
         users.root.openssh.authorizedKeys.keys = [

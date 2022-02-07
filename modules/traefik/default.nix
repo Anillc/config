@@ -9,7 +9,7 @@ in {
         };
     };
     config = lib.mkIf cfg.enable {
-        networking.firewall.allowedTCPPorts = [ 80 443 ];
+        firewall.publicTCPPorts = [ 80 443 ];
         system.activationScripts = pkgs.lib.mkAfter {
             traefikConfig = ''
                 rm -rf /var/traefik

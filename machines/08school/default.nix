@@ -39,11 +39,6 @@ rec {
             '';
         };
         # dhcp
-        networking.firewall.extraCommands = ''
-            ${pkgs.iptables}/bin/iptables -A nixos-fw -s 0.0.0.0/32 -j nixos-fw-accept
-        '';
-        networking.firewall.extraStopCommands = ''
-            ${pkgs.iptables}/bin/iptables -D nixos-fw -s 0.0.0.0/32 -j nixos-fw-accept
-        '';
+        firewall.extraInputRules = "ip saddr 0.0.0.0/32 accept";
     };
 }

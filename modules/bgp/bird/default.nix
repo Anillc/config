@@ -16,7 +16,7 @@ in {
         services.cron.systemCronJobs = [
             "*/15 * * * * root ${roa} && ${pkgs.bird2}/bin/birdc c"
         ];
-        networking.firewall.allowedTCPPorts = [ 179 ];
+        firewall.publicTCPPorts = [ 179 ];
         services.bird2 = {
             enable = true;
             checkConfig = false;

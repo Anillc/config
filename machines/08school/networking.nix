@@ -15,12 +15,7 @@ in {
         after = [ "network-online.target" ];
         wantedBy = [ "multi-user.target" ];
     };
-    networking.nat = {
-        enable = true;
-        internalInterfaces = [ "br0" ];
-        externalInterface = "enp1s0";
-        internalIPs = [ "10.127.20.128/25" ];
-    };
+    firewall.extraNatRules = "ip saddr 10.127.20.128/25 meta iif br0 meta oif enp1s0 masquerade";
     networking.bridges = {
         "br0".interfaces = [ "enp2s0" "wlp0s29f7u4" ];
     };
@@ -40,8 +35,8 @@ in {
     #     "net.ipv6.conf.all.forwarding" = 1;
     # };
     networking.resolvconf.useLocalResolver = lib.mkForce false;
-    networking.firewall.allowedTCPPorts = [ 53 ];
-    networking.firewall.allowedUDPPorts = [ 53 ];
+    firewall.publicTCPPorts = [ 53 ];
+    firewall.publicUDPPorts = [ 53 ];
     services.dnsmasq = {
         enable = true;
         servers = [ "223.5.5.5" "172.20.0.53" ];

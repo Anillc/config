@@ -64,19 +64,13 @@ rec {
             '';
         };
         # tayga
-        networking.firewall.extraCommands = ''
-            ${pkgs.iptables}/bin/iptables -A FORWARD -s 10.127.3.0/24 -d 172.22.167.96/27 -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -A FORWARD -s 10.127.3.0/24 -d 10.0.2.0/24 -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -A FORWARD -s 10.127.3.0/24 -d 172.23.0.80/32 -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -A FORWARD -s 10.127.3.0/24 -j DROP
-            ${pkgs.iptables}/bin/iptables -A FORWARD -j ACCEPT
-        '';
-        networking.firewall.extraStopCommands = ''
-            ${pkgs.iptables}/bin/iptables -D FORWARD -s 10.127.3.0/24 -d 172.22.167.96/27 -j ACCEPT || true
-            ${pkgs.iptables}/bin/iptables -D FORWARD -s 10.127.3.0/24 -d 10.0.2.0/24 -j ACCEPT      || true
-            ${pkgs.iptables}/bin/iptables -D FORWARD -s 10.127.3.0/24 -d 172.23.0.80/32 -j ACCEPT   || true
-            ${pkgs.iptables}/bin/iptables -D FORWARD -s 10.127.3.0/24 -j DROP                       || true
-            ${pkgs.iptables}/bin/iptables -D FORWARD -j ACCEPT                                      || true
+        firewall.extraForwardRules = ''
+            ip saddr 10.127.3.0/24 ip daddr {
+                172.22.167.96/27,
+                10.0.2.0/24,
+                172.23.0.80/32,
+            } accept
+            ip saddr 10.127.3.0/24 drop
         '';
     };
 }
