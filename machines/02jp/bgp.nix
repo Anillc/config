@@ -3,7 +3,7 @@ meta: { ... }: let
 in {
     bgp = {
         enable = true;
-        connect = [ machines.hongkong ];
+        connect = [ machines.hongkong machines.lasvegas machines.de ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.99";

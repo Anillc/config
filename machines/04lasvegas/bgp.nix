@@ -196,7 +196,7 @@ meta: { config, pkgs, ... }: let
 in {
     bgp = {
         enable = true;
-        connect = [ machines.hongkong machines.de machines.shanghai ];
+        connect = [ machines.hongkong machines.de machines.shanghai machines.jp ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.97";

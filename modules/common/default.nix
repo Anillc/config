@@ -3,6 +3,8 @@
     nix.autoOptimiseStore = true;
     nix.optimise.automatic = true;
     firewall.publicTCPPorts = [ 22 ];
+    firewall.internalTCPPorts = [ 5201 ];
+    services.iperf3.enable = true;
     users = {
         mutableUsers = false;
         users.root.openssh.authorizedKeys.keys = [

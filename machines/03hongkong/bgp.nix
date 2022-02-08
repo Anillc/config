@@ -51,7 +51,7 @@ meta: { ... }: let
 in {
     bgp = {
         enable = true;
-        connect = [ machines.shanghai machines.lasvegas machines.de machines.jp ];
+        connect = [ machines.shanghai machines.lasvegas machines.de machines.jp machines.shanghai2 ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.100";
