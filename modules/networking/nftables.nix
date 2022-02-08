@@ -75,6 +75,7 @@ in {
                     chain input {
                         type filter hook input priority 0; policy drop;
                         ct state { established, related } accept
+                        meta iif lo accept
                         ip protocol icmp accept
                         ip6 nexthdr icmpv6 accept
                         ${internalTCP}
