@@ -27,6 +27,15 @@ in {
                         linkLocal = "fe80::a0e:fb02";
                         extendedNextHop = true;
                     }
+                    {
+                        name = "hjm";
+                        endpoint = "cn-zhongshan-01.dn42.yunyingstudio.cn:22526";
+                        publicKey = "b0SqBBmXh/A7Ksag5ZT/rtqGL3HchRXcPuHwdTfBrC0=";
+                        asn = "4242423663";
+                        v4 = "172.23.114.2";
+                        linkLocal = "fe80::1145";
+                        refresh = 60 * 60;
+                    }
                 ];
             };
         };
