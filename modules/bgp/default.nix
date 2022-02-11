@@ -1,10 +1,9 @@
-{ pkgs, config, lib, ... }: with lib; let
+{ config, pkgs, lib, ... }: with lib; let
     cfg = config.bgp;
 in {
     imports = [
         ./bird
-        ./wireguard
-        ./babeld.nix
+        ./wireguard.nix
     ];
     options.bgp = {
         enable = mkEnableOption "enable bgp";
@@ -48,10 +47,10 @@ in {
                         type = types.str;
                         description = "wireguard public key";
                     };
-                    presharedKey = mkOption {
-                        type = types.nullOr types.str;
+                    presharedKeyFile = mkOption {
+                        type = types.nullOr types.path;
                         default = null;
-                        description = "wireguard preshared key";
+                        description = "wireguard preshared key file";
                     };
                     asn = mkOption {
                         type = types.str;
@@ -115,51 +114,8 @@ in {
         };
     };
     config = mkIf cfg.enable {
-        boot.kernel.sysctl = lib.mkForce {
-            "net.ipv4.ip_forward" = 1;
-            "net.ipv6.conf.all.forwarding" = 1;
-            "net.ipv4.conf.all.rp_filter" = 0;
-        };
-        # rpfilter and bird-lg-go
+        # bird-lg-go
         firewall.internalTCPPorts = [ 8000 ];
-        services.cron.enable = true;
         services.bird-lg-go.enable = true;
-        systemd.services.dummy = let
-            start = ''
-                export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
-                    iproute2
-                ]}
-                ip link add dummy2526 type dummy
-                ip link set dummy2526 up
-                ip addr add 2602:feda:da0::${cfg.meta.id}/128 dev dummy2526
-                ip addr add ${cfg.bgpSettings.dn42.v4}/32 dev dummy2526
-                ip addr add ${cfg.bgpSettings.dn42.v6}/128 dev dummy2526
-                
-                ip route add 2602:feda:da0::${cfg.meta.id}/128 dev dummy2526 proto 114 table 114
-                ip route add ${cfg.bgpSettings.dn42.v4}/32 dev dummy2526 proto 114 table 114
-                ip route add ${cfg.bgpSettings.dn42.v6}/128 dev dummy2526 proto 114 table 114
-                ip    rule add table 114
-                ip -6 rule add table 114
-            '';
-            stop = ''
-                export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
-                    iproute2
-                ]}
-                ip    rule del table 114
-                ip -6 rule del table 114
-                ip route flush table 114
-                ip link del dummy2526
-            '';
-        in {
-            description = "dummy interface";
-            wantedBy = [ "multi-user.target" ];
-            after = [ "network.target" ];
-            script = start;
-            preStop = stop;
-            serviceConfig = {
-                Type = "oneshot";
-                RemainAfterExit = "yes";
-            };
-        };
     };
 }
