@@ -14,7 +14,7 @@ rec {
             (import ./bgp.nix meta)
         ];
         nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
-        sops.secrets.wg-wuhan-private-key.sopsFile = ./secrets.yaml;
         networking.hostName = meta.name;
+        sops.defaultSopsFile = ./secrets.yaml;
     };
 }

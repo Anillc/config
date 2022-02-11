@@ -20,13 +20,19 @@
     };
     services.openssh.enable = true;
     environment.systemPackages = with pkgs; [
-        vim traceroute tcpdump dig
+        vim traceroute tcpdump dig wireguard-tools
     ];
     sops = {
         age.keyFile = "/var/lib/sops.key";
-        defaultSopsFile = ./secrets.yaml;
-        secrets.endpoints = {};
-        secrets.sync-database.mode = "0700";
+        secrets.endpoints.sopsFile = ./secrets.yaml;
+        secrets.sync-database = {
+            mode = "0700";
+            sopsFile = ./secrets.yaml;
+        };
+        secrets.wg-private-key = {
+            owner = "systemd-network";
+            group = "systemd-network";
+        };
     };
     documentation.enable = false;
     security.acme.defaults.email = "acme@anillc.cn";

@@ -2,7 +2,6 @@
     cfg = config.bgp;
 in {
     config = lib.mkIf cfg.enable {
-        # TODO: babeld
         firewall.extraInputRules = "ip6 daddr ff02::1:6/128 accept";
         services.babeld = {
             enable = true;
