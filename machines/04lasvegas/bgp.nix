@@ -152,7 +152,7 @@ meta: { config, pkgs, ... }: let
             listen = 22980;
             v4 = "172.23.105.3";
             publicKey = "HgLHUbU6RRme+Vib6pFgL82mgX0fkMp8zcsrZ+EdMBQ=";
-            presharedKey = "UJm9WF6n2zqEfwX/AgIsVnMD1jqZklj0oA9VATdUyXk=";
+            presharedKeyFile = config.sops.secrets.wg-yuuta-preshared-key.path;
             asn = "4242422980";
             linkLocal = "fe80::2980";
         }
@@ -262,40 +262,24 @@ in {
         '';
         inherit meta;
     };
-    networking.wireguard.interfaces.emoecast = {
-        privateKeyFile = meta.wg-private-key config;
-        listenPort = 10002;
-        allowedIPsAsRoutes = false;
-        ips = [ "fe80::2526/64" ];
-        peers = [{
-            publicKey = "1dJpFLegKHKButkXqbv1KLLMTmS6KtFkWBz6GRo2uxE=";
-            persistentKeepalive = 25;
-            endpoint = "fmt1.dn42.cas7.moe:32526";
-            allowedIPs = [ "0.0.0.0/0" "::/0" ];
-        }];
+    wg.emoecast = {
+        listen = 10002;
+        ip = [{ addr = "fe80::2526/64"; }];
+        publicKey = "1dJpFLegKHKButkXqbv1KLLMTmS6KtFkWBz6GRo2uxE=";
+        endpoint = "fmt1.dn42.cas7.moe:32526";
     };
-    networking.wireguard.interfaces.dkioubit = {
-        privateKeyFile = meta.wg-private-key config;
-        allowedIPsAsRoutes = false;
-        ips = [ "fe80::ade1/64" ];
-        peers = [{
-            publicKey = "6Cylr9h1xFduAO+5nyXhFI1XJ0+Sw9jCpCDvcqErF1s=";
-            persistentKeepalive = 25;
-            endpoint = "us2.g-load.eu:22526";
-            allowedIPs = [ "0.0.0.0/0" "::/0" ];
-        }];
+    wg.dkioubit = {
+        ip = [{ addr = "fe80::ade1/64"; }];
+        publicKey = "6Cylr9h1xFduAO+5nyXhFI1XJ0+Sw9jCpCDvcqErF1s=";
+        endpoint = "us2.g-load.eu:22526";
     };
-    networking.wireguard.interfaces.dtech9 = {
-        privateKeyFile = meta.wg-private-key config;
-        listenPort = 21588;
-        allowedIPsAsRoutes = false;
-        ips = [ "fe80::100/64" ];
-        postSetup = "${pkgs.iproute2}/bin/ip addr add ${config.bgp.bgpSettings.dn42.v4}/32 peer 172.20.16.140 dev dtech9";
-        peers = [{
-            publicKey = "iEZ71NPZge6wHKb6q4o2cvCopZ7PBDqn/b3FO56+Hkc=";
-            persistentKeepalive = 25;
-            endpoint = "us-dal01.dn42.tech9.io:51061";
-            allowedIPs = [ "0.0.0.0/0" "::/0" ];
-        }];
+    wg.dtech9 = {
+        listen = 21588;
+        ip = [
+            { addr = "fe80::100/64"; }
+            { addr = "${config.bgp.bgpSettings.dn42.v4}/32"; peer = "172.20.16.140/32"; }
+        ];
+        publicKey = "iEZ71NPZge6wHKb6q4o2cvCopZ7PBDqn/b3FO56+Hkc=";
+        endpoint = "us-dal01.dn42.tech9.io:51061";
     };
 } 

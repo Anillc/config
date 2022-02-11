@@ -5,7 +5,6 @@ rec {
         address = "hk.an.dn42";
         inNat = false;
         system = "x86_64-linux";
-        wg-private-key = config: config.sops.secrets.wg-hongkong-private-key.path;
         wg-public-key = "FDW5S+3nNS883Q5mKVwym0dwEYKF+nuQ1rPZ+sWVqgc=";
     };
     configuration = { config, pkgs, ... }: {
@@ -14,7 +13,7 @@ rec {
             (import ./bgp.nix meta)
         ];
         networking.hostName = meta.name;
-        sops.secrets.wg-hongkong-private-key.sopsFile = ./secrets.yaml;
+        sops.defaultSopsFile = ./secrets.yaml;
         # tgapi and deepl
         firewall.internalTCPPorts = [ 8233 ];
         services.webdav = {

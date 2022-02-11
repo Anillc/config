@@ -9,6 +9,7 @@ in {
         ./babeld.nix
     ];
     systemd.network.enable = true;
+    services.resolved.enable = false;
     boot.kernel.sysctl = mkForce {
         "net.ipv4.ip_forward" = 1;
         "net.ipv6.conf.all.forwarding" = 1;
@@ -37,7 +38,10 @@ in {
     systemd.services.table = {
         wantedBy = [ "multi-user.target" ];
         after = [ "network-online.target" ];
+        bindsTo = [ "network-online.target" ];
         script = ''
+            ${pkgs.iproute2}/bin/ip -4 rule del table 114 || true
+            ${pkgs.iproute2}/bin/ip -6 rule del table 114 || true
             ${pkgs.iproute2}/bin/ip -4 rule add table 114
             ${pkgs.iproute2}/bin/ip -6 rule add table 114
         '';

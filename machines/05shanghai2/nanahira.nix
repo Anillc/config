@@ -1,18 +1,25 @@
 { config, pkgs, ... }: {
     firewall.extraNatRules = "meta iif ve-nanahira meta oif ens18 masquerade";
     systemd.services.nftables.requires = [ "container@nanahira.service" ];
-    systemd.services.nanahira-network = {
-        wantedBy = [ "multi-user.target" ];
-        partOf = [ "dummy.service" ];
-        requires = [ "container@nanahira.service" "network-online.target" ];
-        after = [ "container@nanahira.service" "network-online.target" ];
-        script = ''
-            ${pkgs.iproute2}/bin/ip route del 10.198.0.0/16    table 114 || true
-            ${pkgs.iproute2}/bin/ip route del 192.168.123.0/24 table 114 || true
-            ${pkgs.iproute2}/bin/ip route add 10.198.0.0/16    src 172.22.167.106 via 192.168.114.2 proto 114 table 114
-            ${pkgs.iproute2}/bin/ip route add 192.168.123.0/24 src 172.22.167.106 via 192.168.114.2 proto 114 table 114
-        '';
-    };
+    # systemd.network.networks.nanahira-network = {
+    #     matchConfig.Name = "ve-nanahira";
+    #     routes = [
+    #         { routeConfig = { Gateway = "192.168.114.2"; Source = "172.22.167.106/32"; Destination = "10.198.0.0/16"; Table = 114; Protocol = 114; }; }
+    #         { routeConfig = { Gateway = "192.168.114.2"; Source = "172.22.167.106/32"; Destination = "192.168.123.0/24"; Table = 114; Protocol = 114; }; }
+    #     ];
+    # };
+    # systemd.services.nanahira-network = {
+    #     wantedBy = [ "multi-user.target" ];
+    #     partOf = [ "dummy.service" ];
+    #     requires = [ "container@nanahira.service" "network-online.target" ];
+    #     after = [ "container@nanahira.service" "network-online.target" ];
+    #     script = ''
+    #         ${pkgs.iproute2}/bin/ip route del 10.198.0.0/16    table 114 || true
+    #         ${pkgs.iproute2}/bin/ip route del 192.168.123.0/24 table 114 || true
+    #         ${pkgs.iproute2}/bin/ip route add 10.198.0.0/16    src 172.22.167.106 via 192.168.114.2 proto 114 table 114
+    #         ${pkgs.iproute2}/bin/ip route add 192.168.123.0/24 src 172.22.167.106 via 192.168.114.2 proto 114 table 114
+    #     '';
+    # };
     containers.nanahira = {
         autoStart = true;
         privateNetwork = true;

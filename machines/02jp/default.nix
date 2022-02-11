@@ -5,7 +5,6 @@ rec {
         address = "jp.an.dn42";
         inNat = false;
         system = "x86_64-linux";
-        wg-private-key = config: config.sops.secrets.wg-jp-private-key.path;
         wg-public-key = "HcvaoEtLGxv1tETLCjmcKXkr1CNwiF/ZsmIi7lYAvQ4=";
     };
     configuration = { config, pkgs, ... }: {
@@ -13,10 +12,12 @@ rec {
             ./hardware.nix
             (import ./bgp.nix meta)
         ];
-        sops.secrets.wg-jp-private-key.sopsFile = ./secrets.yaml;
-        sops.secrets.bot-env = {
-            format = "binary";
-            sopsFile = ./bot.env;
+        sops = {
+            defaultSopsFile = ./secrets.yaml;
+            secrets.bot-env = {
+                format = "binary";
+                sopsFile = ./bot.env;
+            };
         };
         networking.hostName = meta.name;
         networking.nameservers = [ "8.8.8.8" "8.8.4.4" ];

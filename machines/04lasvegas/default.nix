@@ -5,7 +5,6 @@ rec {
         address = "las.an.dn42";
         inNat = false;
         system = "x86_64-linux";
-        wg-private-key = config: config.sops.secrets.wg-lasvegas-private-key.path;
         wg-public-key = "NQfs6evQLemuJcdcvpO4ds1wXwUHTlzlQXWTJv+WCXY=";
     };
     configuration = { config, pkgs, ... }: {
@@ -13,8 +12,14 @@ rec {
             ./hardware.nix
             (import ./bgp.nix meta)
         ];
-        sops.secrets.wg-lasvegas-private-key.sopsFile = ./secrets.yaml;
-        sops.secrets.traefik.sopsFile = ./secrets.yaml;
+        sops = {
+            defaultSopsFile = ./secrets.yaml;
+            secrets.traefik = {};
+            secrets.wg-yuuta-preshared-key = {
+                owner = "systemd-network";
+                group = "systemd-network";
+            };
+        };
         networking.hostName = meta.name;
         dns.enable = true;
 
@@ -23,25 +28,15 @@ rec {
             configFile = config.sops.secrets.traefik.path;
         };
 
-        networking.wireguard.interfaces.deploy = {
-            privateKeyFile = meta.wg-private-key config;
-            listenPort = 12001;
-            allowedIPsAsRoutes = false;
-            peers = [{
-                publicKey = "QQZ7pArhUyhdYYDhlv+x3N4G/+Uwu9QAdbWoNWAIRGg=";
-                persistentKeepalive = 25;
-                allowedIPs = [ "0.0.0.0/0" "::/0" ];
-            }];
+        wg.deploy = {
+            listen = 12001;
+            publicKey = "QQZ7pArhUyhdYYDhlv+x3N4G/+Uwu9QAdbWoNWAIRGg=";
         };
-        systemd.services.deploy-network = {
-            wantedBy = [ "multi-user.target" ];
-            partOf = [ "dummy.service" ];
-            requires = [ "wireguard-deploy.service" "network-online.target" ];
-            after = [ "wireguard-deploy.service" "network-online.target" ];
-            script = ''
-                ${pkgs.iproute2}/bin/ip route del 10.127.20.114/32 table 114 || true
-                ${pkgs.iproute2}/bin/ip route add 10.127.20.114/32 dev deploy proto 114 table 114
-            '';
+        systemd.network.networks.deploy-network = {
+            matchConfig.Name = "deploy";
+            routes = [
+                { routeConfig = { Destination = "10.127.20.114/32"; Table = 114; Protocol = 114; }; }
+            ];
         };
         systemd.services.tayga = let
             conf = pkgs.writeText "tayga" ''

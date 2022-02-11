@@ -5,7 +5,6 @@ rec {
         address = "de.an.dn42";
         inNat = true;
         system = "x86_64-linux";
-        wg-private-key = config: config.sops.secrets.wg-de-private-key.path;
         wg-public-key = "JXN4fhKL5aRf++Bh1+xsAkVZPxZqaXuIcTXq2gS8ml8=";
     };
     configuration = { config, pkgs, ... }: {
@@ -13,7 +12,7 @@ rec {
             ./hardware.nix
             (import ./bgp.nix meta)
         ];
-        sops.secrets.wg-de-private-key.sopsFile = ./secrets.yaml;
+        sops.defaultSopsFile = ./secrets.yaml;
         networking.hostName = meta.name;
     };
 }

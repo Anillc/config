@@ -16,9 +16,9 @@ rec {
             (import ./bgp.nix meta)
         ];
         nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
-        sops.secrets = {
-            wg-school-private-key.sopsFile = ./secrets.yaml;
-            school-network = {
+        sops = {
+            defaultSopsFile = ./secrets.yaml;
+            secrets.school-network = {
                 mode = "0755";
                 sopsFile = ./secrets.yaml;
             };
