@@ -7,4 +7,11 @@ in rec {
         "${machine.meta.name}" = machine;
     })) {} files;
     list = builtins.attrValues set;
+    validate = evalModules: machine: (evalModules {
+        modules = [
+            ../modules/common/meta.nix
+            { inherit (machine) meta; }
+        ];
+    }).config.meta;
+    metas = evalModules: builtins.map (validate evalModules) list;
 }

@@ -23,12 +23,12 @@ in {
         networks.dummy2526 = {
             matchConfig.Name = "dummy2526";
             addresses = [
-                { addressConfig = { Address = "2602:feda:da0::${cfg.meta.id}/128"; }; }
+                { addressConfig = { Address = "2602:feda:da0::${config.meta.id}/128"; }; }
                 { addressConfig = { Address = "${cfg.bgpSettings.dn42.v4}/32"; }; }
                 { addressConfig = { Address = "${cfg.bgpSettings.dn42.v6}/128"; }; }
             ];
             routes = [
-                { routeConfig = { Destination = "2602:feda:da0::${cfg.meta.id}/128"; Table = 114; Protocol = 114; }; }
+                { routeConfig = { Destination = "2602:feda:da0::${config.meta.id}/128"; Table = 114; Protocol = 114; }; }
                 { routeConfig = { Destination = "${cfg.bgpSettings.dn42.v4}/32"; Table = 114; Protocol = 114; }; }
                 { routeConfig = { Destination = "${cfg.bgpSettings.dn42.v6}/128"; Table = 114; Protocol = 114; }; }
             ];

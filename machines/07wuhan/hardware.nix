@@ -6,6 +6,7 @@
         device = "/dev/sda1";
         fsType = "ext4";
     };
+    # TODO:
     networking.interfaces.ens18.ipv4.addresses = [{
         address = "10.56.1.12";
         prefixLength = 24;

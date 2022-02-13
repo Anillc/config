@@ -1,23 +1,23 @@
 rec {
+    machines = (import ./..).set;
     meta = {
         id = "01";
         name = "shanghai";
         address = "sh.an.dn42";
-        inNat = false;
-        system = "x86_64-linux";
         wg-public-key = "82rDuI1+QXAXv+6HAf5aH2Ly0JXX/105Fsd61HmVnGE=";
+        connect = [ machines.hongkong machines.shanghai2 machines.wuhan machines.school machines.lasvegas ];
     };
     configuration = { config, pkgs, ... }: {
+        inherit meta;
         nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
-            (import ./bgp.nix meta)
+            ./bgp.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.anillc-device = {};
         };
-        networking.hostName = meta.name;
         # influxdb and go-cqhttp
         firewall.internalTCPPorts = [ 8086 6700 ];
         services.influxdb2.enable = true;

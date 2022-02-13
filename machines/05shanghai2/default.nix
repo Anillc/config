@@ -1,4 +1,5 @@
 rec {
+    machines = (import ./..).set;
     meta = {
         id = "05";
         name = "shanghai2";
@@ -6,14 +7,15 @@ rec {
         inNat = true;
         system = "x86_64-linux";
         wg-public-key = "RBjfmCcZywc4KhQA1Mv/hzm6+I52R0DrHPT7DzLzWGI=";
+        connect = [ machines.shanghai machines.hongkong ];
     };
     configuration = { config, pkgs, ... }: {
+        inherit meta;
         imports = [
             ./hardware.nix
             ./nanahira.nix
-            (import ./bgp.nix meta)
+            ./bgp.nix
         ];
-        networking.hostName = meta.name;
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.cllina-device = {};

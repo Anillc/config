@@ -26,7 +26,9 @@
     };
 
     outputs = { self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, dns }: let
-        machines = (import ./machines).list;
+        m = import ./machines;
+        machineSet = m.set;
+        metas = m.metas nixpkgs.lib.evalModules;
     in flake-utils.lib.eachDefaultSystem (system: let 
         pkgs = import nixpkgs {
             overlays = [ deploy-rs.overlay ];
@@ -41,7 +43,7 @@
                         log=$(${pkgs.deploy-rs.deploy-rs}/bin/deploy -s .#$1 2>&1)
                         echo $log
                     }
-                    ms="${builtins.foldl' (acc: x: acc + x.meta.name + " ") "" machines}"
+                    ms="${pkgs.lib.strings.concatStringsSep " " (builtins.map (x: x.name) metas)}"
                     for m in $ms; do
                         deploy $m &
                         pids[$!]=$!
@@ -54,27 +56,27 @@
         };
     }) // {
         nixosConfigurations = builtins.foldl' (acc: x: acc // {
-            "${x.meta.name}" = nixpkgs.lib.nixosSystem {
+            "${x.name}" = nixpkgs.lib.nixosSystem {
             modules = [
                 sops-nix.nixosModules.sops
-                anillc.nixosModule.${x.meta.system}
+                anillc.nixosModule.${x.system}
                 ({...}: { nixpkgs.overlays = [ (_: _: {
                     inherit dns;
                 }) ]; })
                 (import ./modules)
-                x.configuration
+                machineSet.${x.name}.configuration
             ];
-            inherit (x.meta) system;
+            inherit (x) system;
         };
-        }) {} machines;
-        deploy.nodes = builtins.foldl' (acc: x: if x.meta ? disabled && x.meta.disabled then acc else acc // {
-            "${x.meta.name}" = {
+        }) {} metas;
+        deploy.nodes = builtins.foldl' (acc: x: if !x.enable then acc else acc // {
+            "${x.name}" = {
                 sshUser = "root";
                 sshOpts = [ "-4" "-o" "ServerAliveInterval=30" "-o" "StrictHostKeyChecking=no" ];
-                hostname = x.meta.address;
+                hostname = x.address;
                 confirmTimeout = 300;
-                profiles.system.path = deploy-rs.lib.${x.meta.system}.activate.nixos self.nixosConfigurations.${x.meta.name};
+                profiles.system.path = deploy-rs.lib.${x.system}.activate.nixos self.nixosConfigurations.${x.name};
             };
-        }) {} machines;
+        }) {} metas;
     };
 }

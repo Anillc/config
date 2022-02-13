@@ -11,11 +11,6 @@ in {
             type = types.anything;
             description = "";
         };
-        connect = mkOption {
-            type = types.listOf types.anything;
-            default = [];
-            description = "";
-        };
         extraBirdConfig = mkOption {
             type = types.lines;
             default = "";

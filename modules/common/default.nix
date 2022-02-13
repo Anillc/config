@@ -1,4 +1,8 @@
 { pkgs, config, ... }: {
+    imports = [
+        ./meta.nix
+    ];
+    networking.hostName = config.meta.name;
     time.timeZone = "Asia/Shanghai";
     nix.autoOptimiseStore = true;
     nix.optimise.automatic = true;

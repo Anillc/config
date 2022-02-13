@@ -1,5 +1,4 @@
-meta: { ... }: let
-    machines = (import ./..).set;
+{ ... }: let
     peers = [
         {
             name = "1888";
@@ -51,7 +50,6 @@ meta: { ... }: let
 in {
     bgp = {
         enable = true;
-        connect = [ machines.shanghai machines.lasvegas machines.de machines.jp machines.shanghai2 ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.100";
@@ -98,6 +96,5 @@ in {
                 };
             }
         '';
-        inherit meta;
     };
 }

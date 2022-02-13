@@ -15,6 +15,7 @@
         fsType = "vfat";
     };
     swapDevices = [{ device = "/dev/disk/by-uuid/17ff6bd3-5a1d-4dab-a844-77c82656c18b"; }];
+    # TODO:
     networking.useDHCP = false;
     networking.interfaces.ens192.ipv4.addresses = [{
         address = "103.152.35.32";

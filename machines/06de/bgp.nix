@@ -1,9 +1,6 @@
-meta: { config, ... }: let
-    machines = (import ./..).set;
-in {
+{ config, ... }: {
     bgp = {
         enable = true;
-        connect = [ machines.lasvegas machines.hongkong machines.jp ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.102";
@@ -84,6 +81,5 @@ in {
                 };
             }
         '';
-        inherit meta;
     };
 } 

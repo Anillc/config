@@ -1,10 +1,6 @@
-meta: { config, ... }: let
-    machines = (import ./..).set;
-in {
+{ config, ... }: {
     bgp = {
         enable = true;
-        #connect = [ machines.shanghai machines.shanghai2 machines.beijing ];
-        connect = [ machines.shanghai ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.103";
@@ -56,6 +52,5 @@ in {
                 neighbor fe80::3818:abff:fe08:f5d%ens18 as 4242421876;
             }
         '';
-        inherit meta;
     };
 } 

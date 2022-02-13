@@ -1,6 +1,4 @@
-meta: { ... }: let
-    machines = (import ./..).set;
-in {
+{ ... }: {
     networking.nameservers = [
         "172.20.0.53"
     ];
@@ -11,7 +9,6 @@ in {
     };
     bgp = {
         enable = true;
-        connect = [ machines.hongkong machines.shanghai2 machines.wuhan machines.school machines.lasvegas ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.105";
@@ -35,6 +32,5 @@ in {
                 }];
             };
         };
-        inherit meta;
     };
 } 

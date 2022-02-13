@@ -18,6 +18,5 @@
         fsType = "vfat";
     };
     swapDevices = [ { device = "/dev/disk/by-uuid/51154ad0-0ef7-491a-a5c9-8132eedaad9c"; } ];
-    networking.useDHCP = false;
     networking.nameservers = [ "223.5.5.5" ];
 }

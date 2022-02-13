@@ -1,4 +1,4 @@
-pkgs: cfg: ''
+pkgs: config: ''
     ipv4 table ibgp_table_v4;
     ipv6 table ibgp_table_v6;
     ipv4 table igp_table_v4;
@@ -65,7 +65,7 @@ pkgs: cfg: ''
 
     ${builtins.foldl' (acc: x: ''
         ${acc}
-        ${if x.meta.name == cfg.meta.name then "" else ''
+        ${if x.meta.name == config.meta.name then "" else ''
             protocol bgp i${x.meta.name} from ibgp_peers {
                 neighbor 2602:feda:da0::${x.meta.id} as INTRANET_ASN;
             }

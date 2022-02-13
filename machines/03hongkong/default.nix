@@ -1,18 +1,18 @@
 rec {
+    machines = (import ./..).set;
     meta = {
         id = "03";
         name = "hongkong";
         address = "hk.an.dn42";
-        inNat = false;
-        system = "x86_64-linux";
         wg-public-key = "FDW5S+3nNS883Q5mKVwym0dwEYKF+nuQ1rPZ+sWVqgc=";
+        connect = [ machines.shanghai machines.lasvegas machines.de machines.jp machines.shanghai2 ];
     };
     configuration = { config, pkgs, ... }: {
+        inherit meta;
         imports = [
             ./hardware.nix
-            (import ./bgp.nix meta)
+            ./bgp.nix
         ];
-        networking.hostName = meta.name;
         sops.defaultSopsFile = ./secrets.yaml;
         # tgapi and deepl
         firewall.internalTCPPorts = [ 8233 ];

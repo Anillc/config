@@ -1,16 +1,17 @@
 rec {
+    machines = (import ./..).set;
     meta = {
         id = "02";
         name = "jp";
         address = "jp.an.dn42";
-        inNat = false;
-        system = "x86_64-linux";
         wg-public-key = "HcvaoEtLGxv1tETLCjmcKXkr1CNwiF/ZsmIi7lYAvQ4=";
+        connect = [ machines.hongkong machines.lasvegas machines.de ];
     };
     configuration = { config, pkgs, ... }: {
+        inherit meta;
         imports = [
             ./hardware.nix
-            (import ./bgp.nix meta)
+            ./bgp.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
@@ -19,7 +20,6 @@ rec {
                 sopsFile = ./bot.env;
             };
         };
-        networking.hostName = meta.name;
         networking.nameservers = [ "8.8.8.8" "8.8.4.4" ];
 
         services.mysql = {

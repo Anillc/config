@@ -1,16 +1,17 @@
 rec {
+    machines = (import ./..).set;
     meta = {
         id = "04";
         name = "lasvegas";
         address = "las.an.dn42";
-        inNat = false;
-        system = "x86_64-linux";
         wg-public-key = "NQfs6evQLemuJcdcvpO4ds1wXwUHTlzlQXWTJv+WCXY=";
+        connect = [ machines.hongkong machines.de machines.shanghai machines.jp ];
     };
     configuration = { config, pkgs, ... }: {
+        inherit meta;
         imports = [
             ./hardware.nix
-            (import ./bgp.nix meta)
+            ./bgp.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
@@ -20,7 +21,6 @@ rec {
                 group = "systemd-network";
             };
         };
-        networking.hostName = meta.name;
         dns.enable = true;
 
         traefik = {

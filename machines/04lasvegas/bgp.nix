@@ -1,5 +1,4 @@
-meta: { config, pkgs, ... }: let
-    machines = (import ./..).set;
+{ config, pkgs, ... }: let
     # TODO:yang 
     peers = [
         {
@@ -196,7 +195,6 @@ meta: { config, pkgs, ... }: let
 in {
     bgp = {
         enable = true;
-        connect = [ machines.hongkong machines.de machines.shanghai machines.jp ];
         bgpSettings = {
             dn42 = {
                 v4 = "172.22.167.97";
@@ -260,7 +258,6 @@ in {
                 neighbor 2605:6400:20:25d0:a5b7:c93a:873d:d27c as 142553;
             }
         '';
-        inherit meta;
     };
     wg.emoecast = {
         listen = 10002;
