@@ -25,7 +25,10 @@
         options = "--delete-older-than 5d";
         dates = "Sun 6:00";
     };
-    services.openssh.enable = true;
+    services.openssh = {
+        enable = true;
+        passwordAuthentication = false;
+    };
     environment.systemPackages = with pkgs; [
         vim traceroute tcpdump dig wireguard-tools
     ];
