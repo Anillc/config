@@ -33,7 +33,6 @@ in {
                 { routeConfig = { Destination = "${cfg.bgpSettings.dn42.v6}/128"; Table = 114; Protocol = 114; }; }
             ];
         };
-        networks.table.routingPolicyRules = [{ routingPolicyRuleConfig.Table = 114; }];
     };
     systemd.services.table = {
         wantedBy = [ "multi-user.target" ];

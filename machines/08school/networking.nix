@@ -16,24 +16,29 @@ in {
         wantedBy = [ "multi-user.target" ];
     };
     firewall.extraNatRules = "ip saddr 10.127.20.128/25 meta iif br0 meta oif enp1s0 masquerade";
-    networking.bridges = {
-        "br0".interfaces = [ "enp2s0" "wlp0s29f7u4" ];
+    systemd.network = {
+        netdevs.enp2s0.netdevConfig = {
+            Name = "br0";
+            Kind = "bridge";
+        };
+        networks = {
+            enp2s0 = {
+                matchConfig.Name = "enp2s0";
+                networkConfig.Bridge = "br0";
+            };
+            wlp0s29f7u4 = {
+                matchConfig.Name = "wlp0s29f7u4";
+                networkConfig.Bridge = "br0";
+            };
+            br0 = {
+                matchConfig.Name = "br0";
+                addresses = [
+                    { addressConfig.Address = "10.127.20.129/25"; }
+                    { addressConfig.Address = "2602:feda:da1::1/96"; }
+                ];
+            };
+        };
     };
-    networking.interfaces.br0.ipv4.addresses = [{
-        address = "10.127.20.129";
-        prefixLength = 25;
-    }];
-    networking.interfaces.br0.ipv6.addresses = [{
-        address = "2602:feda:da1:1::1";
-        prefixLength = 96;
-    }];
-    networking.interfaces.enp2s0.useDHCP = false;
-    networking.interfaces.wlp0s29f7u4.useDHCP = false;
-    # have been defined in bgp module
-    # boot.kernel.sysctl = {
-    #     "net.ipv4.ip_forward" = 1;
-    #     "net.ipv6.conf.all.forwarding" = 1;
-    # };
     networking.resolvconf.useLocalResolver = lib.mkForce false;
     firewall.publicTCPPorts = [ 53 ];
     firewall.publicUDPPorts = [ 53 ];

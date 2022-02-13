@@ -19,13 +19,5 @@
     };
     swapDevices = [ { device = "/dev/disk/by-uuid/51154ad0-0ef7-491a-a5c9-8132eedaad9c"; } ];
     networking.useDHCP = false;
-    networking.interfaces.ens18.ipv4.addresses = [{
-        address = "192.168.1.110";
-        prefixLength = 24;
-    }];
-    networking.defaultGateway = {
-        address = "192.168.1.1";
-        interface = "ens18";
-    };
     networking.nameservers = [ "223.5.5.5" ];
 }
