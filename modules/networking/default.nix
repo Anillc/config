@@ -1,5 +1,4 @@
 { config, pkgs, lib, ... }: with lib; let
-    # TODO: use another name
     cfg = config.bgp;
 in {
     imports = [
@@ -10,6 +9,7 @@ in {
     ];
     systemd.network.enable = true;
     services.resolved.enable = false;
+    networking.useDHCP = false;
     boot.kernel.sysctl = mkForce {
         "net.ipv4.ip_forward" = 1;
         "net.ipv6.conf.all.forwarding" = 1;

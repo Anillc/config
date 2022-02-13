@@ -18,5 +18,10 @@
         fsType = "vfat";
     };
     swapDevices = [ { device = "/dev/disk/by-uuid/51154ad0-0ef7-491a-a5c9-8132eedaad9c"; } ];
+    systemd.network.networks.default-network = {
+        matchConfig.Name = "ens18";
+        addresses = [{ addressConfig = { Address = "192.168.1.110/24"; }; }];
+        routes = [{ routeConfig = { Gateway = "192.168.1.1"; }; }];
+    };
     networking.nameservers = [ "223.5.5.5" ];
 }

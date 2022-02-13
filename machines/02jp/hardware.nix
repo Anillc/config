@@ -10,4 +10,8 @@
     swapDevices = [{
         device = "/var/swapfile";
     }];
+    systemd.network.networks.default-network = {
+        matchConfig.Name = "enp1s0";
+        DHCP = "yes";
+    };
 }

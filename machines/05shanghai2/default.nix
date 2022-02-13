@@ -65,15 +65,6 @@ rec {
                 };
             };
         };
-        systemd.network.networks.default-network = {
-            matchConfig.Name = "ens18";
-            addresses = [
-                { addressConfig = { Address = "192.168.1.110/24"; }; }
-            ];
-            routes = [
-                { routeConfig = { Gateway = "192.168.1.1"; }; }
-            ];
-        };
         # Xiao Jin FIXME: not works
         systemd.network.networks.xiaojin-network = {
             matchConfig.Name = "ens18";

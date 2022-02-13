@@ -26,7 +26,11 @@ in {
             '';
         };
         systemd.services.bird2 = {
-            preStart = "${roa}";
+            preStart = ''
+                if [ ! -f /var/bird/roa_dn42.conf ] && [ ! -f /var/bird/roa_dn42_v6.conf ]; then
+                    ${roa}
+                fi
+            '';
             after = [ "network-online.target" ];
         };
     };

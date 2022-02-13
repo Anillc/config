@@ -22,13 +22,17 @@ in {
             Kind = "bridge";
         };
         networks = {
+            enp1s0 = {
+                matchConfig.Name = "enp1s0";
+                DHCP = "ipv4";
+            };
             enp2s0 = {
                 matchConfig.Name = "enp2s0";
-                networkConfig.Bridge = "br0";
+                bridge = [ "br0" ];
             };
             wlp0s29f7u4 = {
                 matchConfig.Name = "wlp0s29f7u4";
-                networkConfig.Bridge = "br0";
+                bridge = [ "br0" ];
             };
             br0 = {
                 matchConfig.Name = "br0";

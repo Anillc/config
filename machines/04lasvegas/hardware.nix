@@ -8,12 +8,11 @@
         device = "/dev/vda1";
         fsType = "ext4";
     };
-    networking.interfaces.ens3.ipv6.addresses = [{
-        address = "2605:6400:20:677::";
-        prefixLength = 48;
-    }];
-    networking.defaultGateway6 = {
-        address = "2605:6400:20::1";
-        interface = "ens3";
+    systemd.network.networks.default-network = {
+        matchConfig.Name = "ens3";
+        DHCP = "ipv4";
+        addresses = [{ addressConfig = { Address = "2605:6400:20:677::/48"; }; }];
+        routes = [{ routeConfig = { Gateway = "2605:6400:20::1"; }; }];
     };
+    networking.nameservers = [ "8.8.8.8" "8.8.4.4" ];
 }
