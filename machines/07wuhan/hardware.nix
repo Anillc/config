@@ -10,7 +10,7 @@
         matchConfig.Name = "ens18";
         addresses = [
             { addressConfig = { Address = "10.56.1.12/24"; }; }
-            { addressConfig = { Address = "2404:f4c0:5156:1::12"; }; }
+            { addressConfig = { Address = "2404:f4c0:5156:1::12/64"; }; }
         ];
         routes = [
             { routeConfig = { Gateway = "10.56.1.1"; }; }
