@@ -9,7 +9,7 @@ rec {
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
-        nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+        nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
             ./bgp.nix
@@ -42,6 +42,7 @@ rec {
                     };
                 };
             };
+            # TODO:
             streamConfig = ''
                 server {
                     listen 172.22.167.105:25565;

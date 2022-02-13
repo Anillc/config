@@ -16,7 +16,7 @@ rec {
             ./networking.nix
             ./bgp.nix
         ];
-        nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+        nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.school-network = {

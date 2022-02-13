@@ -11,6 +11,7 @@ rec {
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
+        nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
             ./nanahira.nix
@@ -24,7 +25,6 @@ rec {
                 group = "systemd-network";
             };
         };
-        nix.binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         
         # gocq
         firewall.internalTCPPorts = [ 6700 ];
