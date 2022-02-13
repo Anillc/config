@@ -32,7 +32,7 @@ rec {
                 };
             }];
         };
-        firewall.publicTCPPorts = [ 80 25565 ];
+        firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
             virtualHosts = {
@@ -42,13 +42,6 @@ rec {
                     };
                 };
             };
-            # TODO:
-            streamConfig = ''
-                server {
-                    listen 172.22.167.105:25565;
-                    proxy_pass ydh.chaowan.me:10956;
-                }
-            '';
         };
         wg.phone = {
             listen = 11451;
