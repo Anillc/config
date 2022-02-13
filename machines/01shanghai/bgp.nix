@@ -1,8 +1,5 @@
 { ... }: {
-    # FIXME:
-    networking.nameservers = [
-        "172.20.0.53"
-    ];
+    networking.nameservers = [ "172.20.0.53" "223.5.5.5" ];
     services.bird-lg-go-frontend = {
         enable = true;
         domain = "an.dn42";
