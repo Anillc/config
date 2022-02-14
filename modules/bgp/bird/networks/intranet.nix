@@ -51,14 +51,20 @@ pkgs: config: ''
             table ibgp_table_v4;
             igp table master4;
             next hop self ebgp;
-            import all;
+            import filter {
+                bgp_local_pref = 50;
+                accept;
+            };
             export all;
         };
         ipv6 {
             table ibgp_table_v6;
             igp table master6;
             next hop self ebgp;
-            import all;
+            import filter {
+                bgp_local_pref = 50;
+                accept;
+            };
             export all;
         };
     }

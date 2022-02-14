@@ -4,6 +4,10 @@ pkgs: config: ''
     protocol device {
         scan time 10;
     }
+    protocol direct {
+        ipv4;
+        ipv6;
+    }
     protocol kernel {
         scan time 20;
         learn;
