@@ -1,24 +1,26 @@
-{ config, pkgs, ... }: {
-    firewall.extraNatRules = "meta iif ve-nanahira meta oif ens18 masquerade";
+{ config, pkgs, lib, ... }: {
+    firewall.extraNatRules = "meta iif nnhr meta oif ens18 masquerade";
     systemd.services.nftables = {
+        before = lib.mkForce [];
+        wants = lib.mkForce [];
         after = [ "container@nanahira.service" ];
         requisite = [ "container@nanahira.service" ];
     };
-    #systemd.services."container@nanahira" = {
-    #    before = [ "network.target" ];
-    #};
-    systemd.network.networks.nanahira-network = {
-        matchConfig.Name = "ve-nanahira";
-        routes = [
-            { routeConfig = { Gateway = "192.168.114.2"; Destination = "10.198.0.0/16"; Source = "172.22.167.106"; Table = 114; Protocol = 114; GatewayOnLink = "yes"; }; }
-            { routeConfig = { Gateway = "192.168.114.2"; Destination = "192.168.123.0/24"; Source = "172.22.167.106"; Table = 114; Protocol = 114; GatewayOnLink = "yes"; }; }
-        ];
+    systemd.network = {
+        networks.nanahira-network = {
+            matchConfig.Name = "nnhr";
+            addresses = [{ addressConfig = { Address = "192.168.114.1/24"; }; }];
+            routes = [
+                { routeConfig = { Gateway = "192.168.114.2"; Destination = "10.198.0.0/16"; PreferredSource = "172.22.167.106"; Table = 114; Protocol = 114; }; }
+                { routeConfig = { Gateway = "192.168.114.2"; Destination = "192.168.123.0/24"; PreferredSource = "172.22.167.106"; Table = 114; Protocol = 114; }; }
+            ];
+        };
     };
+    # use 192.168.114.1/24 and 192.168.114.2/24
     containers.nanahira = {
         autoStart = true;
         privateNetwork = true;
-        hostAddress  = "192.168.114.1";
-        localAddress = "192.168.114.2";
+        extraVeths.nnhr = {};
         bindMounts."/run/secrets".isReadOnly = true;
         config = { pkgs, ... }: {
             environment.systemPackages = with pkgs; [ tcpdump iptables ];
@@ -62,13 +64,13 @@
                     redistribute local deny
                 '';
             };
-            systemd.services.redistribute-network = {
+            systemd.services.setup-network = {
                 wantedBy = [ "multi-user.target" ];
                 requires = [ "wireguard-nanahira.service" "network-online.target" ];
                 after = [ "wireguard-nanahira.service" "network-online.target" ];
                 script = ''
-                    ${pkgs.iproute2}/bin/ip route del 172.22.167.96/27 || true
-                    ${pkgs.iproute2}/bin/ip route del 10.127.20.0/24   || true
+                    ${pkgs.iproute2}/bin/ip address add 192.168.114.2/24 dev nnhr
+                    ${pkgs.iproute2}/bin/ip route add default via 192.168.114.1
                     ${pkgs.iproute2}/bin/ip route add 172.22.167.96/27 via 192.168.114.1 proto 114
                     ${pkgs.iproute2}/bin/ip route add 10.127.20.0/24   via 192.168.114.1 proto 114
                 '';

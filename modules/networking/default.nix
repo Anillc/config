@@ -36,7 +36,7 @@ in {
     };
     systemd.services.table = {
         wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" ];
+        after = [ "network-online.target" "systemd-networkd.service" ];
         bindsTo = [ "network-online.target" ];
         script = ''
             ${pkgs.iproute2}/bin/ip -4 rule del table 114 || true

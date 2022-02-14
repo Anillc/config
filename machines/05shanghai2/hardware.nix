@@ -21,7 +21,7 @@
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens18";
         addresses = [{ addressConfig = { Address = "192.168.1.110/24"; }; }];
-        routes = [{ routeConfig = { Gateway = "192.168.1.1"; }; }];
+        routes = [{ routeConfig = { Gateway = "192.168.1.1"; PreferredSource = "192.168.1.110"; }; }];
     };
     networking.nameservers = [ "223.5.5.5" ];
 }
