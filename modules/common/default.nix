@@ -30,7 +30,7 @@
         passwordAuthentication = false;
     };
     environment.systemPackages = with pkgs; [
-        vim traceroute tcpdump dig wireguard-tools
+        vim traceroute mtr tcpdump dig wireguard-tools
     ];
     sops = {
         age.keyFile = "/var/lib/sops.key";
