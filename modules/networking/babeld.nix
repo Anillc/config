@@ -1,8 +1,9 @@
-{ config, pkgs, ... }: let
+{ config, pkgs, lib, ... }: let
     cfg = config.bgp;
 in {
+    imports = [ ./babeld-override.nix ];
     firewall.extraInputRules = "ip6 daddr ff02::1:6/128 accept";
-    services.babeld = {
+    services.babeld-override = {
         enable = true;
         interfaces = builtins.foldl' (acc: x: acc // {
             "i${x.meta.name}".type = "tunnel";

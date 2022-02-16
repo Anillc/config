@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1643639705,
-        "narHash": "sha256-gvq39+cXdBYrzeXV15QM/tOcjGVWKG9OR0nqk3rU1D4=",
+        "lastModified": 1645000005,
+        "narHash": "sha256-1qPTiOpJuaLQA01osNZDSFSk9Iozf3O4imt/ocRLLfk=",
         "owner": "Anillc",
         "repo": "flakes",
-        "rev": "0c7ff88bb00e7b1cf91f0fc40763e213ba4e67bc",
+        "rev": "ed26dbc454bbf5822bf7ed780e8a8526313da80e",
         "type": "github"
       },
       "original": {

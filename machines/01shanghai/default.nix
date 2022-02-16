@@ -32,6 +32,9 @@ rec {
                 };
             }];
         };
+        services.babelweb2 = {
+            enable = true;
+        };
         firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
@@ -39,6 +42,12 @@ rec {
                 "lg.anillc.cn" = {
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:5000";
+                    };
+                };
+                "babeld.anillc.cn" = {
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:8080";
+                        proxyWebsockets = true;
                     };
                 };
             };
