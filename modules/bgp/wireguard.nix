@@ -9,7 +9,7 @@ in {
                 ip = [
                     { addr = "fe80::2526/64"; }
                     (pkgs.lib.mkIf (x.v4 != null) {
-                        addr = "${config.bgp.bgpSettings.dn42.v4}/32";
+                        addr = "${config.meta.v4}/32";
                         peer = "${x.v4}/32";
                     })
                 ];

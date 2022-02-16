@@ -5,6 +5,8 @@ rec {
         name = "shanghai";
         address = "sh.an.dn42";
         wg-public-key = "82rDuI1+QXAXv+6HAf5aH2Ly0JXX/105Fsd61HmVnGE=";
+        v4 = "172.22.167.105";
+        v6 = "fdc9:83c1:d0ce::9";
         connect = [ machines.hongkong machines.shanghai2 machines.wuhan machines.school machines.lasvegas ];
     };
     configuration = { config, pkgs, ... }: {
@@ -34,6 +36,7 @@ rec {
         };
         services.babelweb2 = {
             enable = true;
+            nodes = builtins.map (x: "[${x.v6}]:33124") ((import ../.).metas pkgs.lib.evalModules);
         };
         firewall.publicTCPPorts = [ 80 ];
         services.nginx = {

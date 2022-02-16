@@ -197,8 +197,6 @@ in {
         enable = true;
         bgpSettings = {
             dn42 = {
-                v4 = "172.22.167.97";
-                v6 = "fdc9:83c1:d0ce::1";
                 inherit peers;
             };
         };
@@ -274,7 +272,7 @@ in {
         listen = 21588;
         ip = [
             { addr = "fe80::100/64"; }
-            { addr = "${config.bgp.bgpSettings.dn42.v4}/32"; peer = "172.20.16.140/32"; }
+            { addr = "${config.meta.v4}/32"; peer = "172.20.16.140/32"; }
         ];
         publicKey = "iEZ71NPZge6wHKb6q4o2cvCopZ7PBDqn/b3FO56+Hkc=";
         endpoint = "us-dal01.dn42.tech9.io:51061";

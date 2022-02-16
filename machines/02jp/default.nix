@@ -5,6 +5,8 @@ rec {
         name = "jp";
         address = "jp.an.dn42";
         wg-public-key = "HcvaoEtLGxv1tETLCjmcKXkr1CNwiF/ZsmIi7lYAvQ4=";
+        v4 = "172.22.167.99";
+        v6 = "fdc9:83c1:d0ce::3";
         connect = [ machines.hongkong machines.lasvegas machines.de ];
     };
     configuration = { config, pkgs, ... }: {

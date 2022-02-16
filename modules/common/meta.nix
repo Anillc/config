@@ -35,5 +35,13 @@
             type = types.listOf types.anything;
             description = "machines to be connected with";
         };
+        v4 = mkOption {
+            type = types.str;
+            description = "ipv4 address (internel)";
+        };
+        v6 = mkOption {
+            type = types.str;
+            description = "ipv6 address (internel)";
+        };
     };
 }

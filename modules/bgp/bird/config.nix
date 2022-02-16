@@ -37,8 +37,8 @@ pkgs: config: ''
     define INTERNET_ASN = 142055;
     define INTRANET_ASN = 142055;
 
-    define DN42_SRC_v4 = ${config.bgp.bgpSettings.dn42.v4};
-    define DN42_SRC_v6 = ${config.bgp.bgpSettings.dn42.v6};
+    define DN42_SRC_v4 = ${config.meta.v4};
+    define DN42_SRC_v6 = ${config.meta.v6};
     define INTERNET_SRC_v4 = 0.0.0.0;
     define INTERNET_SRC_v6 = 2602:feda:da0::${config.meta.id};
 

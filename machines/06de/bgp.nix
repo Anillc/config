@@ -2,21 +2,17 @@
     bgp = {
         enable = true;
         bgpSettings = {
-            dn42 = {
-                v4 = "172.22.167.102";
-                v6 = "fdc9:83c1:d0ce::6";
-                peers = [
-                    {
-                        name = "mika";
-                        endpoint = "zrh1-ch.bugsur.xyz:22526";
-                        publicKey = "MUShSTyApCSU7Rc1TLCGKiyyOBAIkLzEEVCpOf6wbQ0=";
-                        asn = "4242423743";
-                        linkLocal = "fe80::2434";
-                        extendedNextHop = true;
-                        refresh = 60 * 60;
-                    }
-                ];
-            };
+            dn42.peers = [
+                {
+                    name = "mika";
+                    endpoint = "zrh1-ch.bugsur.xyz:22526";
+                    publicKey = "MUShSTyApCSU7Rc1TLCGKiyyOBAIkLzEEVCpOf6wbQ0=";
+                    asn = "4242423743";
+                    linkLocal = "fe80::2434";
+                    extendedNextHop = true;
+                    refresh = 60 * 60;
+                }
+            ];
         };
         bgpTransit = {
             enable = true;

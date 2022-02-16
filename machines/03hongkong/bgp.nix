@@ -52,8 +52,6 @@ in {
         enable = true;
         bgpSettings = {
             dn42 = {
-                v4 = "172.22.167.100";
-                v6 = "fdc9:83c1:d0ce::4";
                 inherit peers;
             };
         };

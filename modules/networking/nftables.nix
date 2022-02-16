@@ -37,6 +37,11 @@ in {
             description = "extraNatRules";
             default = "";
         };
+        extraPreroutingRules = mkOption {
+            type = types.lines;
+            description = "extraPreroutingRules";
+            default = "";
+        };
     };
     config = {
         networking.firewall.enable = false;
@@ -90,6 +95,10 @@ in {
                     chain forward {
                         type filter hook forward priority 0; policy accept;
                         ${cfg.extraForwardRules}
+                    }
+                    chain prerouting {
+                        type nat hook prerouting priority -100; policy accept;
+                        ${cfg.extraPreroutingRules}
                     }
                     chain postrouting {
                         type nat hook postrouting priority 100; policy accept;

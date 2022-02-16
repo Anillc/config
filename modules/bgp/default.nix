@@ -69,14 +69,6 @@ in {
             };
         in {
             dn42 = {
-                v4 = mkOption {
-                    type = types.str;
-                    description = "";
-                };
-                v6 = mkOption {
-                    type = types.str;
-                    description = "";
-                };
                 peers = mkOption {
                     type = types.listOf peer;
                     default = [];

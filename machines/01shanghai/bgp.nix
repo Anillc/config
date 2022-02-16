@@ -8,10 +8,8 @@
     bgp = {
         enable = true;
         bgpSettings = {
-            dn42 = {
-                v4 = "172.22.167.105";
-                v6 = "fdc9:83c1:d0ce::9";
-                peers = [{
+            dn42.peers = [
+                {
                     name = "yang";
                     listen = 21332;
                     v4 = "172.20.168.131";
@@ -20,15 +18,15 @@
                     linkLocal = "fe80::1332";
                 }
                 {
-                    name = "hertz";
-                    listen = 21353;
-                    v4 = "172.20.29.73";
-                    endpoint = "121.41.36.113:22526";
-                    publicKey = "UiMjULCBaKZjVjGIeKECf+TkGN4NLnhPCYHFDZds/Ss=";
-                    asn = "4242421353";
+                   name = "hertz";
+                   listen = 21353;
+                   v4 = "172.20.29.73";
+                   endpoint = "121.41.36.113:22526";
+                   publicKey = "UiMjULCBaKZjVjGIeKECf+TkGN4NLnhPCYHFDZds/Ss=";
+                   asn = "4242421353";
                     linkLocal = "fe80::1353";
-                }];
-            };
+                }
+            ];
         };
     };
 } 
