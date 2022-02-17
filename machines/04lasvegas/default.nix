@@ -14,6 +14,7 @@ rec {
         imports = [
             ./hardware.nix
             ./bgp.nix
+            ./dns.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
