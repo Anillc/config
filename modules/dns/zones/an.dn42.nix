@@ -30,7 +30,8 @@
             "jx".A     = [ "172.22.167.107"     ];
             "jx".AAAA  = [ "fdc9:83c1:d0ce::11" ];
 
-            "mc".A     = [ "172.22.167.105"     ];
+            "dns".A    = [ "172.22.167.126"       ];
+            "dns".AAAA = [ "fdc9:83c1:d0ce::ffff" ];
         };
     };
 in pkgs.writeText name (dns.lib.toString name zone)

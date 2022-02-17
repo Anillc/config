@@ -15,6 +15,7 @@
             "103".PTR = [ "wh.an.dn42."  ];
             "104".PTR = [ "hz.an.dn42."  ];
             "105".PTR = [ "sh.an.dn42."  ];
+            "126".PTR = [ "dns.an.dn42." ];
         };
     };
 in pkgs.writeText name (dns.lib.toString name zone)
