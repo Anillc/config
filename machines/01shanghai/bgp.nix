@@ -18,12 +18,12 @@
                     linkLocal = "fe80::1332";
                 }
                 {
-                   name = "hertz";
-                   listen = 21353;
-                   v4 = "172.20.29.73";
-                   endpoint = "121.41.36.113:22526";
-                   publicKey = "UiMjULCBaKZjVjGIeKECf+TkGN4NLnhPCYHFDZds/Ss=";
-                   asn = "4242421353";
+                    name = "hertz";
+                    listen = 21353;
+                    v4 = "172.20.29.73";
+                    endpoint = "121.41.36.113:22526";
+                    publicKey = "UiMjULCBaKZjVjGIeKECf+TkGN4NLnhPCYHFDZds/Ss=";
+                    asn = "4242421353";
                     linkLocal = "fe80::1353";
                 }
             ];

@@ -1,8 +1,6 @@
 { config, pkgs, lib, ... }: {
     firewall.extraNatRules = "meta iif nnhr meta oif ens18 masquerade";
     systemd.services.nftables = {
-        before = lib.mkForce [];
-        wants = lib.mkForce [];
         after = [ "container@nanahira.service" ];
         requisite = [ "container@nanahira.service" ];
     };

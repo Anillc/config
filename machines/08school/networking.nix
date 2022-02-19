@@ -15,7 +15,12 @@ in {
         after = [ "network-online.target" ];
         wantedBy = [ "multi-user.target" ];
     };
-    firewall.extraNatRules = "ip saddr 10.127.20.128/25 meta iif br0 meta oif enp1s0 masquerade";
+    firewall.extraNatRules = ''
+        ip  saddr 192.168.233.0/24 meta iif br0 meta oif ishanghai snat ip to 172.22.167.107
+        ip6 saddr fdff:233::/64 meta iif br0 meta oif ishanghai snat ip6 to fdc9:83c1:d0ce::11
+        ip  saddr 192.168.233.0/24 meta iif br0 masquerade
+        ip6 saddr fdff:233::/64    meta iif br0 masquerade
+    '';
     systemd.network = {
         netdevs.enp2s0.netdevConfig = {
             Name = "br0";
@@ -30,15 +35,19 @@ in {
                 matchConfig.Name = "enp2s0";
                 bridge = [ "br0" ];
             };
-            wlp0s29f7u4 = {
-                matchConfig.Name = "wlp0s29f7u4";
-                bridge = [ "br0" ];
-            };
+            # bridge wlp0s29f7u4 in hostapd
             br0 = {
                 matchConfig.Name = "br0";
                 addresses = [
-                    { addressConfig.Address = "10.127.20.129/25"; }
-                    { addressConfig.Address = "2602:feda:da1::1/96"; }
+                    { addressConfig.Address = "192.168.233.1/24"; }
+                    { addressConfig.Address = "fdff:233::1/64"; }
+                ];
+            };
+            ishanghai = {
+                routes = [
+                    { routeConfig = { Gateway = "172.22.167.105"; Destination = "172.16.0.0/12"; PreferredSource = "172.22.167.107"; GatewayOnLink = "yes"; }; }
+                    { routeConfig = { Gateway = "172.22.167.105"; Destination = "10.0.0.0/8"; PreferredSource = "172.22.167.107"; GatewayOnLink = "yes"; }; }
+                    { routeConfig = { Gateway = "fdc9:83c1:d0ce::9"; Destination = "fd00::/8"; PreferredSource = "fdc9:83c1:d0ce::11"; GatewayOnLink = "yes"; }; }
                 ];
             };
         };
@@ -46,6 +55,8 @@ in {
     networking.resolvconf.useLocalResolver = lib.mkForce false;
     firewall.publicTCPPorts = [ 53 ];
     firewall.publicUDPPorts = [ 53 ];
+    # dhcp
+    firewall.extraInputRules = "ip saddr 0.0.0.0/32 accept";
     services.dnsmasq = {
         enable = true;
         servers = [ "223.5.5.5" "172.20.0.53" ];
@@ -53,7 +64,7 @@ in {
             interface=br0
             bogus-priv
             enable-ra
-            dhcp-range=10.127.20.130,10.127.20.254,24h
+            dhcp-range=192.168.233.2,192.168.233.254,24h
         '';
     };
     services.hostapd = {
@@ -67,6 +78,7 @@ in {
         #channel = 6;
         countryCode = "CN";
         extraConfig = ''
+            bridge=br0
             ieee80211n=1
             ieee80211ac=1
             wmm_enabled=1

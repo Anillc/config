@@ -45,6 +45,11 @@ in {
     };
     config = {
         networking.firewall.enable = false;
+        systemd.services.nftables = {
+            wants = lib.mkForce [ "network-online.target" ];
+            before = lib.mkForce [ "network-online.target" ];
+            after = [ "systemd-networkd.service" ];
+        };
         networking.nftables = let
             internalTCP = optionalString (builtins.length cfg.internalTCPPorts != 0) ''
                 ip saddr { 10.127.20.0/24, 172.22.167.96/27 } tcp dport { ${
