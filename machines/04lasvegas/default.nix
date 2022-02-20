@@ -14,7 +14,6 @@ rec {
         imports = [
             ./hardware.nix
             ./bgp.nix
-            ./dns.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
@@ -24,13 +23,10 @@ rec {
                 group = "systemd-network";
             };
         };
-        dns.enable = true;
-
         traefik = {
             enable = true;
             configFile = config.sops.secrets.traefik.path;
         };
-
         wg.deploy = {
             listen = 12001;
             publicKey = "QQZ7pArhUyhdYYDhlv+x3N4G/+Uwu9QAdbWoNWAIRGg=";

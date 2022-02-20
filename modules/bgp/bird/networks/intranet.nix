@@ -77,4 +77,4 @@ pkgs: config: ''
             }
         ''}
     '') "" (import ../../../../machines).list}
-''
+'' # TODO: bgp disabled machine

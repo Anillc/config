@@ -4,12 +4,12 @@
         SOA = {
             nameServer = "ns1";
             adminEmail = "noc@anillc.cn";
-            serial = 2021112201;
+            serial = 2022022001;
         };
         NS = [ "ns1.an.dn42." ];
         subdomains = {
-            "ns1".A    = [ "172.22.167.97"      ];
-            "ns1".AAAA = [ "fdc9:83c1:d0ce::1"  ];
+            "ns1".A    = [ "172.22.167.126"      ];
+            "ns1".AAAA = [ "fdc9:83c1:d0ce::ff"  ];
             
             "las".A    = [ "172.22.167.97"      ];
             "las".AAAA = [ "fdc9:83c1:d0ce::1"  ];
@@ -31,7 +31,7 @@
             "jx".AAAA  = [ "fdc9:83c1:d0ce::11" ];
 
             "dns".A    = [ "172.22.167.126"       ];
-            "dns".AAAA = [ "fdc9:83c1:d0ce::ffff" ];
+            "dns".AAAA = [ "fdc9:83c1:d0ce::ff" ];
         };
     };
 in pkgs.writeText name (dns.lib.toString name zone)
