@@ -1,5 +1,4 @@
 { config, pkgs, lib, ... }: {
-    imports = [ ./babeld-override.nix ];
     firewall.extraInputRules = "ip6 daddr ff02::1:6/128 accept";
     services.babeld-override = {
         enable = true;

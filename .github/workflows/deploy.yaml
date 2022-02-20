@@ -20,7 +20,7 @@ jobs:
         nameserver 172.20.0.53
         nameserver 172.23.0.53
         EOF
-        sudo ip route add 172.16.0.0/12 dev deploy
+        sudo ip route add 172.20.0.0/14 dev deploy
         sudo ip route add 10.0.0.0/8 dev deploy
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v15

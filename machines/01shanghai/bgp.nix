@@ -3,6 +3,7 @@
     services.bird-lg-go-frontend = {
         enable = true;
         domain = "an.dn42";
+        # TODO: remove jx
         servers = [ "las" "jp" "hk" "de" "wh" "sh" "sh2" "jx" ];
     };
     bgp = {

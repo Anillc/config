@@ -1,18 +1,17 @@
 { config, pkgs, lib, ... }: {
     firewall.extraNatRules = "meta iif nnhr meta oif ens18 masquerade";
-    systemd.services.nftables = {
-        after = [ "container@nanahira.service" ];
-        requisite = [ "container@nanahira.service" ];
+    systemd.services."container@nanahira" = {
+        before = [ "net.service" "nftables.service" ];
+        partOf = [ "net.service" "nftables.service" ];
     };
-    systemd.network = {
-        networks.nanahira-network = {
-            matchConfig.Name = "nnhr";
-            addresses = [{ addressConfig = { Address = "192.168.114.1/24"; }; }];
-            routes = [
-                { routeConfig = { Gateway = "192.168.114.2"; Destination = "10.198.0.0/16"; PreferredSource = "172.22.167.106"; Table = 114; Protocol = 114; }; }
-                { routeConfig = { Gateway = "192.168.114.2"; Destination = "192.168.123.0/24"; PreferredSource = "172.22.167.106"; Table = 114; Protocol = 114; }; }
-            ];
-        };
+    net = {
+        addresses = [
+            { address = "192.168.114.1/24"; interface = "nnhr"; }
+        ];
+        routes = [
+            { dst = "10.198.0.0/16";    src = "172.22.167.106"; interface = "nnhr"; gateway = "192.168.114.2"; proto = 114; table = 114; }
+            { dst = "192.168.123.0/24"; src = "172.22.167.106"; interface = "nnhr"; gateway = "192.168.114.2"; proto = 114; table = 114; }
+        ];
     };
     # use 192.168.114.1/24 and 192.168.114.2/24
     containers.nanahira = {

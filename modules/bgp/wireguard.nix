@@ -2,7 +2,7 @@
     cfg = config.bgp;
 in {
     config = lib.mkIf config.bgp.enable {
-        wg = (builtins.foldl' (acc: x: acc // {
+        net.wg = (builtins.foldl' (acc: x: acc // {
 
             # dn42 interfaces
             "d${x.name}" = {

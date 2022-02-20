@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }: with lib; let
-    cfg = config.wg;
+    cfg = config.net.wg;
 in {
-    options.wg = let
+    options.net.wg = let
         ipOptions = types.submodule ({ ... }: {
             options = {
                 addr = mkOption {
@@ -15,7 +15,7 @@ in {
                 };
             };
         });
-        interfaceOptions = types.submodule ({ ... }: {
+        interfaceOptions = types.submodule {
             options = {
                 privateKeyFile = mkOption {
                     type = types.path;
@@ -52,7 +52,7 @@ in {
                     default = 0;
                 };
             };
-        });
+        };
     in mkOption {
         type = types.attrsOf interfaceOptions;
         description = "wireguard interfaces";
@@ -62,39 +62,17 @@ in {
         firewall.publicUDPPorts = builtins.foldl' (acc: x: acc ++ (if x.listen == null then [] else [
             x.listen
         ])) [] (builtins.attrValues cfg);
-        systemd.network = {
-            netdevs = builtins.mapAttrs (name: value: {
-                netdevConfig = {
-                    Name = name;
-                    Kind = "wireguard";
-                };
-                wireguardConfig = {
-                    PrivateKeyFile = value.privateKeyFile;
-                    ListenPort = mkIf (value.listen != null) value.listen;
-                };
-                wireguardPeers = [{
-                    wireguardPeerConfig = {
-                        PublicKey = value.publicKey;
-                        PresharedKeyFile = mkIf (value.presharedKeyFile != null) value.privateKeyFile;
-                        Endpoint = mkIf (value.endpoint != null) value.endpoint;
-                        PersistentKeepalive = 25;
-                        AllowedIPs = [ "0.0.0.0/0" "::/0" ];
-                    };
-                }];
-            }) cfg;
-            networks = builtins.mapAttrs (name: value: {
-                matchConfig.Name = name;
-                addresses = builtins.map (x: {
-                    addressConfig = {
-                        Address = x.addr;
-                        Peer = mkIf (x.peer != null) x.peer;
-                    };
-                }) value.ip;
-            }) cfg;
-        };
+
+        net.addresses = let
+            addresses = name: value: builtins.foldl' (acc: x: acc ++ [
+                { address = x.addr; interface = name; peer = mkIf (x.peer != null) x.peer;  }
+            ]) [] value.ip;
+        in pkgs.lib.flatten (builtins.attrValues (builtins.mapAttrs addresses cfg));
+        
         systemd.services.wireguard-refresh = {
             wantedBy = [ "multi-user.target" ];
             after = [ "network-online.target" ];
+            restartIfChanged = true;
             script = ''
                 ${pkgs.lib.strings.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: ''
                     ${optionalString (value.refresh != 0) ''

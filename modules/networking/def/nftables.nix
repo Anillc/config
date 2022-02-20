@@ -48,7 +48,8 @@ in {
         systemd.services.nftables = {
             wants = lib.mkForce [ "network-online.target" ];
             before = lib.mkForce [ "network-online.target" ];
-            after = [ "systemd-networkd.service" ];
+            after = [ "net.service" ];
+            bindsTo = [ "net.service" ];
         };
         networking.nftables = let
             internalTCP = optionalString (builtins.length cfg.internalTCPPorts != 0) ''

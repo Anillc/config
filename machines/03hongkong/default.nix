@@ -70,11 +70,10 @@ rec {
             wantedBy = [ "multi-user.target" ];
             after = [ "network-online.target" ];
             script = ''
-                ${pkgs.iproute2}/bin/ip route del 2602:feda:daf::/48 table 114 || true
                 ${pkgs.route-chain}/bin/route-chain 2602:feda:daf::/96 &
                 CHAIN=$!
                 sleep 1
-                ${pkgs.iproute2}/bin/ip route add 2602:feda:daf::/48 dev tun0 proto 114 table 114
+                ${pkgs.iproute2}/bin/ip route replace 2602:feda:daf::/48 dev tun0 proto 114 table 114
                 wait $CHAIN
             '';
         };

@@ -1,11 +1,9 @@
 { config, pkgs, lib, ... }: with lib; {
     imports = [
-        ./nftables.nix
-        ./wg.nix
+        ./def
         ./wg-internal.nix
         ./babeld.nix
     ];
-    systemd.network.enable = true;
     services.resolved.enable = false;
     networking.useDHCP = false;
     boot.kernel.sysctl = mkForce {
@@ -13,34 +11,17 @@
         "net.ipv6.conf.all.forwarding" = 1;
         "net.ipv4.conf.all.rp_filter" = 0;
     };
-    systemd.network = {
-        netdevs.dummy2526.netdevConfig = {
-            Name = "dummy2526";
-            Kind = "dummy";
-        };
-        networks.dummy2526 = {
-            matchConfig.Name = "dummy2526";
-            addresses = [
-                { addressConfig = { Address = "2602:feda:da0::${config.meta.id}/128"; }; }
-                { addressConfig = { Address = "${config.meta.v4}/32"; }; }
-                { addressConfig = { Address = "${config.meta.v6}/128"; }; }
-            ];
-            routes = [
-                { routeConfig = { Destination = "2602:feda:da0::${config.meta.id}/128"; Table = 114; Protocol = 114; }; }
-                { routeConfig = { Destination = "${config.meta.v4}/32"; Table = 114; Protocol = 114; }; }
-                { routeConfig = { Destination = "${config.meta.v6}/128"; Table = 114; Protocol = 114; }; }
-            ];
-        };
-    };
-    systemd.services.table = {
-        wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" "systemd-networkd.service" ];
-        bindsTo = [ "network-online.target" ];
-        script = ''
-            ${pkgs.iproute2}/bin/ip -4 rule del table 114 || true
-            ${pkgs.iproute2}/bin/ip -6 rule del table 114 || true
-            ${pkgs.iproute2}/bin/ip -4 rule add table 114
-            ${pkgs.iproute2}/bin/ip -6 rule add table 114
-        '';
+    net = {
+        addresses = [
+            { interface = "dummy2526"; address = "${config.meta.v4}/32"; }
+            { interface = "dummy2526"; address = "${config.meta.v6}/128"; }
+            { interface = "dummy2526"; address = "2602:feda:da0::${config.meta.id}/128"; }
+        ];
+        routes = [
+            { dst = "${config.meta.v4}/32";                 interface = "dummy2526"; proto = 114; table = 114; }
+            { dst = "${config.meta.v6}/128";                interface = "dummy2526"; proto = 114; table = 114; }
+            { dst = "2602:feda:da0::${config.meta.id}/128"; interface = "dummy2526"; proto = 114; table = 114; }
+        ];
+        tables = [ 114 ];
     };
 }

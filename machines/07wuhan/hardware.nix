@@ -6,20 +6,15 @@
         device = "/dev/sda1";
         fsType = "ext4";
     };
-    systemd.network.networks.default-network = {
-        matchConfig.Name = "ens18";
+    net = {
         addresses = [
-            { addressConfig = { Address = "10.56.1.12/24"; }; }
-            { addressConfig = { Address = "2404:f4c0:5156:1::12/64"; }; }
+            { address = "10.56.1.12/24";                interface = "ens18"; }
+            { address = "2404:f4c0:5156:1::12/64";      interface = "ens18"; }
+            { address = "2406:840:1f:10::14:2055:1/64"; interface = "ens19"; }
         ];
-        routes = [
-            { routeConfig = { Gateway = "10.56.1.1"; }; }
-            { routeConfig = { Gateway = "2404:f4c0:5156:1::1"; }; }
-        ];
-    };
-    systemd.network.networks.default-network2 = {
-        matchConfig.Name = "ens19";
-        addresses = [{ addressConfig = { Address = "2406:840:1f:10::14:2055:1/64"; }; }];
+        up = [ "ens18" "ens19" ];
+        gateway4 = "10.56.1.1";
+        gateway6 = "2404:f4c0:5156:1::1";
     };
     networking.nameservers = [ "223.5.5.5" ];
 }

@@ -68,12 +68,10 @@ rec {
             };
         };
         # Xiao Jin
-        systemd.network.networks.default-network = {
-            routes = [
-                { routeConfig = { Gateway = "192.168.1.1"; Destination = "10.0.0.0/16"; PreferredSource = "172.22.167.106"; Table = 114; Protocol = 114; GatewayOnLink = "yes"; }; }
-                { routeConfig = { Gateway = "192.168.1.1"; Destination = "192.168.2.0/24"; PreferredSource = "172.22.167.106"; Table = 114; Protocol = 114; GatewayOnLink = "yes"; }; }
-                { routeConfig = { Gateway = "192.168.1.1"; Destination = "192.168.22.0/24"; PreferredSource = "172.22.167.106"; Table = 114; Protocol = 114; GatewayOnLink = "yes"; }; }
-            ];
-        };
+        net.routes = [
+            { dst = "10.0.0.0/16";     src = "172.22.167.106"; interface = "ens18"; gateway = "192.168.1.1"; onlink = true; proto = 114; table = 114; }
+            { dst = "192.168.2.0/24";  src = "172.22.167.106"; interface = "ens18"; gateway = "192.168.1.1"; onlink = true; proto = 114; table = 114; }
+            { dst = "192.168.22.0/24"; src = "172.22.167.106"; interface = "ens18"; gateway = "192.168.1.1"; onlink = true; proto = 114; table = 114; }
+        ];
     };
 }

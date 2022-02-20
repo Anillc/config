@@ -55,17 +55,14 @@ rec {
                 };
             };
         };
-        wg.phone = {
+        net.wg.phone = {
             listen = 11451;
             publicKey = "Pm7l051569YlVKkaCItUR8TmeAp7m6od3RhSkOGPriA=";
         };
-        systemd.network.networks.phone-network = {
-            matchConfig.Name = "phone";
-            routes = [
-                { routeConfig = { Destination = "172.22.167.110/32"; Table = 114; Protocol = 114; }; }
-                { routeConfig = { Destination = "2602:feda:da1::1/128"; Table = 114; Protocol = 114; }; }
-                { routeConfig = { Destination = "fd10:127:cc:1::1/128"; Table = 114; Protocol = 114; }; }
-            ];
-        };
+        net.routes = [
+            { dst = "172.22.167.110/32";    interface = "phone"; proto = 114; table = 114; }
+            { dst = "2602:feda:da1::1/128"; interface = "phone"; proto = 114; table = 114; }
+            { dst = "fd10:127:cc:1::1/128"; interface = "phone"; proto = 114; table = 114; }
+        ];
     };
 }

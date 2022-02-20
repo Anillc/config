@@ -3,14 +3,14 @@
 in {
     systemd.services.setup-wireguard = {
         wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" ];
-        bindsTo = [ "systemd-networkd.service" ];
+        after = [ "network-online.target" "net.service" ];
+        bindsTo = [ "net.service" ];
         script = pkgs.lib.strings.concatStringsSep "\n" (builtins.map (x: optionalString (!x.inNat) ''
             ENDPOINT=$(${pkgs.jq}/bin/jq -r '."${x.id}"' ${config.sops.secrets.endpoints.path})
             ${pkgs.wireguard-tools}/bin/wg set i${x.name} peer "${x.wg-public-key}" endpoint "$ENDPOINT:110${config.meta.id}"
         '') connect);
     };
-    wg = builtins.foldl' (acc: x: acc // {
+    net.wg = builtins.foldl' (acc: x: acc // {
         "i${x.name}" = {
             listen = mkIf (!config.meta.inNat) (pkgs.lib.toInt "110${x.id}");
             ip = [

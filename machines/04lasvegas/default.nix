@@ -27,16 +27,13 @@ rec {
             enable = true;
             configFile = config.sops.secrets.traefik.path;
         };
-        wg.deploy = {
+        net.wg.deploy = {
             listen = 12001;
             publicKey = "QQZ7pArhUyhdYYDhlv+x3N4G/+Uwu9QAdbWoNWAIRGg=";
         };
-        systemd.network.networks.deploy-network = {
-            matchConfig.Name = "deploy";
-            routes = [
-                { routeConfig = { Destination = "10.127.20.114/32"; Table = 114; Protocol = 114; }; }
-            ];
-        };
+        net.routes = [
+            { dst = "10.127.20.114/32"; interface = "deploy"; proto = 114; table = 114; }
+        ];
         systemd.services.tayga = let
             conf = pkgs.writeText "tayga" ''
                 tun-device nat64
@@ -50,10 +47,8 @@ rec {
             script = ''
                 ${pkgs.tayga}/bin/tayga --mktun --config ${conf}
                 ${pkgs.iproute2}/bin/ip link set nat64 up
-                ${pkgs.iproute2}/bin/ip route del 10.127.3.0/24 table 114 || true
-                ${pkgs.iproute2}/bin/ip route del 2a0e:b107:1171::/96 || true
-                ${pkgs.iproute2}/bin/ip route add 10.127.3.0/24 dev nat64 proto 114 table 114
-                ${pkgs.iproute2}/bin/ip route add 2a0e:b107:1171::/96 dev nat64
+                ${pkgs.iproute2}/bin/ip route replace 10.127.3.0/24 dev nat64 proto 114 table 114
+                ${pkgs.iproute2}/bin/ip route replace 2a0e:b107:1171::/96 dev nat64
                 ${pkgs.tayga}/bin/tayga --nodetach --config ${conf}
             '';
         };

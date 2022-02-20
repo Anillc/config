@@ -257,18 +257,18 @@ in {
             }
         '';
     };
-    wg.emoecast = {
+    net.wg.emoecast = {
         listen = 10002;
         ip = [{ addr = "fe80::2526/64"; }];
         publicKey = "1dJpFLegKHKButkXqbv1KLLMTmS6KtFkWBz6GRo2uxE=";
         endpoint = "fmt1.dn42.cas7.moe:32526";
     };
-    wg.dkioubit = {
+    net.wg.dkioubit = {
         ip = [{ addr = "fe80::ade1/64"; }];
         publicKey = "6Cylr9h1xFduAO+5nyXhFI1XJ0+Sw9jCpCDvcqErF1s=";
         endpoint = "us2.g-load.eu:22526";
     };
-    wg.dtech9 = {
+    net.wg.dtech9 = {
         listen = 21588;
         ip = [
             { addr = "fe80::100/64"; }

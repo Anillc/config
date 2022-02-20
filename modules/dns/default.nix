@@ -9,23 +9,26 @@
     };
 in {
     config = mkIf config.bgp.enable {
-        systemd.network.networks.dns-network = {
-            matchConfig.Name = "dns";
+        net = {
             addresses = [
-                { addressConfig = { Address = "${config.meta.v4}/32"; }; }
-                { addressConfig = { Address = "${config.meta.v6}/128"; }; }
+                { address = "${config.meta.v4}/32";  interface = "dns"; }
+                { address = "${config.meta.v6}/128"; interface = "dns"; }
             ];
             routes = [
-                { routeConfig = { Destination = "172.22.167.126/32"; Table = 114; Protocol = 114; }; }
-                { routeConfig = { Destination = "fdc9:83c1:d0ce::ff/128"; Table = 114; Protocol = 114; }; }
+                { dst = "172.22.167.126/32";      interface = "dns"; proto = 114; table = 114; }
+                { dst = "fdc9:83c1:d0ce::ff/128"; interface = "dns"; proto = 114; table = 114; }
             ];
+        };
+        systemd.services."container@dns" = {
+            before = [ "net.service" ];
+            partOf = [ "net.service" ];
         };
         containers.dns = {
             autoStart = true;
             privateNetwork = true;
             extraVeths.dns = {};
             config = { ... }: {
-                imports = [ ../networking/nftables.nix ];
+                imports = [ ../networking/def ];
                 nixpkgs.overlays = [(self: super: {
                     inherit (pkgs) dns;
                 })];

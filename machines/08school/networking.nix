@@ -10,48 +10,32 @@ in {
         enable = true;
         systemCronJobs = [ "*/20 * * * * root ${connect}" ];
     };
-    systemd.services.connectToSchool = {
+    systemd.services.connect-to-school = {
         script = "${connect}";
-        after = [ "network-online.target" ];
+        after = [ "network-online.target" "net.service" ];
         wantedBy = [ "multi-user.target" ];
     };
     firewall.extraNatRules = ''
-        ip  saddr 192.168.233.0/24 meta iif br0 meta oif ishanghai snat ip to 172.22.167.107
-        ip6 saddr fdff:233::/64 meta iif br0 meta oif ishanghai snat ip6 to fdc9:83c1:d0ce::11
+        ip  saddr 192.168.233.0/24 meta iif br0 meta oif ishanghai snat to 172.22.167.107
+        ip6 saddr fdff:233::/64    meta iif br0 meta oif ishanghai snat to fdc9:83c1:d0ce::11
         ip  saddr 192.168.233.0/24 meta iif br0 masquerade
         ip6 saddr fdff:233::/64    meta iif br0 masquerade
     '';
-    systemd.network = {
-        netdevs.enp2s0.netdevConfig = {
-            Name = "br0";
-            Kind = "bridge";
-        };
-        networks = {
-            enp1s0 = {
-                matchConfig.Name = "enp1s0";
-                DHCP = "ipv4";
-            };
-            enp2s0 = {
-                matchConfig.Name = "enp2s0";
-                bridge = [ "br0" ];
-            };
-            # bridge wlp0s29f7u4 in hostapd
-            br0 = {
-                matchConfig.Name = "br0";
-                addresses = [
-                    { addressConfig.Address = "192.168.233.1/24"; }
-                    { addressConfig.Address = "fdff:233::1/64"; }
-                ];
-            };
-            ishanghai = {
-                routes = [
-                    { routeConfig = { Gateway = "172.22.167.105"; Destination = "172.16.0.0/12"; PreferredSource = "172.22.167.107"; GatewayOnLink = "yes"; }; }
-                    { routeConfig = { Gateway = "172.22.167.105"; Destination = "10.0.0.0/8"; PreferredSource = "172.22.167.107"; GatewayOnLink = "yes"; }; }
-                    { routeConfig = { Gateway = "fdc9:83c1:d0ce::9"; Destination = "fd00::/8"; PreferredSource = "fdc9:83c1:d0ce::11"; GatewayOnLink = "yes"; }; }
-                ];
-            };
-        };
+    networking.interfaces.enp1s0.useDHCP = true;
+    net = {
+        addresses = [
+            { address = "192.168.233.1/24"; interface = "br0"; }
+            { address = "fdff:233::1/64";   interface = "br0"; }
+        ];
+        routes = [
+            { dst = "172.20.0.0/14"; src = "172.22.167.107";     interface = "ishanghai"; gateway = "172.22.167.105";    onlink = true; }
+            { dst = "10.0.0.0/8";    src = "172.22.167.107";     interface = "ishanghai"; gateway = "172.22.167.105";    onlink = true; }
+            { dst = "fd00::/8";      src = "fdc9:83c1:d0ce::11"; interface = "ishanghai"; gateway = "fdc9:83c1:d0ce::9"; onlink = true; }
+        ];
+        up = [ "enp1s0" "enp2s0" "wlp0s29f7u4" ];
+        bridges.br0 = [ "enp2s0" "wlp0s29f7u4" ];
     };
+
     networking.resolvconf.useLocalResolver = lib.mkForce false;
     firewall.publicTCPPorts = [ 53 ];
     firewall.publicUDPPorts = [ 53 ];
@@ -78,7 +62,6 @@ in {
         #channel = 6;
         countryCode = "CN";
         extraConfig = ''
-            bridge=br0
             ieee80211n=1
             ieee80211ac=1
             wmm_enabled=1
