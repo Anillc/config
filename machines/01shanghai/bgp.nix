@@ -4,7 +4,7 @@
         enable = true;
         domain = "an.dn42";
         # TODO: remove jx
-        servers = [ "las" "jp" "hk" "de" "wh" "sh" "sh2" "jx" ];
+        servers = [ "las" "jp" "hk" "de" "wh" "sh" "sh2" ];
     };
     bgp = {
         enable = true;
