@@ -1,6 +1,9 @@
 { config, pkgs, ... }: {
     firewall.extraNatRules = ''
-        meta iifname dnsmasq meta oifname "en*" masquerade
+        # for dn42 dst
+        meta iifname dnsmasq meta oifname != "en*" snat ip  to ${config.meta.v4}
+        meta iifname dnsmasq meta oifname != "en*" snat ip6 to ${config.meta.v6}
+        meta iifname dnsmasq masquerade
     '';
     net = {
         addresses = [

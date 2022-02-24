@@ -15,6 +15,7 @@ in {
         after = [ "network-online.target" "net.service" ];
         wantedBy = [ "multi-user.target" ];
     };
+    # don't konw why masquerade modified src to lo address
     firewall.extraNatRules = ''
         ip  saddr 192.168.233.0/24 meta iifname br0 meta oifname ishanghai snat to 172.22.167.107
         ip6 saddr fdff:233::/64    meta iifname br0 meta oifname ishanghai snat to fdc9:83c1:d0ce::11
