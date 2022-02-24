@@ -12,7 +12,6 @@
             { dst = "fdc9:83c1:d0ce::fe/128"; interface = "dnsmasq"; proto = 114; table = 114; }
         ];
     };
-    # TODO
     systemd.services.net.partOf = [ "container@dnsmasq.service" ];
     systemd.services."container@dnsmasq".before = [ "net.service" ];
     containers.dnsmasq = {

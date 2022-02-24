@@ -1,9 +1,7 @@
 { config, pkgs, lib, ... }: {
-    firewall.extraNatRules = "meta iif nnhr meta oif ens18 masquerade";
-    systemd.services."container@nanahira" = {
-        before = [ "net.service" "nftables.service" ];
-        partOf = [ "net.service" "nftables.service" ];
-    };
+    firewall.extraNatRules = "meta iifname nnhr meta oifname ens18 masquerade";
+    systemd.services.net.partOf = [ "container@dnsmasq.service" ];
+    systemd.services."container@nanahira".before = [ "net.service" ];
     net = {
         addresses = [
             { address = "192.168.114.1/24"; interface = "nnhr"; }

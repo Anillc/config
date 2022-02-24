@@ -45,12 +45,6 @@ in {
     };
     config = {
         networking.firewall.enable = false;
-        systemd.services.nftables = {
-            wants = lib.mkForce [ "network-online.target" ];
-            before = lib.mkForce [ "network-online.target" ];
-            after = [ "net.service" ];
-            bindsTo = [ "net.service" ];
-        };
         networking.nftables = let
             internalTCP = optionalString (builtins.length cfg.internalTCPPorts != 0) ''
                 ip saddr { 10.127.20.0/24, 172.22.167.96/27 } tcp dport { ${
@@ -86,7 +80,7 @@ in {
                     chain input {
                         type filter hook input priority 0; policy drop;
                         ct state { established, related } accept
-                        meta iif lo accept
+                        meta iifname lo accept
                         ip protocol icmp accept
                         ip6 nexthdr icmpv6 accept
                         ${internalTCP}

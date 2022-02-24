@@ -19,10 +19,8 @@ in {
                 { dst = "fdc9:83c1:d0ce::ff/128"; interface = "dns"; proto = 114; table = 114; }
             ];
         };
-        systemd.services."container@dns" = {
-            before = [ "net.service" ];
-            partOf = [ "net.service" ];
-        };
+        systemd.services.net.partOf = [ "container@dnsmasq.service" ];
+        systemd.services."container@dns".before = [ "net.service" ];
         containers.dns = {
             autoStart = true;
             privateNetwork = true;

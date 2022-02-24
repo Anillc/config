@@ -16,10 +16,10 @@ in {
         wantedBy = [ "multi-user.target" ];
     };
     firewall.extraNatRules = ''
-        ip  saddr 192.168.233.0/24 meta iif br0 meta oif ishanghai snat to 172.22.167.107
-        ip6 saddr fdff:233::/64    meta iif br0 meta oif ishanghai snat to fdc9:83c1:d0ce::11
-        ip  saddr 192.168.233.0/24 meta iif br0 masquerade
-        ip6 saddr fdff:233::/64    meta iif br0 masquerade
+        ip  saddr 192.168.233.0/24 meta iifname br0 meta oifname ishanghai snat to 172.22.167.107
+        ip6 saddr fdff:233::/64    meta iifname br0 meta oifname ishanghai snat to fdc9:83c1:d0ce::11
+        ip  saddr 192.168.233.0/24 meta iifname br0 masquerade
+        ip6 saddr fdff:233::/64    meta iifname br0 masquerade
     '';
     networking.interfaces.enp1s0.useDHCP = true;
     net = {
