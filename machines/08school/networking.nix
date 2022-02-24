@@ -17,10 +17,11 @@ in {
     };
     # don't konw why masquerade modified src to lo address
     firewall.extraNatRules = ''
-        ip  saddr 192.168.233.0/24 meta iifname br0 meta oifname ishanghai snat to 172.22.167.107
-        ip6 saddr fdff:233::/64    meta iifname br0 meta oifname ishanghai snat to fdc9:83c1:d0ce::11
-        ip  saddr 192.168.233.0/24 meta iifname br0 masquerade
-        ip6 saddr fdff:233::/64    meta iifname br0 masquerade
+        ip  saddr 192.168.233.0/24                 meta iifname br0 meta oifname ishanghai snat to 172.22.167.107
+        ip6 saddr fdff:233::/64 ip6 daddr fd00::/8 meta iifname br0 meta oifname ishanghai snat to fdc9:83c1:d0ce::11
+        ip6 saddr fdff:233::/64                    meta iifname br0 meta oifname ishanghai snat to 2602:feda:da0::8
+        ip  saddr 192.168.233.0/24                 meta iifname br0 masquerade
+        ip6 saddr fdff:233::/64                    meta iifname br0 masquerade
     '';
     networking.interfaces.enp1s0.useDHCP = true;
     net = {
@@ -32,6 +33,7 @@ in {
             { dst = "172.20.0.0/14"; src = "172.22.167.107";     interface = "ishanghai"; gateway = "172.22.167.105";    onlink = true; }
             { dst = "10.0.0.0/8";    src = "172.22.167.107";     interface = "ishanghai"; gateway = "172.22.167.105";    onlink = true; }
             { dst = "fd00::/8";      src = "fdc9:83c1:d0ce::11"; interface = "ishanghai"; gateway = "fdc9:83c1:d0ce::9"; onlink = true; }
+            { dst = "default";       src = "2602:feda:da0::8";   interface = "ishanghai"; gateway = "2602:feda:da0::1";  onlink = true; }
         ];
         up = [ "enp1s0" "enp2s0" "wlp0s29f7u4" ];
         bridges.br0 = [ "enp2s0" "wlp0s29f7u4" ];
@@ -44,12 +46,13 @@ in {
     firewall.extraInputRules = "ip saddr 0.0.0.0/32 accept";
     services.dnsmasq = {
         enable = true;
-        servers = [ "223.5.5.5" "172.20.0.53" ];
+        servers = [ "172.22.167.125" ];
         extraConfig = ''
             interface=br0
             bogus-priv
             enable-ra
             dhcp-range=192.168.233.2,192.168.233.254,24h
+            dhcp-range=fdff:233::2,fdff:233::fff,ra-only
         '';
     };
     services.hostapd = {
