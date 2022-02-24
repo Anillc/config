@@ -22,8 +22,6 @@ rec {
                 sopsFile = ./bot.env;
             };
         };
-        networking.nameservers = [ "8.8.8.8" "8.8.4.4" ];
-
         services.mysql = {
             enable = true;
             package = pkgs.mariadb;

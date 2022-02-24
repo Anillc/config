@@ -25,5 +25,4 @@
         up = [ "ens18" ];
         gateway4 = "192.168.1.1";
     };
-    networking.nameservers = [ "223.5.5.5" ];
 }

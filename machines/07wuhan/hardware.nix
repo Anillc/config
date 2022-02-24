@@ -16,5 +16,4 @@
         gateway4 = "10.56.1.1";
         gateway6 = "2404:f4c0:5156:1::1";
     };
-    networking.nameservers = [ "223.5.5.5" ];
 }

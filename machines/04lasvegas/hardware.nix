@@ -16,5 +16,4 @@
         up = [ "ens3" ];
         gateway6 = "2605:6400:20::1";
     };
-    networking.nameservers = [ "8.8.8.8" "8.8.4.4" ];
 }

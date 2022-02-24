@@ -1,9 +1,7 @@
 { ... }: {
-    networking.nameservers = [ "172.20.0.53" "223.5.5.5" ];
     services.bird-lg-go-frontend = {
         enable = true;
         domain = "an.dn42";
-        # TODO: remove jx
         servers = [ "las" "jp" "hk" "de" "wh" "sh" "sh2" ];
     };
     bgp = {

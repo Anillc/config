@@ -18,5 +18,4 @@
         up = [ "ens160" ];
         gateway4 = "2a0f:9400:7a00::1";
     };
-    networking.nameservers = [ "8.8.8.8" "8.8.4.4" ];
 }

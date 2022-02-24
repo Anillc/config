@@ -46,6 +46,7 @@ in {
     firewall.extraInputRules = "ip saddr 0.0.0.0/32 accept";
     services.dnsmasq = {
         enable = true;
+        resolveLocalQueries = false;
         servers = [ "172.22.167.125" ];
         extraConfig = ''
             interface=br0
@@ -74,5 +75,4 @@ in {
             rsn_pairwise=CCMP
         '';
     };
-    networking.nameservers = lib.mkForce [ "223.5.5.5" ];
 }
