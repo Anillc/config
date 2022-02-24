@@ -7,7 +7,7 @@ rec {
         wg-public-key = "NQfs6evQLemuJcdcvpO4ds1wXwUHTlzlQXWTJv+WCXY=";
         v4 = "172.22.167.97";
         v6 = "fdc9:83c1:d0ce::1";
-        connect = [ machines.hongkong machines.de machines.shanghai machines.jp ];
+        connect = [ machines.hongkong machines.de machines.shanghai machines.jp machines.fmt ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;

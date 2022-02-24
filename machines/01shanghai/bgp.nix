@@ -2,7 +2,7 @@
     services.bird-lg-go-frontend = {
         enable = true;
         domain = "an.dn42";
-        servers = [ "las" "jp" "hk" "de" "wh" "sh" "sh2" ];
+        servers = [ "las" "jp" "hk" "de" "wh" "sh" "sh2" "fmt" ];
     };
     bgp = {
         enable = true;

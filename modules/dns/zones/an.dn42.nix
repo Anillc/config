@@ -29,9 +29,11 @@
             "sh2".AAAA = [ "fdc9:83c1:d0ce::10" ];
             "jx".A     = [ "172.22.167.107"     ];
             "jx".AAAA  = [ "fdc9:83c1:d0ce::11" ];
+            "fmt".A    = [ "172.22.167.108"     ];
+            "fmt".AAAA = [ "fdc9:83c1:d0ce::12" ];
 
-            "dns".A    = [ "172.22.167.126"       ];
-            "dns".AAAA = [ "fdc9:83c1:d0ce::ff" ];
+            "dns".A    = [ "172.22.167.125"     ];
+            "dns".AAAA = [ "fdc9:83c1:d0ce::fe" ];
         };
     };
 in pkgs.writeText name (dns.lib.toString name zone)
