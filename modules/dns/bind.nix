@@ -19,8 +19,7 @@ in {
                 { dst = "fdc9:83c1:d0ce::ff/128"; interface = "dns"; proto = 114; table = 114; }
             ];
         };
-        # FIXME: won't restart net
-        systemd.services.net.partOf = [ "container@dnsmasq.service" ];
+        systemd.services.net.partOf = [ "container@dns.service" ];
         systemd.services."container@dns".before = [ "net.service" ];
         containers.dns = {
             autoStart = true;
