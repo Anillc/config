@@ -6,6 +6,9 @@
         device = "/dev/sda1";
         fsType = "ext4";
     };
+    boot.kernel.sysctl = {
+        "accept_ra" = 2;
+    };
     net = {
         addresses = [
             { address = "208.99.48.169/24"; interface = "ens18"; }
