@@ -60,11 +60,6 @@ rec {
                     '';
                 };
             };
-            virtualHosts."tghook.anillc.cn" = {
-                locations."/" = {
-                    proxyPass = "http://172.22.167.99:8056";
-                };
-            };
         };
         systemd.services.route-chain = {
             wantedBy = [ "multi-user.target" ];
