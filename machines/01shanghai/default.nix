@@ -19,6 +19,7 @@ rec {
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.anillc-device = {};
+            secrets.anillc-environment = {};
         };
         # influxdb and go-cqhttp
         firewall.internalTCPPorts = [ 8086 6700 ];
@@ -26,13 +27,14 @@ rec {
         services.go-cqhttp = {
             enable = true;
             device = config.sops.secrets.anillc-device.path;
-            config.message.remove-reply-at = true;
-            config.servers = [{
-                ws = {
-                    host = "0.0.0.0";
-                    port = 6700;
+            environmentFile = config.sops.secrets.anillc-environment.path;
+            config = {
+                message.remove-reply-at = true;
+                account = {
+                    uin = "\${UIN}";
+                    password = "\${PASSWORD}";
                 };
-            }];
+            };
         };
         services.babelweb2 = {
             enable = true;

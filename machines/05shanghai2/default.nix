@@ -22,10 +22,8 @@ rec {
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.cllina-device = {};
-            secrets.wg-nanahira-private-key = {
-                owner = "systemd-network";
-                group = "systemd-network";
-            };
+            secrets.cllina-environment = {};
+            secrets.wg-nanahira-private-key = {};
         };
         
         # gocq
@@ -33,13 +31,14 @@ rec {
         services.go-cqhttp = {
             enable = true;
             device = config.sops.secrets.cllina-device.path;
-            config.message.remove-reply-at = true;
-            config.servers = [{
-                ws = {
-                    host = "0.0.0.0";
-                    port = 6700;
+            environmentFile = config.sops.secrets.cllina-environment.path;
+            config = {
+                message.remove-reply-at = true;
+                account = {
+                    uin = "\${UIN}";
+                    password = "\${PASSWORD}";
                 };
-            }];
+            };
         };
 
         services.cron.systemCronJobs = [ "0 0 * * * root ${pkgs.systemd}/bin/systemctl restart podman-xxqg" ];
