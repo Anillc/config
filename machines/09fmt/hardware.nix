@@ -7,7 +7,7 @@
         fsType = "ext4";
     };
     boot.kernel.sysctl = {
-        "accept_ra" = 2;
+        "net.ipv6.conf.ens18.accept_ra" = 2;
     };
     net = {
         addresses = [

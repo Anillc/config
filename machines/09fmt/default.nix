@@ -13,6 +13,7 @@ rec {
         inherit meta;
         imports = [
             ./hardware.nix
+            ./bgp.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
     };
