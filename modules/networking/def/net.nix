@@ -88,7 +88,6 @@ in {
         };
     };
     config = {
-        # TODO: fix dnsmasq
         systemd.services.net = {
             after = [ "network.target" ];
             wantedBy = [ "network-online.target" ];
@@ -144,13 +143,6 @@ in {
                     ip route replace default via ${cfg.gateway6}
                 ''}
 
-                # set endpoint after set default gateway
-                ${wgInterfaces (x: ''
-                    ${optionalString (x.endpoint != null) ''
-                        wg set ${x.name} peer "${x.publicKey}" endpoint ${x.endpoint} || true
-                    ''}
-                '')}
-
                 ${pkgs.lib.strings.concatStrings (builtins.map (x: ''
                     ip route replace ${x.dst} ${
                         optionalString (x.src != null) "src ${x.src}"
@@ -171,6 +163,13 @@ in {
                     ip -4 rule add table ${builtins.toString x}
                     ip -6 rule add table ${builtins.toString x}
                 '') cfg.tables)}
+
+                # set endpoint after set default gateway
+                ${wgInterfaces (x: ''
+                    ${optionalString (x.endpoint != null) ''
+                        wg set ${x.name} peer "${x.publicKey}" endpoint ${x.endpoint} || true
+                    ''}
+                '')}
             '';
             postStop = ''
                 ${pkgs.lib.strings.concatStrings (builtins.map (x: ''
