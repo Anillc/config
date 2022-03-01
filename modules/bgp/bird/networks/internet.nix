@@ -104,7 +104,7 @@ cfg: ''
             igp table master6;
             next hop self;
             import filter {
-                internet_transits_filter_v6();
+                # internet_transits_filter_v6();
                 accept;
             };
             export where source = RTS_STATIC;

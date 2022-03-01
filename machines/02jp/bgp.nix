@@ -19,7 +19,7 @@
                     import filter {
                         bgp_path.delete(UTILS_INTERNET_BOGON_ASNS);
                         if bgp_path.first != 20473 then bgp_path.prepend(20473);
-                        internet_transits_filter_v6();
+                        # internet_transits_filter_v6();
                         accept;
                     };
                     export where source = RTS_STATIC;

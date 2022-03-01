@@ -88,6 +88,7 @@ in {
         };
     };
     config = {
+        # TODO: fix dnsmasq
         systemd.services.net = {
             after = [ "network.target" ];
             wantedBy = [ "network-online.target" ];

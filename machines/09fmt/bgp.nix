@@ -9,7 +9,7 @@
         extraBirdConfig = ''
             protocol static {
                 ipv6;
-                route 2602:fc1d::/32 via "ens18";
+                route 2602:fc1d::/64 via "ens18";
             }
         '';
     };
