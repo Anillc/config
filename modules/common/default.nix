@@ -56,6 +56,10 @@
         '';
     in {
         enable = true;
-        systemCronJobs = [ "*/20 * * * * root ${script}" ];
+        systemCronJobs = [
+            "*/20 * * * * root ${script}"
+            # resolve nscd memory leak
+            "10 0 * * * root ${pkgs.systemd}/bin/systemctl restart nscd"
+        ];
     };
 }
