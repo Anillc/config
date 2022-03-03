@@ -2,10 +2,12 @@
     connect = builtins.map (x: (import ../../machines).validate pkgs.lib.evalModules x) config.meta.connect;
 in {
     systemd.services.setup-wireguard = {
-        wantedBy = [ "multi-user.target" ];
+        wantedBy = [ "multi-user.target" "net.service" ];
         after = [ "network-online.target" "net.service" ];
         partOf = [ "net.service" ];
         script = pkgs.lib.strings.concatStringsSep "\n" (builtins.map (x: optionalString (!x.inNat) ''
+            # wait for starting the net service
+            sleep 2
             ENDPOINT=$(${pkgs.jq}/bin/jq -r '."${x.id}"' ${config.sops.secrets.endpoints.path})
             ${pkgs.wireguard-tools}/bin/wg set i${x.name} peer "${x.wg-public-key}" endpoint "$ENDPOINT:110${config.meta.id}"
         '') connect);
