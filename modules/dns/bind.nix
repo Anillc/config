@@ -9,6 +9,12 @@
     };
 in {
     config = mkIf config.bgp.enable {
+        firewall.extraNatRules = ''
+            # for dn42 dst
+            meta iifname dns meta oifname != "en*" snat ip  to ${config.meta.v4}
+            meta iifname dns meta oifname != "en*" snat ip6 to ${config.meta.v6}
+            meta iifname dns masquerade
+        '';
         net = {
             addresses = [
                 { address = "${config.meta.v4}/32";  interface = "dns"; }
