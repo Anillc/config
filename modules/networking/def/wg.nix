@@ -79,7 +79,7 @@ in {
                         function wg_${name}() {
                             while :; do
                                 sleep ${builtins.toString value.refresh}
-                                ${pkgs.wireguard}/bin/wg set ${name} peer ${value.publicKey} endpoint ${value.endpoint}
+                                ${pkgs.wireguard-tools}/bin/wg set ${name} peer ${value.publicKey} endpoint ${value.endpoint}
                                 echo the endpoint of ${name} refreshed
                             done
                         }
