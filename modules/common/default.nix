@@ -18,12 +18,18 @@
             ];
         };
     };
-    nix.settings.auto-optimise-store = true;
-    nix.optimise.automatic = true;
-    nix.gc = {
-        automatic = true;
-        options = "--delete-older-than 5d";
-        dates = "Sun 6:00";
+    nix = {
+        package = pkgs.nixUnstable;
+        extraOptions = ''
+            experimental-features = nix-command flakes
+        '';
+        optimise.automatic = true;
+        settings.auto-optimise-store = true;
+        gc = {
+            automatic = true;
+            options = "--delete-older-than 5d";
+            dates = "Sun 6:00";
+        };
     };
     services.openssh = {
         enable = true;
