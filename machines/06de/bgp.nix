@@ -12,6 +12,15 @@
                     extendedNextHop = true;
                     refresh = 60 * 60;
                 }
+                {
+                    name = "dgy";
+                    endpoint = "v4.ru.dn42.dgy.xyz:22526";
+                    publicKey = "Y8E2cd2DKr7hZ3qs1WgU+2l+qWHaOxw4vFPAGevpiW0=";
+                    asn = "4242420826";
+                    linkLocal = "fe80::826";
+                    extendedNextHop = true;
+                    refresh = 60 * 60;
+                }
             ];
         };
         bgpTransit = {
