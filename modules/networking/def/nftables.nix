@@ -78,7 +78,7 @@ in {
                 flush ruleset
                 table inet firewall {
                     chain input {
-                        type filter hook input priority 0; policy drop;
+                        type filter hook input priority filter; policy drop;
                         ct state { established, related } accept
                         meta iifname lo accept
                         ip protocol icmp accept
@@ -90,18 +90,18 @@ in {
                         ${cfg.extraInputRules}
                     }
                     chain output {
-                        type filter hook output priority 0; policy accept;
+                        type filter hook output priority filter; policy accept;
                     }
                     chain forward {
-                        type filter hook forward priority 0; policy accept;
+                        type filter hook forward priority filter; policy accept;
                         ${cfg.extraForwardRules}
                     }
                     chain prerouting {
-                        type nat hook prerouting priority -100; policy accept;
+                        type nat hook prerouting priority dstnat; policy accept;
                         ${cfg.extraPreroutingRules}
                     }
                     chain postrouting {
-                        type nat hook postrouting priority 100; policy accept;
+                        type nat hook postrouting priority srcnat; policy accept;
                         ${cfg.extraNatRules}
                     }
                 }
