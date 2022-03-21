@@ -11,9 +11,8 @@
             export-table 32766
             redistribute proto 114 allow
             redistribute local deny
-            install pref-src ${config.meta.v4}
-            install ip fd00::/8 pref-src ${config.meta.v6}
-            install pref-src 2602:feda:da0::${config.meta.id}
+            install pref-src ${config.meta.igpv4}
+            install pref-src ${config.meta.igpv6}
         '';
     };
     firewall.internalTCPPorts = [ 33124 ];
