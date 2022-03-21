@@ -76,5 +76,5 @@ pkgs: config: ''
                 neighbor 2602:feda:da0::${x.meta.id} as INTRANET_ASN;
             }
         ''}
-    '') "" (import ../../../../machines).list}
+    '') "" (import ../../../../machines pkgs.lib).list}
 '' # TODO: bgp disabled machine

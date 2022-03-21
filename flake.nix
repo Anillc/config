@@ -2,8 +2,6 @@
     description = "config";
 
     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    #inputs.nixpkgs.url = "git+file:///home/anillc/nixpkgs";
-    #inputs.nixpkgs.url = "github:Anillc/nixpkgs";
     inputs.flake-utils = {
         url = "github:numtide/flake-utils";
         inputs.nixpkgs.follows = "nixpkgs";
@@ -25,14 +23,15 @@
         inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    outputs = { self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, dns }: let
-        m = import ./machines;
-        machineSet = m.set;
-        metas = m.metas nixpkgs.lib.evalModules;
+    outputs = inputs@{ self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, dns }: let
+        machines = import ./machines nixpkgs.lib;
+        modules = import ./modules;
     in flake-utils.lib.eachDefaultSystem (system: let 
         pkgs = import nixpkgs {
-            overlays = [ deploy-rs.overlay ];
             inherit system;
+            overlays = [
+                deploy-rs.overlay
+            ];
         };
     in {
         devShell = pkgs.mkShell {
@@ -43,40 +42,38 @@
                         log=$(${pkgs.deploy-rs.deploy-rs}/bin/deploy -s .#$1 2>&1)
                         echo $log
                     }
-                    ms="${pkgs.lib.strings.concatStringsSep " " (builtins.map (x: x.name) metas)}"
+                    ms="${pkgs.lib.strings.concatStringsSep " " (map (machine: machine.meta.name) machines.list)}"
                     for m in $ms; do
                         deploy $m &
-                        pids[$!]=$!
                     done
-                    for pid in ''${pids[*]}; do
-                        wait $pid
-                    done
+                    wait
                 '')
             ];
         };
-    }) // {
-        nixosConfigurations = builtins.foldl' (acc: x: acc // {
-            "${x.name}" = nixpkgs.lib.nixosSystem {
+    }) // (with builtins; with nixpkgs.lib; {
+        nixosConfigurations = listToAttrs (map (machine: let
+            inherit (machine) meta;
+        in nameValuePair meta.name (nixpkgs.lib.nixosSystem {
+            inherit (meta) system;
             modules = [
-                sops-nix.nixosModules.sops
-                anillc.nixosModule.${x.system}
-                ({...}: { nixpkgs.overlays = [ (_: _: {
+                { nixpkgs.overlays = [(self: super: {
                     inherit dns;
-                }) ]; })
-                (import ./modules)
-                machineSet.${x.name}.configuration
+                })]; }
+                sops-nix.nixosModules.sops
+                anillc.nixosModule.${meta.system}
+                modules
+                machine.configuration
             ];
-            inherit (x) system;
-        };
-        }) {} metas;
-        deploy.nodes = builtins.foldl' (acc: x: if !x.enable then acc else acc // {
-            "${x.name}" = {
-                sshUser = "root";
-                sshOpts = [ "-4" "-o" "ServerAliveInterval=30" "-o" "StrictHostKeyChecking=no" ];
-                hostname = x.address;
-                confirmTimeout = 300;
-                profiles.system.path = deploy-rs.lib.${x.system}.activate.nixos self.nixosConfigurations.${x.name};
-            };
-        }) {} metas;
-    };
+        })) machines.list);
+
+        deploy.nodes = listToAttrs (map (machine: let
+            inherit (machine) meta;
+        in nameValuePair meta.name {
+            sshUser = "root";
+            sshOpts = [ "-4" "-o" "ServerAliveInterval=30" "-o" "StrictHostKeyChecking=no" ];
+            hostname = meta.address;
+            confirmTimeout = 300;
+            profiles.system.path = deploy-rs.lib.${meta.system}.activate.nixos self.nixosConfigurations.${meta.name};
+        }) (filter (machine: machine.meta.enable) machines.list));
+    });
 }

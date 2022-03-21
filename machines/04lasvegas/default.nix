@@ -1,5 +1,5 @@
-rec {
-    machines = (import ./..).set;
+lib: rec {
+    machines = import ./.. lib;
     meta = {
         id = "04";
         name = "lasvegas";
@@ -7,7 +7,7 @@ rec {
         wg-public-key = "NQfs6evQLemuJcdcvpO4ds1wXwUHTlzlQXWTJv+WCXY=";
         v4 = "172.22.167.97";
         v6 = "fdc9:83c1:d0ce::1";
-        connect = [ machines.hongkong machines.de machines.shanghai machines.jp machines.fmt ];
+        connect = with machines.set; [ hongkong de shanghai jp fmt ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;

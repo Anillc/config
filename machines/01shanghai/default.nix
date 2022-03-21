@@ -1,5 +1,5 @@
-rec {
-    machines = (import ./..).set;
+lib: rec {
+    machines = import ./.. lib;
     meta = {
         id = "01";
         name = "shanghai";
@@ -7,7 +7,7 @@ rec {
         wg-public-key = "82rDuI1+QXAXv+6HAf5aH2Ly0JXX/105Fsd61HmVnGE=";
         v4 = "172.22.167.105";
         v6 = "fdc9:83c1:d0ce::9";
-        connect = [ machines.hongkong machines.shanghai2 machines.wuhan machines.school machines.lasvegas ];
+        connect = with machines.set; [ hongkong shanghai2 wuhan school lasvegas ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
@@ -38,7 +38,7 @@ rec {
         };
         services.babelweb2 = {
             enable = true;
-            nodes = builtins.map (x: "[${x.v6}]:33124") ((import ../.).metas pkgs.lib.evalModules);
+            nodes = builtins.map (x: "[${x.v6}]:33124") (map (x: x.meta) machines.list);
         };
         firewall.publicTCPPorts = [ 80 ];
         services.nginx = {

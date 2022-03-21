@@ -1,5 +1,5 @@
 { config, pkgs, lib, ... }: with lib; let
-    connect = builtins.map (x: (import ../../machines).validate pkgs.lib.evalModules x) config.meta.connect;
+    connect = map (x: x.meta) config.meta.connect;
 in {
     systemd.services.setup-wireguard = {
         wantedBy = [ "multi-user.target" "net.service" ];
