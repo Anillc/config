@@ -23,6 +23,8 @@ in {
         address = mkOption {
             type = types.str;
             description = "address";
+            # TODO to v4
+            default = cfg.igpv4;
         };
         inNat = mkOption {
             type = types.bool;

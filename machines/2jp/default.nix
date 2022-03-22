@@ -3,7 +3,6 @@ lib: rec {
     meta = {
         id = 2;
         name = "jp";
-        address = "jp.an.dn42";
         wg-public-key = "HcvaoEtLGxv1tETLCjmcKXkr1CNwiF/ZsmIi7lYAvQ4=";
         connect = with machines.set; [ hk las de ];
     };

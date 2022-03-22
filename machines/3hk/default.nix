@@ -3,7 +3,6 @@ lib: rec {
     meta = {
         id = 3;
         name = "hk";
-        address = "hk.an.dn42";
         wg-public-key = "FDW5S+3nNS883Q5mKVwym0dwEYKF+nuQ1rPZ+sWVqgc=";
         connect = with machines.set; [ sh las de jp ];
     };
@@ -13,6 +12,7 @@ lib: rec {
             ./hardware.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
+        networking.nameservers = [ "8.8.8.8" ];
         services.webdav = {
             enable = true;
             settings = {

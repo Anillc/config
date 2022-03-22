@@ -3,7 +3,6 @@ lib: rec {
     meta = {
         id = 8;
         name = "jx";
-        address = "jx.an.dn42";
         inNat = true;
         wg-public-key = "2YSajirzbCUK4h3NbuBgpZPOypjrhtrLnT5pJp2K9HU=";
         connect = with machines.set; [ sh ];
@@ -22,5 +21,6 @@ lib: rec {
                 sopsFile = ./secrets.yaml;
             };
         };
+        networking.nameservers = [ "223.5.5.5" ];
     };
 }

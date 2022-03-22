@@ -3,7 +3,6 @@ lib: rec {
     meta = {
         id = 1;
         name = "sh";
-        address = "sh.an.dn42";
         wg-public-key = "82rDuI1+QXAXv+6HAf5aH2Ly0JXX/105Fsd61HmVnGE=";
         connect = with machines.set; [ hk sh2 wh jx las ];
     };
@@ -41,11 +40,6 @@ lib: rec {
         services.nginx = {
             enable = true;
             virtualHosts = {
-                "lg.anillc.cn" = {
-                    locations."/" = {
-                        proxyPass = "http://127.0.0.1:5000";
-                    };
-                };
                 "babeld.anillc.cn" = {
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:8080";

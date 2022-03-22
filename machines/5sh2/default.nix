@@ -3,7 +3,6 @@ lib: rec {
     meta = {
         id = 5;
         name = "sh2";
-        address = "sh2.an.dn42";
         inNat = true;
         system = "x86_64-linux";
         wg-public-key = "RBjfmCcZywc4KhQA1Mv/hzm6+I52R0DrHPT7DzLzWGI=";
@@ -22,6 +21,7 @@ lib: rec {
             secrets.cllina-environment = {};
             secrets.wg-nanahira-private-key = {};
         };
+        networking.nameservers = [ "223.5.5.5" ];
         
         # gocq
         firewall.internalTCPPorts = [ 6700 ];
