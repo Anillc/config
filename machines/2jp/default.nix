@@ -18,6 +18,7 @@ lib: rec {
                 sopsFile = ./bot.env;
             };
         };
+        bgp.enable = true;
         services.mysql = {
             enable = true;
             package = pkgs.mariadb;

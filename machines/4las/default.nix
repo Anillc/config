@@ -19,6 +19,7 @@ lib: rec {
                 group = "systemd-network";
             };
         };
+        bgp.enable = true;
         # traefik = {
         #     enable = true;
         #     configFile = config.sops.secrets.traefik.path;

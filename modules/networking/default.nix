@@ -3,6 +3,7 @@
         ./def
         ./wg-internal.nix
         ./babeld.nix
+        ./frr
     ];
     services.resolved.enable = false;
     networking.useDHCP = false;

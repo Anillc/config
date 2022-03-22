@@ -3,7 +3,6 @@ lib: rec {
     meta = {
         id = 6;
         name = "de";
-        address = "de.awsl.ee";
         inNat = true;
         wg-public-key = "JXN4fhKL5aRf++Bh1+xsAkVZPxZqaXuIcTXq2gS8ml8=";
         connect = with machines.set; [ las hk jp fmt ];
@@ -15,5 +14,6 @@ lib: rec {
         ];
         sops.defaultSopsFile = ./secrets.yaml;
         networking.nameservers = [ "8.8.8.8" ];
+        bgp.enable = true;
     };
 }

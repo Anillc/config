@@ -14,6 +14,7 @@ lib: rec {
         ];
         nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         sops.defaultSopsFile = ./secrets.yaml;
+        bgp.enable = true;
         networking.nameservers = [ "223.5.5.5" ];
     };
 }

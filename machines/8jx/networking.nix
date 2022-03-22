@@ -19,8 +19,8 @@ in {
     };
     # don't konw why masquerade modified src to lo address
     firewall.extraPostroutingRules = ''
-        ip  saddr 192.168.233.0/24 meta iifname br0 meta oifname ishanghai snat to 10.11.255.8
-        ip6 saddr fdff:233::/64    meta iifname br0 meta oifname ishanghai snat to fd11:ffff::8
+        ip  saddr 192.168.233.0/24 meta iifname br0 meta oifname ish snat to 10.11.255.8
+        ip6 saddr fdff:233::/64    meta iifname br0 meta oifname is snat to fd11:ffff::8
         ip  saddr 192.168.233.0/24 meta iifname br0 masquerade
         ip6 saddr fdff:233::/64    meta iifname br0 masquerade
     '';

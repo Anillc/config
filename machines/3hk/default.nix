@@ -12,6 +12,7 @@ lib: rec {
             ./hardware.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
+        bgp.enable = true;
         networking.nameservers = [ "8.8.8.8" ];
         services.webdav = {
             enable = true;

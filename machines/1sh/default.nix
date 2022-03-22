@@ -17,6 +17,7 @@ lib: rec {
             secrets.anillc-device = {};
             secrets.anillc-environment = {};
         };
+        bgp.enable = true;
         # influxdb and go-cqhttp
         firewall.internalTCPPorts = [ 8086 6700 ];
         services.influxdb2.enable = true;
