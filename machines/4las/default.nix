@@ -19,7 +19,15 @@ lib: rec {
                 group = "systemd-network";
             };
         };
-        bgp.enable = true;
+        bgp = {
+            enable = true;
+            upstream = {
+                enable = true;
+                asn = "53667";
+                address = "2605:6400:ffff::2";
+                password = "yfAnvncg";
+            };
+        };
         # traefik = {
         #     enable = true;
         #     configFile = config.sops.secrets.traefik.path;

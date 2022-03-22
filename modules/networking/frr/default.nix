@@ -9,6 +9,22 @@ let
 in {
     options.bgp = {
         enable = mkEnableOption "enable bgp";
+        upstream = {
+            enable = mkEnableOption "enable transit";
+            asn = mkOption {
+                type = types.str;
+                description = "asn";
+            };
+            address = mkOption {
+                type = types.str;
+                description = "address";
+            };
+            password = mkOption {
+                type = types.nullOr types.str;
+                description = "password";
+                default = null;
+            };
+        };
     };
     config = mkIf cfg.enable {
         # bgp
@@ -48,23 +64,76 @@ in {
                 config = ''
                     ip   nht resolve-via-default
                     ipv6 nht resolve-via-default
+                    ! set src
+                ''; # TODO
+            };
+            static = {
+                enable = true;
+                config = ''
+                   ipv6 route 2a0e:b107:1170::/48 reject 
+                   ipv6 route 2a0e:b107:1171::/48 reject 
+                   ipv6 route 2a0e:b107:df5::/48  reject 
+                   ipv6 route 2602:feda:da0::/44  reject 
+                   ipv6 route 2a0d:2587:8100::/41 reject 
                 '';
             };
             bgp = {
                 enable = true;
-                config = ''
+                config = traceVal ''
+                    ipv6 prefix-list NETWORK permit 2a0e:b107:1170::/48
+                    ipv6 prefix-list NETWORK permit 2a0e:b107:1171::/48
+                    ipv6 prefix-list NETWORK permit 2a0e:b107:df5::/48
+                    ipv6 prefix-list NETWORK permit 2602:feda:da0::/44
+                    ipv6 prefix-list NETWORK permit 2a0d:2587:8100::/41
+                    ipv6 prefix-list NETWORK deny any
+
+                    route-map UPSTREAM_IN permit 10
+                    route-map UPSTREAM_OUT permit 10
+                     match ipv6 address prefix-list NETWORK
+
+                    route-map IBGP_IN permit 10
+                     set local-preference 50
+                    route-map IBGP_OUT permit 10
+                     set ip next-hop ${config.meta.v4}
+                     set ipv6 next-hop global ${config.meta.v6}
+
                     router bgp 142055
-                        bgp router-id ${config.meta.igpv4}
-                        no bgp default ipv4-unicast
-                        no bgp default ipv6-unicast
-                        neighbor ipeers peer-group
-                        neighbor ipeers remote-as 142055
-                        ${concatStrings (map (x:
-                            "neighbor ${x.meta.igpv4} peer-group ipeers\n    ") (filter (x: x.meta.id != config.meta.id) machines.list))}
-                        address-family l2vpn evpn
-                            neighbor ipeers activate
-                            advertise-all-vni
-                        exit-address-family
+                     bgp router-id ${config.meta.igpv4}
+                     no bgp default ipv4-unicast
+                     no bgp default ipv6-unicast
+                     ! ibgp
+                     neighbor ibgp peer-group
+                     neighbor ibgp capability dynamic
+                     neighbor ibgp remote-as 142055
+                    ${concatStrings (map (x:
+                        " neighbor ${x.meta.igpv4} peer-group ibgp\n"
+                    ) (filter (x: x.meta.id != config.meta.id) machines.list))}
+                     ! ebgp
+                     neighbor upstream peer-group
+                     neighbor upstream ebgp-multihop
+                     neighbor upstream capability dynamic
+                     neighbor upstream prefix-list UPSTREAM_OUT out
+                     ${optionalString (cfg.upstream.password != null) "neighbor upstream password ${cfg.upstream.password}"}
+                    ${optionalString cfg.upstream.enable (
+                        " neighbor ${cfg.upstream.address} peer-group upstream\n" +
+                        " neighbor ${cfg.upstream.address} remote-as ${cfg.upstream.asn}"
+                    )}
+                     address-family l2vpn evpn
+                      neighbor ibgp activate
+                      advertise-all-vni
+                     exit-address-family
+                     address-family ipv6 unicast
+                      ! redistribute prefixes
+                      redistribute static
+                      neighbor ibgp activate
+                      neighbor ibgp route-map IBGP_IN  in
+                      neighbor ibgp route-map IBGP_OUT out
+                    ${optionalString cfg.upstream.enable (
+                        "  neighbor upstream activate\n" +
+                        "  neighbor upstream route-map UPSTREAM_IN  in\n" +
+                        "  neighbor upstream route-map UPSTREAM_OUT out"
+                    )}
+                     exit-address-family
                 '';
             };
         };
