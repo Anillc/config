@@ -4,7 +4,7 @@ lib: rec {
         id = 1;
         name = "sh";
         wg-public-key = "82rDuI1+QXAXv+6HAf5aH2Ly0JXX/105Fsd61HmVnGE=";
-        connect = with machines.set; [ hk sh2 wh jx las ];
+        connect = with machines.set; [ hk sh2 wh jx ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;

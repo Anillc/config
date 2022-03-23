@@ -6,7 +6,6 @@
             "i${x.meta.name}".type = "tunnel";
         }) {} config.meta.connect;
         extraConfig = ''
-            reflect-kernel-metric true
             import-table 114
             export-table 32766
             redistribute proto 114 allow

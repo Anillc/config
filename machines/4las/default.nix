@@ -4,7 +4,7 @@ lib: rec {
         id = 4;
         name = "las";
         wg-public-key = "NQfs6evQLemuJcdcvpO4ds1wXwUHTlzlQXWTJv+WCXY=";
-        connect = with machines.set; [ hk de sh jp fmt ];
+        connect = with machines.set; [ hk de jp fmt ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
@@ -26,6 +26,7 @@ lib: rec {
                 asn = "53667";
                 address = "2605:6400:ffff::2";
                 password = "yfAnvncg";
+                multihop = true;
             };
         };
         # traefik = {

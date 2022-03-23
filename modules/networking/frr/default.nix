@@ -24,6 +24,11 @@ in {
                 description = "password";
                 default = null;
             };
+            multihop = mkOption {
+                type = types.bool;
+                description = "multihop";
+                default = false;
+            };
         };
     };
     config = mkIf cfg.enable {
@@ -50,8 +55,11 @@ in {
                 ip link set vx11 master br11
                 ip address add ${config.meta.v4}/22 dev br11
                 ip address add ${config.meta.v6}/32 dev br11
+
+                ip address add 2602:feda:da0::${toHexString config.meta.id}/48 dev br11
             '';
             postStop = ''
+                ip address del 2602:feda:da0::${toHexString config.meta.id}/48 dev br11
                 ip address del ${config.meta.v4}/22 dev br11
                 ip address del ${config.meta.v6}/32 dev br11
                 ip link del br11 || true
@@ -62,31 +70,32 @@ in {
             zebra = {
                 enable = true;
                 config = ''
+                    route-map SET_SRC permit 10
+                     set src 2602:feda:da0::${toHexString config.meta.id}
                     ip   nht resolve-via-default
                     ipv6 nht resolve-via-default
-                    ! set src
+                    ipv6 protocol bgp route-map SET_SRC
                 ''; # TODO
             };
             static = {
                 enable = true;
                 config = ''
-                   ipv6 route 2a0e:b107:1170::/48 reject 
-                   ipv6 route 2a0e:b107:1171::/48 reject 
-                   ipv6 route 2a0e:b107:df5::/48  reject 
-                   ipv6 route 2602:feda:da0::/44  reject 
-                   ipv6 route 2a0d:2587:8100::/41 reject 
+                    ipv6 route 2a0e:b107:1170::/48 reject 
+                    ipv6 route 2a0e:b107:1171::/48 reject 
+                    ipv6 route 2a0e:b107:df5::/48  reject 
+                    ipv6 route 2602:feda:da0::/44  reject 
+                    ipv6 route 2a0d:2587:8100::/41 reject 
+                    ipv6 prefix-list NETWORK seq 1 permit 2a0e:b107:1170::/48
+                    ipv6 prefix-list NETWORK seq 2 permit 2a0e:b107:1171::/48
+                    ipv6 prefix-list NETWORK seq 3 permit 2a0e:b107:df5::/48
+                    ipv6 prefix-list NETWORK seq 4 permit 2602:feda:da0::/44
+                    ipv6 prefix-list NETWORK seq 5 permit 2a0d:2587:8100::/41
+                    ipv6 prefix-list NETWORK seq 6 deny any
                 '';
             };
             bgp = {
                 enable = true;
-                config = traceVal ''
-                    ipv6 prefix-list NETWORK permit 2a0e:b107:1170::/48
-                    ipv6 prefix-list NETWORK permit 2a0e:b107:1171::/48
-                    ipv6 prefix-list NETWORK permit 2a0e:b107:df5::/48
-                    ipv6 prefix-list NETWORK permit 2602:feda:da0::/44
-                    ipv6 prefix-list NETWORK permit 2a0d:2587:8100::/41
-                    ipv6 prefix-list NETWORK deny any
-
+                config = ''
                     route-map UPSTREAM_IN permit 10
                     route-map UPSTREAM_OUT permit 10
                      match ipv6 address prefix-list NETWORK
@@ -110,9 +119,9 @@ in {
                     ) (filter (x: x.meta.id != config.meta.id) machines.list))}
                      ! ebgp
                      neighbor upstream peer-group
-                     neighbor upstream ebgp-multihop
                      neighbor upstream capability dynamic
                      neighbor upstream prefix-list UPSTREAM_OUT out
+                     ${optionalString cfg.upstream.multihop "neighbor upstream ebgp-multihop"}
                      ${optionalString (cfg.upstream.password != null) "neighbor upstream password ${cfg.upstream.password}"}
                     ${optionalString cfg.upstream.enable (
                         " neighbor ${cfg.upstream.address} peer-group upstream\n" +
