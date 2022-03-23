@@ -18,7 +18,7 @@ lib: rec {
             upstream = {
                 enable = true;
                 asn = "7720";
-                address = "2602:fc1d::1";
+                address = "2602:fc1d:0:2::1";
                 multihop = true;
             };
         };
