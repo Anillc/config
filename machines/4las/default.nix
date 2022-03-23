@@ -29,6 +29,25 @@ lib: rec {
                 multihop = true;
             };
         };
+        services.frr.static = {
+            enable = true;
+            config = ''
+                ! Buyvm Router
+                ipv6 route 2605:6400:ffff::/64 fe80::4e96:1400:c8a8:5ff0 ens3
+                ! Buyvm Gateway
+                ipv6 route 2604:4d40:2000::/64 fe80::4e96:1400:c8a8:5ff0 ens3
+                ! Buyvm Customers
+                ipv6 route 2605:6400:20::/48 fe80::4e96:1400:c8a8:5ff0 ens3
+                ! He
+                ipv6 route 2001:470:1:964::1/128 fe80::4e96:1400:c8a8:5ff0 ens3
+                ! Cogent
+                ipv6 route 2001:550:2:c8::28:1/128 fe80::4e96:1400:c8a8:5ff0 ens3
+                ! GTT
+                ipv6 route 2001:668:0:3:ffff:2:0:1c6d/128 fe80::4e96:1400:c8a8:5ff0 ens3
+                ! anyNode
+                ipv6 route fdeb:fc8d:4786:60b7::2/128 fe80::4e96:1400:c8a8:5ff0 ens3
+            '';
+        };
         # traefik = {
         #     enable = true;
         #     configFile = config.sops.secrets.traefik.path;

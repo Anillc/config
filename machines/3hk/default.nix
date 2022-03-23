@@ -12,7 +12,14 @@ lib: rec {
             ./hardware.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
-        bgp.enable = true;
+        bgp = {
+            enable = true;
+            upstream = {
+                enable = true;
+                asn = "38008";
+                address = "2406:4440::1";
+            };
+        };
         networking.nameservers = [ "8.8.8.8" ];
         services.webdav = {
             enable = true;

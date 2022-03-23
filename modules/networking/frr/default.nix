@@ -75,7 +75,7 @@ in {
                     ip   nht resolve-via-default
                     ipv6 nht resolve-via-default
                     ipv6 protocol bgp route-map SET_SRC
-                ''; # TODO
+                '';
             };
             static = {
                 enable = true;
@@ -85,17 +85,18 @@ in {
                     ipv6 route 2a0e:b107:df5::/48  reject 
                     ipv6 route 2602:feda:da0::/44  reject 
                     ipv6 route 2a0d:2587:8100::/41 reject 
+                '';
+            };
+            bgp = {
+                enable = true;
+                config = ''
                     ipv6 prefix-list NETWORK seq 1 permit 2a0e:b107:1170::/48
                     ipv6 prefix-list NETWORK seq 2 permit 2a0e:b107:1171::/48
                     ipv6 prefix-list NETWORK seq 3 permit 2a0e:b107:df5::/48
                     ipv6 prefix-list NETWORK seq 4 permit 2602:feda:da0::/44
                     ipv6 prefix-list NETWORK seq 5 permit 2a0d:2587:8100::/41
                     ipv6 prefix-list NETWORK seq 6 deny any
-                '';
-            };
-            bgp = {
-                enable = true;
-                config = ''
+                    
                     route-map UPSTREAM_IN permit 10
                     route-map UPSTREAM_OUT permit 10
                      match ipv6 address prefix-list NETWORK

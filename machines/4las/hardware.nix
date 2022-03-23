@@ -13,6 +13,9 @@
         addresses = [
             { address = "2605:6400:20:677::/48"; interface = "ens3"; }
         ];
+        routes = [
+            { dst = "2605:6400:ffff::2/128"; src = "2605:6400:20:677::"; interface = "ens3"; }
+        ];
         up = [ "ens3" ];
         gateway6 = "2605:6400:20::1";
     };

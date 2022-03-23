@@ -13,6 +13,14 @@ lib: rec {
         ];
         sops.defaultSopsFile = ./secrets.yaml;
         networking.nameservers = [ "8.8.8.8" ];
-        bgp.enable = true;
+        bgp = {
+            enable = true;
+            upstream = {
+                enable = true;
+                asn = "7720";
+                address = "2602:fc1d::1";
+                multihop = true;
+            };
+        };
     };
 }

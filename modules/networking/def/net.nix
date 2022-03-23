@@ -99,6 +99,7 @@ in {
                     optionalString (x.peer != null) "peer ${x.peer}"
                 } || true
             '') cfg.addresses)}
+            sleep 1 # make ip address add happy
             ${concatStrings (map (x: ''
                 ip route replace ${x.dst} ${
                     optionalString (x.src != null) "src ${x.src}"

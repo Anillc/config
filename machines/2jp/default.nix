@@ -18,7 +18,16 @@ lib: rec {
                 sopsFile = ./bot.env;
             };
         };
-        bgp.enable = true;
+        bgp = {
+            enable = true;
+            upstream = {
+                enable = true;
+                asn = "64515";
+                address = "2001:19f0:ffff::1";
+                password = "TRgV3ytV38";
+                multihop = true;
+            };
+        };
         services.mysql = {
             enable = true;
             package = pkgs.mariadb;
