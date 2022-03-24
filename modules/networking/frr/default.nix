@@ -30,6 +30,22 @@ in {
                 default = false;
             };
         };
+        peers = mkOption {
+            type = types.listOf (types.submodule {
+                options = {
+                    asn = mkOption {
+                        type = types.str;
+                        description = "asn";
+                    };
+                    address = mkOption {
+                        type = types.str;
+                        description = "address";
+                    };
+                };
+            });
+            description = "peers";
+            default = [];
+        };
     };
     config = mkIf cfg.enable {
         # bgp
@@ -66,7 +82,7 @@ in {
                 ip link del vx11 || true
             '';
         };
-        services.frr = {
+        services.frr-override = {
             zebra = {
                 enable = true;
                 config = ''
@@ -89,6 +105,7 @@ in {
             };
             bgp = {
                 enable = true;
+                extraOptions = "-M rpki";
                 config = ''
                     ipv6 prefix-list NETWORK seq 1 permit 2a0e:b107:1170::/48
                     ipv6 prefix-list NETWORK seq 2 permit 2a0e:b107:1171::/48
@@ -96,19 +113,52 @@ in {
                     ipv6 prefix-list NETWORK seq 4 permit 2602:feda:da0::/44
                     ipv6 prefix-list NETWORK seq 5 permit 2a0d:2587:8100::/41
                     ipv6 prefix-list NETWORK seq 6 deny any
-                    
-                    route-map UPSTREAM_IN permit 10
-                    route-map UPSTREAM_OUT permit 10
-                     match ipv6 address prefix-list NETWORK
 
+                    ipv6 prefix-list BOGON_v6 seq 1  deny ::/8 le 128
+                    ipv6 prefix-list BOGON_v6 seq 2  deny 100::/64 le 128
+                    ipv6 prefix-list BOGON_v6 seq 3  deny 2001:2::/48 le 128
+                    ipv6 prefix-list BOGON_v6 seq 4  deny 2001:10::/28 le 128
+                    ipv6 prefix-list BOGON_v6 seq 5  deny 2001:db8::/32 le 128
+                    ipv6 prefix-list BOGON_v6 seq 6  deny 2002::/16 le 128
+                    ipv6 prefix-list BOGON_v6 seq 7  deny 3ffe::/16 le 128
+                    ipv6 prefix-list BOGON_v6 seq 8  deny fc00::/7 le 128
+                    ipv6 prefix-list BOGON_v6 seq 9  deny fe80::/10 le 128
+                    ipv6 prefix-list BOGON_v6 seq 10 deny fec0::/10 le 128
+                    ipv6 prefix-list BOGON_v6 seq 11 deny ff00::/8 le 128
+                    ipv6 prefix-list BOGON_v6 seq 12 deny ::/0 ge 49 le 128
+                    ipv6 prefix-list BOGON_v6 seq 13 permit any
+
+                    bgp as-path access-list BOGON_ASN seq 1 deny 23456
+                    bgp as-path access-list BOGON_ASN seq 2 deny 64496-131071
+                    bgp as-path access-list BOGON_ASN seq 3 deny 4200000000-4294967295
+                    bgp as-path access-list BOGON_ASN seq 4 permit .*
+
+                    rpki
+                     rpki cache rtr.rpki.cloudflare.com 8282 preference 1
+                     exit
+                    
                     route-map IBGP_IN permit 10
                      set local-preference 50
                     route-map IBGP_OUT permit 10
                      set ip next-hop ${config.meta.v4}
                      set ipv6 next-hop global ${config.meta.v6}
 
+                    route-map UPSTREAM_IN permit 10
+                    route-map UPSTREAM_OUT permit 10
+                     match ipv6 address prefix-list NETWORK
+
+                    route-map PEERS_IN permit 10
+                     match as-path BOGON_ASN
+                    route-map PEERS_IN permit 15
+                     match ipv6 address prefix-list BOGON_v6
+                    route-map PEERS_IN deny 20
+                     match rpki invalid
+                    route-map PEERS_OUT permit 10
+                     match ipv6 address prefix-list NETWORK
+
                     router bgp 142055
                      bgp router-id ${config.meta.igpv4}
+                     bgp graceful-restart
                      no bgp default ipv4-unicast
                      no bgp default ipv6-unicast
                      ! ibgp
@@ -118,16 +168,22 @@ in {
                     ${concatStrings (map (x:
                         " neighbor ${x.meta.igpv4} peer-group ibgp\n"
                     ) (filter (x: x.meta.id != config.meta.id) machines.list))}
-                     ! ebgp
+                     ! ebgp upstream
                      neighbor upstream peer-group
                      neighbor upstream capability dynamic
-                     neighbor upstream prefix-list UPSTREAM_OUT out
                      ${optionalString cfg.upstream.multihop "neighbor upstream ebgp-multihop"}
                      ${optionalString (cfg.upstream.password != null) "neighbor upstream password ${cfg.upstream.password}"}
                     ${optionalString cfg.upstream.enable (
                         " neighbor ${cfg.upstream.address} peer-group upstream\n" +
                         " neighbor ${cfg.upstream.address} remote-as ${cfg.upstream.asn}"
                     )}
+                     ! ebgp peers
+                     neighbor peers peer-group
+                     neighbor peers capability dynamic
+                    ${concatStrings (map (x:
+                        " neighbor ${x.address} peer-group peers\n" +
+                        " neighbor ${x.address} remote-as ${x.asn}\n"
+                    ) cfg.peers)}
                      address-family l2vpn evpn
                       neighbor ibgp activate
                       advertise-all-vni
@@ -136,13 +192,17 @@ in {
                       ! redistribute prefixes
                       redistribute static
                       neighbor ibgp activate
+                      neighbor ibgp soft-reconfiguration inbound
                       neighbor ibgp route-map IBGP_IN  in
                       neighbor ibgp route-map IBGP_OUT out
-                    ${optionalString cfg.upstream.enable (
-                        "  neighbor upstream activate\n" +
-                        "  neighbor upstream route-map UPSTREAM_IN  in\n" +
-                        "  neighbor upstream route-map UPSTREAM_OUT out"
-                    )}
+                      neighbor upstream activate
+                      neighbor upstream soft-reconfiguration inbound
+                      neighbor upstream route-map UPSTREAM_IN  in
+                      neighbor upstream route-map UPSTREAM_OUT out
+                      neighbor peers activate
+                      neighbor peers soft-reconfiguration inbound
+                      neighbor peers route-map PEERS_IN  in
+                      neighbor peers route-map PEERS_OUT out
                      exit-address-family
                 '';
             };

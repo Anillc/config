@@ -29,7 +29,7 @@ lib: rec {
                 multihop = true;
             };
         };
-        services.frr.static = {
+        services.frr-override.static = {
             enable = true;
             config = ''
                 ! Buyvm Router

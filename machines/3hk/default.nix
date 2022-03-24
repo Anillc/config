@@ -4,7 +4,7 @@ lib: rec {
         id = 3;
         name = "hk";
         wg-public-key = "FDW5S+3nNS883Q5mKVwym0dwEYKF+nuQ1rPZ+sWVqgc=";
-        connect = with machines.set; [ sh las de jp ];
+        connect = with machines.set; [ sh las de jp fmt ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
@@ -19,6 +19,10 @@ lib: rec {
                 asn = "38008";
                 address = "2406:4440::1";
             };
+            peers = [{ # APERIX
+                asn = "38008";
+                address = "2406:4440::100";
+            }];
         };
         networking.nameservers = [ "8.8.8.8" ];
         services.webdav = {
