@@ -1,5 +1,3 @@
-# TODO
-
 { config, pkgs, lib, ... }: let
     connect = pkgs.writeScript "connect" ''
         export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
@@ -17,10 +15,7 @@ in {
         after = [ "network-online.target" "net-online.service" ];
         wantedBy = [ "multi-user.target" ];
     };
-    # don't konw why masquerade modified src to lo address
     firewall.extraPostroutingRules = ''
-        ip  saddr 192.168.233.0/24 meta iifname br0 meta oifname ish snat to 10.11.255.8
-        ip6 saddr fdff:233::/64    meta iifname br0 meta oifname is snat to fd11:ffff::8
         ip  saddr 192.168.233.0/24 meta iifname br0 masquerade
         ip6 saddr fdff:233::/64    meta iifname br0 masquerade
     '';
@@ -29,12 +24,6 @@ in {
         addresses = [
             { address = "192.168.233.1/24"; interface = "br0"; }
             { address = "fdff:233::1/64";   interface = "br0"; }
-        ];
-        routes = [
-            # { dst = "172.20.0.0/14"; src = "172.22.167.107";     interface = "ishanghai"; gateway = "172.22.167.105";    onlink = true; }
-            { dst = "10.0.0.0/8";    src = "10.11.255.8";     interface = "ishanghai"; gateway = "10.11.255.1";    onlink = true; }
-            { dst = "fd00::/8";      src = "fd11:ffff::8"; interface = "ishanghai"; gateway = "fd11:ffff::1"; onlink = true; }
-            # { dst = "default";       src = "2602:feda:da0::8";   interface = "ishanghai"; gateway = "2602:feda:da0::1";  onlink = true; }
         ];
         up = [ "enp1s0" "enp2s0" "wlp0s29f7u4" ];
         bridges.br0 = [ "enp2s0" "wlp0s29f7u4" ];
