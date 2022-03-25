@@ -142,8 +142,9 @@ in {
                     route-map IBGP_OUT permit 10
                      set ip next-hop ${config.meta.v4}
                      set ipv6 next-hop global ${config.meta.v6}
+                     ${optionalString cfg.upstream.enable "set as-path prepend ${cfg.upstream.asn}"}
 
-                    route-map UPSTREAM_IN permit 10
+                    route-map UPSTREAM_IN deny 10
                     route-map UPSTREAM_OUT permit 10
                      match ipv6 address prefix-list NETWORK
 
@@ -191,6 +192,7 @@ in {
                      address-family ipv6 unicast
                       ! redistribute prefixes
                       redistribute static
+                      ${optionalString cfg.upstream.enable "network ::/0"}
                       neighbor ibgp activate
                       neighbor ibgp soft-reconfiguration inbound
                       neighbor ibgp route-map IBGP_IN  in

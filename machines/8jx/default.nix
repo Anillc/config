@@ -21,6 +21,7 @@ lib: rec {
                 sopsFile = ./secrets.yaml;
             };
         };
+        bgp.enable = true;
         networking.nameservers = [ "223.5.5.5" ];
     };
 }
