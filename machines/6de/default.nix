@@ -1,10 +1,11 @@
 lib: rec {
     machines = import ./.. lib;
     meta = {
-        id = 9;
-        name = "fmt";
-        wg-public-key = "3jCbL/4+/Sdk2NuDQGln09AKj8v29GnxyS/0WSzJ0Ck=";
-        connect = with machines.set; [ las de hk ];
+        id = 6;
+        name = "de";
+        inNat = true;
+        wg-public-key = "JXN4fhKL5aRf++Bh1+xsAkVZPxZqaXuIcTXq2gS8ml8=";
+        connect = with machines.set; [ las hk jp fmt ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
@@ -17,9 +18,8 @@ lib: rec {
             enable = true;
             upstream = {
                 enable = true;
-                asn = "7720";
-                address = "2602:fc1d:0:2::1";
-                multihop = true;
+                asn = "135395";
+                address = "2a0f:9400:7a00::1";
             };
         };
     };

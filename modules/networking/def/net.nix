@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }: with lib; let
+{ config, pkgs, lib, ... }:
+
+with builtins;
+with lib;
+
+let
     cfg = config.net;
 in {
     options.net = {
@@ -87,101 +92,93 @@ in {
             default = null;
         };
     };
-    config = {
-        systemd.services.net = {
+    config = let
+        configureNetwork = ''
+            ${concatStrings (map (x: ''
+                ip address add ${x.address} dev ${x.interface} ${
+                    optionalString (x.peer != null) "peer ${x.peer}"
+                } || true
+            '') cfg.addresses)}
+            sleep 1 # make ip address add happy
+            ${concatStrings (map (x: ''
+                ip route replace ${x.dst} ${
+                    optionalString (x.src != null) "src ${x.src}"
+                } ${
+                    optionalString (x.interface != null) "dev ${x.interface}"
+                } ${
+                    optionalString (x.gateway != null) "via ${x.gateway}"
+                } ${
+                    optionalString (x.proto != null) "proto ${toString x.proto}"
+                } ${
+                    optionalString (x.table != null) "table ${toString x.table}"
+                } ${
+                    optionalString x.onlink "onlink"
+                } || true
+            '') cfg.routes)}
+            ${optionalString (cfg.gateway4 != null) ''
+                ip route replace default via ${cfg.gateway4} || true
+            ''}
+            ${optionalString (cfg.gateway6 != null) ''
+                ip route replace default via ${cfg.gateway6} || true
+            ''}
+        '';
+        stopNetwork = concatStringsSep "\n" (flatten [
+            (map (x: "ip route del ${x.dst} ${
+                optionalString (x.table != null) "table ${toString x.table}"
+            } || true") cfg.routes)
+            (map (x: "ip address del ${x.address} dev ${x.interface} || true") cfg.addresses)
+        ]);
+    in {
+        systemd.services.net-online = {
             after = [ "network.target" ];
             wantedBy = [ "network-online.target" ];
-            path = with pkgs; [ iproute2 wireguard-tools];
             restartIfChanged = true;
+            path = with pkgs; [ iproute2 ];
             serviceConfig = {
                 Type = "oneshot";
                 RemainAfterExit = true;
             };
-            script = let
-                wgInterfaces = text: builtins.foldl' (acc: x: acc + ''
-                    ${text x}
-                '') "" (builtins.attrValues (builtins.mapAttrs (name: value: {
-                    inherit name;
-                } // value) cfg.wg));
-            in ''
-                ip link add dummy2526 type dummy
-                ip link set dummy2526 up
-
-                ${pkgs.lib.strings.concatStrings (builtins.map (x: ''
-                    ip link set ${x} up
+            script = ''
+                ip link add dmy11 type dummy
+                ip link set dmy11 up
+                ${concatStrings (map (link: ''
+                    ip link set ${link} up
                 '') cfg.up)}
-
-                ${pkgs.lib.strings.concatStrings (builtins.attrValues (builtins.mapAttrs (name: value: ''
+                ${concatStrings (mapAttrsToList (name: value: ''
                     ip link add ${name} type bridge
-                    ${pkgs.lib.strings.concatStrings (builtins.map (x: ''
+                    ${concatStrings (map (x: ''
                         ip link set ${x} master ${name}
                     '') value)}
                     ip link set ${name} up
-                '') cfg.bridges))}
-                
-                ${wgInterfaces (x: ''
-                    ip link add ${x.name} type wireguard
-                    wg set ${x.name} private-key ${x.privateKeyFile} ${
-                        optionalString (x.listen != null) "listen-port ${builtins.toString x.listen}"
-                    }
-                    wg set ${x.name} peer "${x.publicKey}" ${
-                        optionalString (x.presharedKeyFile != null) "preshared-key \"${x.presharedKeyFile}\""
-                    } persistent-keepalive 25 allowed-ips 0.0.0.0/0,::/0
-                    ip link set ${x.name} up
-                '')}
-
-                ${pkgs.lib.strings.concatStrings (builtins.map (x: ''
-                    ip address add ${x.address} dev ${x.interface} ${
-                        optionalString (x.peer != null) "peer ${x.peer}"
-                    } || true
-                '') cfg.addresses)}
-
-                ${optionalString (cfg.gateway4 != null) ''
-                    ip route replace default via ${cfg.gateway4}
-                ''}
-                ${optionalString (cfg.gateway6 != null) ''
-                    ip route replace default via ${cfg.gateway6}
-                ''}
-
-                ${pkgs.lib.strings.concatStrings (builtins.map (x: ''
-                    ip route replace ${x.dst} ${
-                        optionalString (x.src != null) "src ${x.src}"
-                    } ${
-                        optionalString (x.interface != null) "dev ${x.interface}"
-                    } ${
-                        optionalString (x.gateway != null) "via ${x.gateway}"
-                    } ${
-                        optionalString (x.proto != null) "proto ${builtins.toString x.proto}"
-                    } ${
-                        optionalString (x.table != null) "table ${builtins.toString x.table}"
-                    } ${
-                        optionalString x.onlink "onlink"
-                    }
-                '') cfg.routes)}
-
-                ${pkgs.lib.strings.concatStrings (builtins.map (x: ''
-                    ip -4 rule add table ${builtins.toString x}
-                    ip -6 rule add table ${builtins.toString x}
+                '') cfg.bridges)}
+                ${configureNetwork}
+                ${concatStrings (map (x: ''
+                    ip -4 rule add table ${toString x}
+                    ip -6 rule add table ${toString x}
                 '') cfg.tables)}
-
-                # set endpoint after set default gateway
-                ${wgInterfaces (x: ''
-                    ${optionalString (x.endpoint != null) ''
-                        wg set ${x.name} peer "${x.publicKey}" endpoint ${x.endpoint} || true
-                    ''}
-                '')}
             '';
-            postStop = ''
-                ${pkgs.lib.strings.concatStrings (builtins.map (x: ''
-                    ip -4 rule delete table ${builtins.toString x} || true
-                    ip -6 rule delete table ${builtins.toString x} || true
-                '') cfg.tables)}
-
-                ip link delete dummy2526 || true
-            '' + pkgs.lib.strings.concatStringsSep "\n" (
-                (builtins.map (x: "ip link delete ${x} || true") (builtins.attrNames cfg.wg))
-                ++ (builtins.map (x: "ip link delete ${x} || true") (builtins.attrNames cfg.bridges))
-            );
+            postStop = concatStringsSep "\n" (flatten [
+                (map (x: ''
+                    ip -4 rule delete table ${toString x} || true
+                    ip -6 rule delete table ${toString x} || true
+                '') cfg.tables)
+                stopNetwork
+                (map (x: "ip link del ${x} || true") (attrNames cfg.bridges))
+                "ip link del dmy11"
+            ]);
+        };
+        systemd.services.net = {
+            after = [ "net-online.target" ];
+            wantedBy = [ "multi-user.target" ];
+            restartIfChanged = true;
+            path = with pkgs; [ iproute2 ];
+            serviceConfig = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+                Restart = "on-failure";
+            };
+            script = configureNetwork;
+            postStop = stopNetwork;
         };
     };
 }

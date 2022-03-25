@@ -1,20 +1,12 @@
-{ config, pkgs, lib, ... }: with lib; let
+{ config, pkgs, lib, ... }:
+
+with builtins;
+with lib;
+
+let
     cfg = config.net.wg;
 in {
     options.net.wg = let
-        ipOptions = types.submodule ({ ... }: {
-            options = {
-                addr = mkOption {
-                    type = types.str;
-                    description = "ip addr";
-                };
-                peer = mkOption {
-                    type = types.nullOr types.str;
-                    description = "peer";
-                    default = null;
-                };
-            };
-        });
         interfaceOptions = types.submodule {
             options = {
                 privateKeyFile = mkOption {
@@ -41,11 +33,6 @@ in {
                     description = "listen port";
                     default = null;
                 };
-                ip = mkOption {
-                    type = types.listOf ipOptions;
-                    description = "ip addresses";
-                    default = [];
-                };
                 refresh = mkOption {
                     type = types.int;
                     description = "refresh";
@@ -59,36 +46,59 @@ in {
         default = {};
     };
     config = {
-        firewall.publicUDPPorts = builtins.foldl' (acc: x: acc ++ (if x.listen == null then [] else [
-            x.listen
-        ])) [] (builtins.attrValues cfg);
-
-        net.addresses = let
-            addresses = name: value: builtins.foldl' (acc: x: acc ++ [
-                { address = x.addr; interface = name; peer = mkIf (x.peer != null) x.peer;  }
-            ]) [] value.ip;
-        in pkgs.lib.flatten (builtins.attrValues (builtins.mapAttrs addresses cfg));
-        
-        systemd.services.wireguard-refresh = {
-            wantedBy = [ "multi-user.target" ];
-            after = [ "network-online.target" ];
-            restartIfChanged = true;
-            script = ''
-                ${pkgs.lib.strings.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: ''
-                    ${optionalString (value.refresh != 0) ''
-                        function wg_${name}() {
-                            while :; do
-                                sleep ${builtins.toString value.refresh}
-                                ${pkgs.wireguard-tools}/bin/wg set ${name} peer ${value.publicKey} endpoint ${value.endpoint}
-                                echo the endpoint of ${name} refreshed
-                            done
-                        }
-                        wg_${name} &
-                        PIDS[$!]=$!
-                    ''}
-                '') cfg))}
-                wait ''${PIDS[*]}
+        firewall.publicUDPPorts = map (x: x.listen) (filter (x: x.listen != null) (attrValues cfg));
+        systemd.services = (listToAttrs (flip mapAttrsToList cfg (name: value: nameValuePair "net-wg-${name}" (let
+            configure = ''
+                wg set ${name} private-key ${value.privateKeyFile} ${
+                    optionalString (value.listen != null) "listen-port ${toString value.listen}"
+                }
+                wg set ${name} peer "${value.publicKey}" ${
+                    optionalString (value.presharedKeyFile != null) ''preshared-key "${value.presharedKeyFile}"''
+                } persistent-keepalive 25 allowed-ips 0.0.0.0/0,::/0
+                ip link set ${name} up
+                ${optionalString (value.endpoint != null) ''
+                    wg set ${name} peer "${value.publicKey}" endpoint ${value.endpoint} || true
+                ''}
             '';
+        in {
+            after = [ "network.target" "net-online.service" ];
+            before = [ "net.service" ];
+            partOf = [ "net-online.service" ];
+            wantedBy = [ "multi-user.target" ];
+            path = with pkgs; [ iproute2 wireguard-tools ];
+            reloadIfChanged = true;
+            restartTriggers = [ value.endpoint value.publicKey ];
+            serviceConfig = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+            };
+            script = ''
+                ip link add ${name} type wireguard
+            '' + configure;
+            reload = configure;
+            postStop = "ip link delete ${name} || true";
+        })))) // {
+            net.partOf = map (name: "net-wg-${name}.service") (attrNames cfg);
+            wireguard-refresh = {
+                wantedBy = [ "multi-user.target" ];
+                after = [ "network-online.target" ];
+                restartIfChanged = true;
+                path = with pkgs; [ wireguard-tools ];
+                script = ''
+                    ${concatStringsSep "\n" (mapAttrsToList (name: value: ''
+                        ${optionalString (value.refresh != 0) ''
+                            function wg_${name}() {
+                                while :; do
+                                    sleep ${toString value.refresh}
+                                    wg set ${name} peer ${value.publicKey} endpoint ${value.endpoint} || true
+                                done
+                            }
+                            wg_${name} &
+                        ''}
+                    '') cfg)}
+                    wait
+                '';
+            };
         };
     };
 }

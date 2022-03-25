@@ -14,14 +14,12 @@
     };
     net = {
         addresses = [
-            { interface = "dummy2526"; address = "${config.meta.v4}/32"; }
-            { interface = "dummy2526"; address = "${config.meta.v6}/128"; }
-            { interface = "dummy2526"; address = "2602:feda:da0::${config.meta.id}/128"; }
+            { interface = "dmy11"; address = "${config.meta.igpv4}/32"; }
+            { interface = "dmy11"; address = "${config.meta.igpv6}/128"; }
         ];
         routes = [
-            { dst = "${config.meta.v4}/32";                 interface = "dummy2526"; proto = 114; table = 114; }
-            { dst = "${config.meta.v6}/128";                interface = "dummy2526"; proto = 114; table = 114; }
-            { dst = "2602:feda:da0::${config.meta.id}/128"; interface = "dummy2526"; proto = 114; table = 114; }
+            { dst = "${config.meta.igpv4}/32";  interface = "dmy11"; proto = 114; table = 114; }
+            { dst = "${config.meta.igpv6}/128"; interface = "dmy11"; proto = 114; table = 114; }
         ];
         tables = [ 114 ];
     };
