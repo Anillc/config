@@ -1,4 +1,9 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }:
+
+with builtins;
+with lib;
+
+{
     imports = [
         ./meta.nix
     ];
@@ -53,6 +58,8 @@
     documentation.enable = false;
     security.acme.defaults.email = "acme@anillc.cn";
     security.acme.acceptTerms = true;
+    services.nscd.enable = false;
+    system.nssModules = mkForce [];
     services.cron = let
         script = pkgs.writeScript "sync" ''
             export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
@@ -64,8 +71,6 @@
         enable = true;
         systemCronJobs = [
             "*/20 * * * * root ${script}"
-            # resolve nscd memory leak
-            "10 0 * * * root ${pkgs.systemd}/bin/systemctl restart nscd"
         ];
     };
 }
