@@ -39,7 +39,7 @@
                 pkgs.deploy-rs.deploy-rs pkgs.sops
                 (pkgs.writeScriptBin "deploy-all" ''
                     deploy() {
-                        log=$(${pkgs.deploy-rs.deploy-rs}/bin/deploy -s --auto-rollback false .#$1 2>&1)
+                        log=$(${pkgs.deploy-rs.deploy-rs}/bin/deploy -s .#$1 2>&1)
                         echo $log
                     }
                     ms="${pkgs.lib.strings.concatStringsSep " " (map (machine: machine.meta.name) machines.list)}"

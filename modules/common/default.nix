@@ -46,6 +46,7 @@ with lib;
     sops = {
         age.keyFile = "/var/lib/sops.key";
         secrets.endpoints.sopsFile = ./secrets.yaml;
+        secrets.tinc-private.sopsFile = ./secrets.yaml;
         secrets.sync-database = {
             mode = "0700";
             sopsFile = ./secrets.yaml;

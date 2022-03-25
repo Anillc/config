@@ -27,14 +27,14 @@ in {
             description = "extraInputRules";
             default = "";
         };
-        extraOutRules = mkOption {
-            type = types.lines;
-            description = "extraOutRules";
-            default = "";
-        };
         extraForwardRules = mkOption {
             type = types.lines;
             description = "extraForwardRules";
+            default = "";
+        };
+        extraNatRules = mkOption {
+            type = types.lines;
+            description = "extraNatRules";
             default = "";
         };
         extraPreroutingRules = mkOption {
@@ -42,28 +42,23 @@ in {
             description = "extraPreroutingRules";
             default = "";
         };
-        extraPostroutingRules = mkOption {
-            type = types.lines;
-            description = "extraPostroutingRules";
-            default = "";
-        };
     };
     config = {
         networking.firewall.enable = false;
         networking.nftables = let
             internalTCP = optionalString (builtins.length cfg.internalTCPPorts != 0) ''
-                ip saddr 10.11.0.0/16 tcp dport { ${
+                ip saddr { 10.127.20.0/24, 172.22.167.96/27 } tcp dport { ${
                     pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.internalTCPPorts)
                 } } accept
-                ip6 saddr fd11::/16 tcp dport { ${
+                ip6 saddr { fd10:127:cc::/48, fdc9:83c1:d0ce::/48 } tcp dport { ${
                     pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.internalTCPPorts)
                 } } accept
             '';
             internalUDP = optionalString (builtins.length cfg.internalUDPPorts != 0) ''
-                ip saddr 10.11.0.0/16 udp dport { ${
+                ip saddr { 10.127.20.0/24, 172.22.167.96/27 } udp dport { ${
                     pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.internalUDPPorts)
                 } } accept
-                ip6 saddr fd11::/16 udp dport { ${
+                ip6 saddr { fd10:127:cc::/48, fdc9:83c1:d0ce::/48 } udp dport { ${
                     pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.internalUDPPorts)
                 } } accept
             '';
@@ -96,14 +91,9 @@ in {
                     }
                     chain output {
                         type filter hook output priority filter; policy accept;
-                        ip  saddr 10.11.0.0/16 oifname "en*" reject
-                        ip6 saddr fd11::/16    oifname "en*" reject
-                        ${cfg.extraOutRules}
                     }
                     chain forward {
                         type filter hook forward priority filter; policy accept;
-                        ip  saddr 10.11.0.0/16 oifname "en*" reject
-                        ip6 saddr fd11::/16    oifname "en*" reject
                         ${cfg.extraForwardRules}
                     }
                     chain prerouting {
@@ -112,7 +102,7 @@ in {
                     }
                     chain postrouting {
                         type nat hook postrouting priority srcnat; policy accept;
-                        ${cfg.extraPostroutingRules}
+                        ${cfg.extraNatRules}
                     }
                 }
             '';

@@ -1,0 +1,3 @@
+{ config, ... }: {
+    bgp.enable = true;
+} 

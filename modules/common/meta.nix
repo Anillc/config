@@ -1,11 +1,4 @@
-{ config, lib, ... }:
-
-with builtins;
-with lib;
-
-let
-    cfg = config.meta;
-in {
+{ pkgs, lib, ... }: with lib; {
     options.meta = {
         enable = mkOption {
             type = types.bool;
@@ -13,7 +6,7 @@ in {
             default = true;
         };
         id = mkOption {
-            type = types.int;
+            type = types.str;
             description = "id";
         };
         name = mkOption {
@@ -23,8 +16,6 @@ in {
         address = mkOption {
             type = types.str;
             description = "address";
-            # TODO to v4
-            default = cfg.igpv4;
         };
         inNat = mkOption {
             type = types.bool;
@@ -44,25 +35,13 @@ in {
             type = types.listOf types.anything;
             description = "machines to be connected with";
         };
-        igpv4 = mkOption {
-            type = types.str;
-            description = "igpv4";
-            default = "10.11.255.${toString cfg.id}";
-        };
-        igpv6 = mkOption {
-            type = types.str;
-            description = "igpv6";
-            default = "fd11:ffff::${toHexString cfg.id}";
-        };
         v4 = mkOption {
             type = types.str;
             description = "ipv4 address (internel)";
-            default = "10.11.0.${toString cfg.id}";
         };
         v6 = mkOption {
             type = types.str;
             description = "ipv6 address (internel)";
-            default = "fd11::${toHexString cfg.id}";
         };
     };
 }

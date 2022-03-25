@@ -1,13 +1,14 @@
 lib: rec {
     machines = import ./.. lib;
     meta = {
-        id = "09";
-        name = "fmt";
-        address = "fmt.an.dn42";
-        wg-public-key = "3jCbL/4+/Sdk2NuDQGln09AKj8v29GnxyS/0WSzJ0Ck=";
-        v4 = "172.22.167.108";
-        v6 = "fdc9:83c1:d0ce::12";
-        connect = with machines.set; [ lasvegas ];
+        id = "06";
+        name = "de";
+        address = "de.an.dn42";
+        inNat = true;
+        wg-public-key = "JXN4fhKL5aRf++Bh1+xsAkVZPxZqaXuIcTXq2gS8ml8=";
+        v4 = "172.22.167.102";
+        v6 = "fdc9:83c1:d0ce::6";
+        connect = with machines.set; [ lasvegas hongkong jp ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
@@ -16,19 +17,20 @@ lib: rec {
             ./bgp.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
-        firewall.publicTCPPorts = [ 1655 646 ];
-        # services.tinc.networks.de = {
+
+        # firewall.publicTCPPorts = [ 646 ];
+        # services.tinc.networks.fmt = {
         #     ed25519PrivateKeyFile = config.sops.secrets.tinc-private.path;
         #     interfaceType = "tap";
-        #     bindToAddress = "0.0.0.0 1655";
         #     settings = {
         #         Mode = "switch";
         #         DirectOnly = true;
         #     };
         #     hostSettings = {
-        #         de = {
+        #         fmt = {
+        #             addresses = [{ address = ""; port = 1655; }];
         #             settings = {
-        #                 TCPOnly = true;
+        #                 TCPOnly = "yes";
         #                 Ed25519PublicKey = "cONS4tKAwZYDB7mDEFRCqmeeuOodaTYRDT6PwOflvwP";
         #             };
         #         };
@@ -37,16 +39,18 @@ lib: rec {
         # services.frr.ldp = {
         #     enable = true;
         #     config = ''
+        #         interface tinc.fmt
+        #         interface lo
         #         mpls ldp
         #          dual-stack cisco-interop
-        #          neighbor 192.168.156.2 password opensourcerouting
+        #          neighbor 192.168.156.1 password opensourcerouting
         #          address-family ipv4
-        #           discovery transport-address 192.168.156.1
+        #           discovery transport-address 192.168.156.2
         #           label local advertise explicit-null
-        #           interface tinc.de
+        #           interface tinc.fmt
         #         l2vpn ENG type vpls
         #          member pseudowire mpw0
-        #           neighbor lsr-id 192.168.156.2
+        #           neighbor lsr-id 1.1.1.1
         #           pw-id 100
         #     '';
         # };
