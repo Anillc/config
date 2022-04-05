@@ -4,9 +4,9 @@ with builtins;
 with lib;
 
 let
-    cfg = config.net.wg;
+    cfg = config.wg;
 in {
-    options.net.wg = let
+    options.wg = let
         interfaceOptions = types.submodule {
             options = {
                 privateKeyFile = mkOption {
@@ -47,58 +47,44 @@ in {
     };
     config = {
         firewall.publicUDPPorts = map (x: x.listen) (filter (x: x.listen != null) (attrValues cfg));
-        systemd.services = (listToAttrs (flip mapAttrsToList cfg (name: value: nameValuePair "net-wg-${name}" (let
-            configure = ''
-                wg set ${name} private-key ${value.privateKeyFile} ${
-                    optionalString (value.listen != null) "listen-port ${toString value.listen}"
-                }
-                wg set ${name} peer "${value.publicKey}" ${
-                    optionalString (value.presharedKeyFile != null) ''preshared-key "${value.presharedKeyFile}"''
-                } persistent-keepalive 25 allowed-ips 0.0.0.0/0,::/0
-                ip link set ${name} up
-                ${optionalString (value.endpoint != null) ''
-                    wg set ${name} peer "${value.publicKey}" endpoint ${value.endpoint} || true
-                ''}
-            '';
-        in {
-            after = [ "network.target" "net-online.service" ];
-            before = [ "net.service" ];
-            partOf = [ "net-online.service" ];
+        systemd.network.netdevs = mapAttrs (name: value: {
+            netdevConfig = {
+                Name = name;
+                Kind = "wireguard";
+            };
+            wireguardConfig = {
+                PrivateKeyFile = value.privateKeyFile;
+                ListenPort = mkIf (value.listen != null) value.listen;
+            };
+            wireguardPeers = [{
+                wireguardPeerConfig = {
+                    PublicKey = value.publicKey;
+                    PresharedKeyFile = mkIf (value.presharedKeyFile != null) value.privateKeyFile;
+                    Endpoint = mkIf (value.endpoint != null) value.endpoint;
+                    PersistentKeepalive = 25;
+                    AllowedIPs = [ "0.0.0.0/0" "::/0" ];
+                };
+            }];
+        }) cfg;
+        systemd.services.wireguard-refresh = {
             wantedBy = [ "multi-user.target" ];
-            path = with pkgs; [ iproute2 wireguard-tools ];
-            reloadIfChanged = true;
-            restartTriggers = [ value.endpoint value.publicKey ];
-            serviceConfig = {
-                Type = "oneshot";
-                RemainAfterExit = true;
-            };
+            after = [ "network-online.target" ];
+            restartIfChanged = true;
+            path = with pkgs; [ wireguard-tools ];
             script = ''
-                ip link add ${name} type wireguard
-            '' + configure;
-            reload = configure;
-            postStop = "ip link delete ${name} || true";
-        })))) // {
-            net.partOf = map (name: "net-wg-${name}.service") (attrNames cfg);
-            wireguard-refresh = {
-                wantedBy = [ "multi-user.target" ];
-                after = [ "network-online.target" ];
-                restartIfChanged = true;
-                path = with pkgs; [ wireguard-tools ];
-                script = ''
-                    ${concatStringsSep "\n" (mapAttrsToList (name: value: ''
-                        ${optionalString (value.refresh != 0) ''
-                            function wg_${name}() {
-                                while :; do
-                                    sleep ${toString value.refresh}
-                                    wg set ${name} peer ${value.publicKey} endpoint ${value.endpoint} || true
-                                done
-                            }
-                            wg_${name} &
-                        ''}
-                    '') cfg)}
-                    wait
-                '';
-            };
+                ${concatStringsSep "\n" (mapAttrsToList (name: value: ''
+                    ${optionalString (value.refresh != 0) ''
+                        function wg_${name}() {
+                            while :; do
+                                sleep ${toString value.refresh}
+                                wg set ${name} peer ${value.publicKey} endpoint ${value.endpoint} || true
+                            done
+                        }
+                        wg_${name} &
+                    ''}
+                '') cfg)}
+                wait
+            '';
         };
     };
 }

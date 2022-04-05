@@ -25,11 +25,6 @@ in {
             description = "address";
             default = cfg.v4;
         };
-        inNat = mkOption {
-            type = types.bool;
-            description = "in nat";
-            default = false;
-        };
         system = mkOption {
             type = types.str;
             description = "system";
@@ -38,20 +33,6 @@ in {
         wg-public-key = mkOption {
             type = types.str;
             description = "wireguard public key";
-        };
-        connect = mkOption {
-            type = types.listOf types.anything;
-            description = "machines to be connected with";
-        };
-        igpv4 = mkOption {
-            type = types.str;
-            description = "igpv4";
-            default = "10.11.255.${toString cfg.id}";
-        };
-        igpv6 = mkOption {
-            type = types.str;
-            description = "igpv6";
-            default = "fd11:ffff::${toHexString cfg.id}";
         };
         v4 = mkOption {
             type = types.str;

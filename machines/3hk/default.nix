@@ -4,12 +4,12 @@ lib: rec {
         id = 3;
         name = "hk";
         wg-public-key = "FDW5S+3nNS883Q5mKVwym0dwEYKF+nuQ1rPZ+sWVqgc=";
-        connect = with machines.set; [ sh las de jp fmt ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
         imports = [
             ./hardware.nix
+            ./networking.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
         bgp = {

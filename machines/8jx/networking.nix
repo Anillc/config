@@ -1,33 +1,53 @@
-{ config, pkgs, lib, ... }: let
+{ config, pkgs, lib, ... }:
+
+with builtins;
+with lib;
+
+let
     connect = pkgs.writeScript "connect" ''
-        export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
+        export PATH=$PATH:${with pkgs; makeBinPath [
             curl
         ]}
         ${config.sops.secrets.school-network.path}
     '';
+    machines = import ./.. lib;
 in {
+    wgi = with machines.set; [
+        { inherit (sh.meta) name wg-public-key; peer = 11008; }
+    ];
+    networking.nameservers = [ "223.5.5.5" ];
+    systemd.network = {
+        netdevs.br0.netdevConfig = {
+            Name = "br0";
+            Kind = "bridge";
+        };
+        networks.bre = {
+            matchConfig.Name = "enp2s0";
+            bridge = [ "br0" ];
+        };
+        networks.br0 = {
+            matchConfig.Name = "br0";
+            address = [ "192.168.233.1/24" "fdff:233::1/64" ];
+        };
+        networks.default-network = {
+            matchConfig.Name = "enp1s0";
+            DHCP = "ipv4";
+        };
+    };
+
     services.cron = {
         enable = true;
         systemCronJobs = [ "*/20 * * * * root ${connect}" ];
     };
     systemd.services.connect-to-school = {
         script = "${connect}";
-        after = [ "network-online.target" "net-online.service" ];
+        after = [ "network-online.target" "systemd-networkd.service" ];
         wantedBy = [ "multi-user.target" ];
     };
     firewall.extraPostroutingRules = ''
         ip  saddr 192.168.233.0/24 meta iifname br0 masquerade
         ip6 saddr fdff:233::/64    meta iifname br0 masquerade
     '';
-    networking.interfaces.enp1s0.useDHCP = true;
-    net = {
-        addresses = [
-            { address = "192.168.233.1/24"; interface = "br0"; }
-            { address = "fdff:233::1/64";   interface = "br0"; }
-        ];
-        up = [ "enp1s0" "enp2s0" "wlp0s29f7u4" ];
-        bridges.br0 = [ "enp2s0" "wlp0s29f7u4" ];
-    };
 
     networking.resolvconf.useLocalResolver = lib.mkForce false;
     firewall.publicTCPPorts = [ 53 ];
@@ -52,14 +72,15 @@ in {
         ssid = "Anillc's AP";
         interface = "wlp0s29f7u4";
         wpaPassphrase = "AnillcDayo";
-        #hwMode = "a";
-        #channel = 48;
-        hwMode = "g";
-        channel = 1;
+        hwMode = "a";
+        channel = 48;
+        # hwMode = "g";
+        # channel = 11;
         countryCode = "CN";
         extraConfig = ''
+            bridge=br0
             ieee80211n=1
-            # ieee80211ac=1
+            ieee80211ac=1
             wmm_enabled=1
             auth_algs=1
             wpa_key_mgmt=WPA-PSK

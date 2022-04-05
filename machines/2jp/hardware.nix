@@ -7,11 +7,4 @@
         fsType = "ext4";
     };
     hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-    swapDevices = [{
-        device = "/var/swapfile";
-    }];
-    networking.interfaces.enp1s0.useDHCP = true;
-    net.routes = [
-        { dst = "2001:19f0:ffff::1/128"; gateway = "fe80::fc00:3ff:fed1:df7a"; interface = "enp1s0"; }
-    ];
 }

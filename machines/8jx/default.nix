@@ -3,9 +3,7 @@ lib: rec {
     meta = {
         id = 8;
         name = "jx";
-        inNat = true;
         wg-public-key = "2YSajirzbCUK4h3NbuBgpZPOypjrhtrLnT5pJp2K9HU=";
-        connect = with machines.set; [ sh ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
@@ -22,6 +20,5 @@ lib: rec {
             };
         };
         bgp.enable = true;
-        networking.nameservers = [ "223.5.5.5" ];
     };
 }

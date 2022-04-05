@@ -5,7 +5,7 @@ with lib;
 
 let
     cfg = config.bgp;
-    machines = import ../../../machines lib;
+    machines = import ../../machines lib;
 in {
     options.bgp = {
         enable = mkEnableOption "enable bgp";
@@ -52,36 +52,30 @@ in {
         firewall.publicTCPPorts = [ 179 ];
         # vxlan
         firewall.internalUDPPorts = [ 4789 ];
-        systemd.services.frr-vxlan-setup = {
-            after = [ "net-online.service" ];
-            before = [ "net.service" ];
-            partOf = [ "net.service" ];
-            wantedBy = [ "net.service" "multi-user.target" ];
-            restartIfChanged = true;
-            path = with pkgs; [ iproute2 ];
-            serviceConfig = {
-                Type = "oneshot";
-                RemainAfterExit = true;
-            };
-            script = ''
-                ip link add vx11 type vxlan id 11 dstport 4789 local ${config.meta.igpv4} nolearning
-                ip link set vx11 up
-                ip link add br11 type bridge
-                ip link set br11 up
-                ip link set vx11 master br11
-                ip address add ${config.meta.v4}/22 dev br11
-                ip address add ${config.meta.v6}/32 dev br11
-
-                ip address add 2602:feda:da0::${toHexString config.meta.id}/48 dev br11
-            '';
-            postStop = ''
-                ip address del 2602:feda:da0::${toHexString config.meta.id}/48 dev br11
-                ip address del ${config.meta.v4}/22 dev br11
-                ip address del ${config.meta.v6}/32 dev br11
-                ip link del br11 || true
-                ip link del vx11 || true
-            '';
-        };
+        # TODO
+        # systemd.services.frr-vxlan-setup = {
+        #     after = [ "net-online.service" ];
+        #     before = [ "net.service" ];
+        #     partOf = [ "net.service" ];
+        #     wantedBy = [ "net.service" "multi-user.target" ];
+        #     restartIfChanged = true;
+        #     path = with pkgs; [ iproute2 ];
+        #     serviceConfig = {
+        #         Type = "oneshot";
+        #         RemainAfterExit = true;
+        #     };
+        #     script = ''
+        #         ip link add vx11 type vxlan id 11 dstport 4789 local ${config.meta.v4} nolearning
+        #         ip link set vx11 up
+        #         ip link add br11 type bridge
+        #         ip link set br11 up
+        #         ip link set vx11 master br11
+        #     '';
+        #     postStop = ''
+        #         ip link del br11 || true
+        #         ip link del vx11 || true
+        #     '';
+        # };
         services.frr-override = {
             zebra = {
                 enable = true;
@@ -140,8 +134,7 @@ in {
                     route-map IBGP_IN permit 10
                      set local-preference 50
                     route-map IBGP_OUT permit 10
-                     set ip next-hop ${config.meta.v4}
-                     set ipv6 next-hop global ${config.meta.v6}
+                     ! ibgp won't send neighbor's routes to other neighbors
                      ${optionalString cfg.upstream.enable "set as-path prepend ${cfg.upstream.asn}"}
 
                     route-map UPSTREAM_IN deny 10
@@ -158,7 +151,7 @@ in {
                      match ipv6 address prefix-list NETWORK
 
                     router bgp 142055
-                     bgp router-id ${config.meta.igpv4}
+                     bgp router-id ${config.meta.v4}
                      bgp graceful-restart
                      no bgp default ipv4-unicast
                      no bgp default ipv6-unicast
@@ -166,12 +159,14 @@ in {
                      neighbor ibgp peer-group
                      neighbor ibgp capability dynamic
                      neighbor ibgp remote-as 142055
+                     neighbor ibgp next-hop-self
                     ${concatStrings (map (x:
-                        " neighbor ${x.meta.igpv4} peer-group ibgp\n"
+                        " neighbor ${x.meta.v4} peer-group ibgp\n"
                     ) (filter (x: x.meta.id != config.meta.id) machines.list))}
                      ! ebgp upstream
                      neighbor upstream peer-group
                      neighbor upstream capability dynamic
+                     neighbor upstream next-hop-self
                      ${optionalString cfg.upstream.multihop "neighbor upstream ebgp-multihop"}
                      ${optionalString (cfg.upstream.password != null) "neighbor upstream password ${cfg.upstream.password}"}
                     ${optionalString cfg.upstream.enable (
@@ -181,6 +176,7 @@ in {
                      ! ebgp peers
                      neighbor peers peer-group
                      neighbor peers capability dynamic
+                     neighbor peers next-hop-self
                     ${concatStrings (map (x:
                         " neighbor ${x.address} peer-group peers\n" +
                         " neighbor ${x.address} remote-as ${x.asn}\n"

@@ -91,6 +91,16 @@ in
 
   config = mkIf cfg.enable {
 
+    nixpkgs.overlays = [(self: super: {
+      babeld = super.babeld.overrideAttrs (old: {
+        src = pkgs.fetchgit {
+          url = "https://github.com/jech/babeld.git";
+          rev = "4b51a3b2ed6b5bbd331a8c127340cd4b38cc5d91";
+          sha256 = "sha256-bogdBieNU3Dv922993yaVMEbrMn0Rt6n0VDONG1iJ08=";
+         };
+      });
+    })];
+
     systemd.services.babeld = {
       description = "Babel routing daemon";
       after = [ "network.target" ];

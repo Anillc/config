@@ -3,6 +3,7 @@
 { config, pkgs, lib, ... }: {
     firewall.extraPostroutingRules = "meta iifname nnhr meta oifname ens18 masquerade";
     systemd.services.net.partOf = [ "container@nanahira.service" ];
+    # TODO
     systemd.services."container@nanahira".before = [ "net-online.service" ];
     net = {
         addresses = [

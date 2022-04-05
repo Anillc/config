@@ -3,16 +3,15 @@ lib: rec {
     meta = {
         id = 5;
         name = "sh2";
-        inNat = true;
         system = "x86_64-linux";
         wg-public-key = "RBjfmCcZywc4KhQA1Mv/hzm6+I52R0DrHPT7DzLzWGI=";
-        connect = with machines.set; [ sh ];
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
         nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
+            ./networking.nix
             # ./nanahira.nix TODO
         ];
         sops = {

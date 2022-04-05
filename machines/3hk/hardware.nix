@@ -15,13 +15,4 @@
         fsType = "vfat";
     };
     swapDevices = [{ device = "/dev/disk/by-uuid/17ff6bd3-5a1d-4dab-a844-77c82656c18b"; }];
-    net = {
-        addresses = [
-            { address = "103.152.35.32/24"; interface = "ens192"; }
-            { address = "2406:4440::32/64"; interface = "ens192"; }
-        ];
-        up = [ "ens192" ];
-        gateway4 = "103.152.35.254";
-        gateway6 = "2406:4440::1";
-    };
 }

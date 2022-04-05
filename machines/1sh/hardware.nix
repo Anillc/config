@@ -8,5 +8,4 @@
         device = "/dev/vda1";
         fsType = "ext4";
     };
-    networking.interfaces.ens5.useDHCP = true;
 }
