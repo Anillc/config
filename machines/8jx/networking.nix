@@ -16,7 +16,7 @@ in {
         { inherit (sh.meta) name wg-public-key; peer = 11008; }
     ];
     networking.nameservers = [ "223.5.5.5" ];
-    systemd.network = {
+    systemd.network = mkMerge [{
         netdevs.br0.netdevConfig = {
             Name = "br0";
             Kind = "bridge";
@@ -33,7 +33,12 @@ in {
             matchConfig.Name = "enp1s0";
             DHCP = "ipv4";
         };
-    };
+    } {
+        # for masquerade
+        networks = listToAttrs (map (x: nameValuePair x.name {
+            address = [ "${config.meta.v4}/32" "${config.meta.v6}/128" ];
+        }) config.wgi);
+    }];
 
     services.cron = {
         enable = true;
