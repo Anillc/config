@@ -17,4 +17,15 @@ in {
         matchConfig.Name = "ens5";
         DHCP = "ipv4";
     };
+    wg.phone = {
+        listen = 11451;
+        publicKey = "Pm7l051569YlVKkaCItUR8TmeAp7m6od3RhSkOGPriA=";
+    };
+    systemd.network.networks.phone = {
+        matchConfig.Name = "phone";
+        routes = [
+            { routeConfig = { Destination = "10.11.1.1/32";  Table = 114; Protocol = 114; }; }
+            { routeConfig = { Destination = "fd11:1::1/128"; Table = 114; Protocol = 114; }; }
+        ];
+    };
 }

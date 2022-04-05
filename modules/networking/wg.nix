@@ -32,12 +32,13 @@ with lib;
         };
     };
     config = {
+        # interfaces starts with i will add to babeld
         wg = listToAttrs (map
             (x: nameValuePair "i${x.name}" {
                 publicKey = x.wg-public-key;
                 listen = mkIf (x ? listen) x.listen;
             }) config.wgi);
-        systemd.network.networks = listToAttrs (map (x: nameValuePair x.name {
+        systemd.network.networks = listToAttrs (map (x: nameValuePair "i${x.name}" {
             matchConfig.Name = "i${x.name}";
             address = [ "fe80::10${toHexString config.meta.id}/64" ];
         }) config.wgi);

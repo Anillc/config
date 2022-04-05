@@ -10,17 +10,16 @@ jobs:
       with:
         endpoint: ${{ secrets.WG_ENDPOINT }}
         endpoint_public_key: NQfs6evQLemuJcdcvpO4ds1wXwUHTlzlQXWTJv+WCXY=
-        ips: 10.127.20.114/32
+        ips: 10.11.1.2/32
         allowed_ips: 0.0.0.0/0, ::/0
         private_key: ${{ secrets.WG_PRIVATE_KEY }}
     - name: setup network
       run: |
         sudo apt install -y iproute2
-        sudo tee /etc/resolv.conf <<EOF
-        nameserver 172.22.167.125
-        EOF
-        sudo ip route add 172.20.0.0/14 dev deploy
-        sudo ip route add 10.0.0.0/8 dev deploy
+        # sudo tee /etc/resolv.conf <<EOF
+        # nameserver 172.22.167.125
+        # EOF
+        sudo ip route add 10.11.0.0/16 dev deploy
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v15
     - uses: cachix/cachix-action@v10

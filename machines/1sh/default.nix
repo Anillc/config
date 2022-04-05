@@ -48,15 +48,5 @@ lib: rec {
                 };
             };
         };
-        # TODO
-        # net.wg.phone = {
-        #     listen = 11451;
-        #     publicKey = "Pm7l051569YlVKkaCItUR8TmeAp7m6od3RhSkOGPriA=";
-        # };
-        # net.routes = [
-        #     { dst = "172.22.167.110/32";    interface = "phone"; proto = 114; table = 114; }
-        #     { dst = "2602:feda:da1::1/128"; interface = "phone"; proto = 114; table = 114; }
-        #     { dst = "fd10:127:cc:1::1/128"; interface = "phone"; proto = 114; table = 114; }
-        # ];
     };
 }

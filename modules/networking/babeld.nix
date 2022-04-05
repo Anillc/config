@@ -11,6 +11,7 @@ with lib;
             (name: value: {
                 type = "tunnel";
                 v4-via-v6 = true;
+                hello-interval = 2;
             });
         extraConfig = ''
             import-table 114

@@ -33,13 +33,5 @@ lib: rec {
         #     enable = true;
         #     configFile = config.sops.secrets.traefik.path;
         # };
-        # net.wg.deploy = {
-        #     listen = 12001;
-        #     publicKey = "QQZ7pArhUyhdYYDhlv+x3N4G/+Uwu9QAdbWoNWAIRGg=";
-        # };
-        # TODO
-        # net.routes = [
-        #     { dst = "10.127.20.114/32"; interface = "deploy"; proto = 114; table = 114; }
-        # ];
     };
 }

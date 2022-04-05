@@ -25,10 +25,10 @@ with lib;
         };
         networks.dmy11 = {
             matchConfig.Name = "dmy11";
-            addresses = [
-                { addressConfig = { Address = "${config.meta.v4}/32"; }; }
-                { addressConfig = { Address = "${config.meta.v6}/128"; }; }
-                { addressConfig = { Address = "2602:feda:da0::${toHexString config.meta.id}/128"; }; }
+            address = [
+                "${config.meta.v4}/32"
+                "${config.meta.v6}/128"
+                "2602:feda:da0::${toHexString config.meta.id}/128"
             ];
             routes = [
                 { routeConfig = { Destination = "${config.meta.v4}/32";  Table = 114; Protocol = 114; }; }
@@ -40,6 +40,7 @@ with lib;
     systemd.services.table = {
         wantedBy = [ "multi-user.target" ];
         after = [ "network-online.target" ];
+        partOf = [ "systemd-networkd.service" ];
         restartIfChanged = true;
         path = with pkgs; [ iproute2 ];
         serviceConfig = {
