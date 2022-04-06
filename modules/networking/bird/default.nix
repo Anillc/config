@@ -31,7 +31,7 @@ in {
             };
         };
         peers = mkOption {
-            type = types.listOf (types.submodule {
+            type = types.attrsOf (types.submodule {
                 options = {
                     asn = mkOption {
                         type = types.str;
@@ -44,7 +44,7 @@ in {
                 };
             });
             description = "peers";
-            default = [];
+            default = {};
         };
     };
     config = mkIf cfg.enable {
@@ -75,7 +75,7 @@ in {
                     ipv6 {
                         import all;
                         export filter {
-                            if net = ::/0 then {
+                            if net = ::/0 || net ~ [2000::/3+] then {
                                 krt_prefsrc = 2602:feda:da0::${toHexString config.meta.id};
                             }
                             accept;
@@ -131,6 +131,31 @@ in {
                     }
                 ''}
 
+                ${concatStringsSep "\n" (flip mapAttrsToList cfg.peers (name: value: ''
+                    protocol bgp e${name} {
+                        graceful restart on;
+                        local as ASN;
+                        neighbor ${value.address} as ${value.asn};
+                        ipv4 {
+                            import none;
+                            export none;
+                        };
+                        ipv6 {
+                            next hop self;
+                            import filter {
+                                utils_internet_reject_small_prefixes_v6();
+                                utils_reject_long_aspaths();
+                                utils_internet_reject_bogon();
+                                utils_internet_reject_transit_paths();
+                                utils_internet_roa();
+                                accept;
+                            };
+                            export where source = RTS_STATIC;
+                            import limit 1000 action block;
+                        };
+                    }
+                ''))}
+
 
                 protocol static {
                     route 2a0e:b107:1170::/48 reject;
@@ -152,7 +177,7 @@ in {
                     route 2a0d:2587:8100::/41 reject;
                     ipv6;
                 }
-            '';
+            ''; # TODO: export where source = RTS_STATIC; to an alone table (for ospf)
         };
     };
 }

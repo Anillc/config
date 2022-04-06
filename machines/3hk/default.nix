@@ -19,10 +19,10 @@ lib: rec {
                 asn = "38008";
                 address = "2406:4440::1";
             };
-            peers = [{ # APERIX
+            peers.aperix = { # APERIX
                 asn = "38008";
                 address = "2406:4440::100";
-            }];
+            };
         };
         networking.nameservers = [ "8.8.8.8" ];
         services.webdav = {
