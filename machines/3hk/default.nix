@@ -10,6 +10,7 @@ lib: rec {
         imports = [
             ./hardware.nix
             ./networking.nix
+            ./matrix.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
         bgp = {
@@ -39,7 +40,7 @@ lib: rec {
                 }];
             };
         };
-        firewall.publicTCPPorts = [ 80 ];
+        firewall.publicTCPPorts = [ 80 443 ];
         services.nginx = {
             enable = true;
             virtualHosts."dav.anillc.cn" = {
