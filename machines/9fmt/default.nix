@@ -3,6 +3,7 @@ lib: rec {
     meta = {
         id = 9;
         name = "fmt";
+        enable = false;
         wg-public-key = "3jCbL/4+/Sdk2NuDQGln09AKj8v29GnxyS/0WSzJ0Ck=";
     };
     configuration = { config, pkgs, ... }: {

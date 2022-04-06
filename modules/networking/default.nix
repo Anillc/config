@@ -6,9 +6,9 @@ with lib;
 {
     imports = [
         ./def
-        ./babeld.nix
-        ./frr.nix
+        ./bird
         ./wg.nix
+        ./babeld.nix
     ];
     services.resolved.enable = false;
     networking.useDHCP = false;

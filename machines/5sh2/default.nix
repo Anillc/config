@@ -24,7 +24,7 @@ lib: rec {
         networking.nameservers = [ "223.5.5.5" ];
         
         # gocq
-        firewall.internalTCPPorts = [ 6700 ];
+        firewall.internalTCPPorts = [ 6700 8080 ];
         services.go-cqhttp = {
             enable = true;
             device = config.sops.secrets.cllina-device.path;
