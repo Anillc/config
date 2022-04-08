@@ -12,7 +12,13 @@ lib: rec {
             ./networking.nix
             ./matrix.nix
         ];
-        sops.defaultSopsFile = ./secrets.yaml;
+        sops = {
+            defaultSopsFile = ./secrets.yaml;
+            secrets.koishi-matrix = {
+                owner = "matrix-synapse";
+                group = "matrix-synapse";
+            };
+        };
         bgp = {
             enable = true;
             upstream = {

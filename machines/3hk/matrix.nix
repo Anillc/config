@@ -4,6 +4,7 @@ with builtins;
 with lib;
 
 {
+    firewall.internalTCPPorts = [ 8008 ];
     services.postgresql = {
         enable = true;
         initialScript = pkgs.writeText "synapse-init.sql" ''
@@ -17,9 +18,12 @@ with lib;
     services.matrix-synapse = {
         enable = true;
         server_name = "matrix.anillc.cn";
+        app_service_config_files = [
+            config.sops.secrets.koishi-matrix.path
+        ];
         listeners = [{
             port = 8008;
-            bind_address = "127.0.0.1";
+            bind_address = "0.0.0.0";
             type = "http";
             tls = false;
             x_forwarded = true;

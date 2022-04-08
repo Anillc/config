@@ -53,6 +53,9 @@ in {
         ip  saddr 192.168.233.0/24 meta iifname br0 masquerade
         ip6 saddr fdff:233::/64    meta iifname br0 masquerade
     '';
+    firewall.extraPreroutingRules = ''
+        ip saddr 10.11.0.0/16 ip daddr 10.11.0.8 tcp dport 8005 dnat to 192.168.233.241
+    '';
 
     networking.resolvconf.useLocalResolver = lib.mkForce false;
     firewall.publicTCPPorts = [ 53 ];
