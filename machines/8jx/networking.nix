@@ -75,17 +75,18 @@ in {
             dhcp-range=fdff:233::2,fdff:233::fff,ra-only
         '';
     };
-    services.hostapd = {
-        enable = true;
-        ssid = "Anillc's AP";
-        interface = "wlp0s29f7u4";
-        wpaPassphrase = "AnillcDayo";
-        hwMode = "a";
-        channel = 48;
-        # hwMode = "g";
-        # channel = 11;
-        countryCode = "CN";
-        extraConfig = ''
+    systemd.services.hostapd = let
+        # RTL8812BU
+        conf1 = pkgs.writeText "hostapd.conf" ''
+            interface=wlp0s29f7u4
+            driver=nl80211
+            ssid=Anillc's AP
+            hw_mode=a
+            channel=48
+            ctrl_interface=/run/hostapd
+            ctrl_interface_group=wheel
+            wpa=2
+            wpa_passphrase=AnillcDayo
             bridge=br0
             ieee80211n=1
             ieee80211ac=1
@@ -94,5 +95,29 @@ in {
             wpa_key_mgmt=WPA-PSK
             rsn_pairwise=CCMP
         '';
+        conf2 = pkgs.writeText "hostapd.conf" ''
+            interface=wlp0s29f7u2
+            driver=nl80211
+            ssid=Anillc's AP
+            hw_mode=g
+            channel=11
+            ctrl_interface=/run/hostapd
+            ctrl_interface_group=wheel
+            wpa=2
+            wpa_passphrase=AnillcDayo
+            bridge=br0
+            ieee80211n=1
+            wmm_enabled=1
+            auth_algs=1
+            wpa_key_mgmt=WPA-PSK
+            rsn_pairwise=CCMP
+        '';
+    in {
+        after = [ "systemd-networkd.service" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+            ExecStart = "${pkgs.hostapd}/bin/hostapd ${conf1} ${conf2}";
+            Restart = "always";
+        };
     };
 }
