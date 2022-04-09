@@ -73,7 +73,14 @@ in {
                 protocol kernel {
                     learn;
                     ipv6 {
-                        import all;
+                        import filter {
+                            ${optionalString cfg.upstream.enable ''
+                                if net = ::/0 then {
+                                    preference = 200;
+                                }
+                            ''}
+                            accept;
+                        };
                         export filter {
                             if net = ::/0 || net ~ [2000::/3+] then {
                                 krt_prefsrc = 2602:feda:da0::${toHexString config.meta.id};

@@ -3,7 +3,6 @@ lib: rec {
     meta = {
         id = 5;
         name = "sh2";
-        system = "x86_64-linux";
         wg-public-key = "RBjfmCcZywc4KhQA1Mv/hzm6+I52R0DrHPT7DzLzWGI=";
     };
     configuration = { config, pkgs, ... }: {
