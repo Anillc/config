@@ -45,9 +45,15 @@ in {
         systemCronJobs = [ "*/20 * * * * root ${connect}" ];
     };
     systemd.services.connect-to-school = {
-        script = "${connect}";
         after = [ "network-online.target" "systemd-networkd.service" ];
+        partOf = [ "systemd-networkd.service" ];
         wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            Restart = "on-failure";
+        };
+        script = "${connect}";
     };
     firewall.extraPostroutingRules = ''
         ip  saddr 192.168.233.0/24 meta iifname br0 masquerade

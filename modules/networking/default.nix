@@ -35,25 +35,12 @@ with lib;
                 { routeConfig = { Destination = "${config.meta.v6}/128"; Table = 114; Protocol = 114; }; }
                 { routeConfig = { Destination = "2602:feda:da0::${toHexString config.meta.id}/128"; Table = 114; Protocol = 114; }; }
             ];
+            routingPolicyRules = [{
+                routingPolicyRuleConfig = {
+                    Family = "both";
+                    Table = "114";
+                };
+            }];
         };
-    };
-    systemd.services.table = {
-        wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" ];
-        partOf = [ "systemd-networkd.service" ];
-        restartIfChanged = true;
-        path = with pkgs; [ iproute2 ];
-        serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-        };
-        script = ''
-            ip -4 rule add table 114
-            ip -6 rule add table 114
-        '';
-        postStop = ''
-            ip -4 rule del table 114 || true
-            ip -6 rule del table 114 || true
-        '';
     };
 }
