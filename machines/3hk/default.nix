@@ -10,15 +10,8 @@ lib: rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./matrix.nix
         ];
-        sops = {
-            defaultSopsFile = ./secrets.yaml;
-            secrets.koishi-matrix = {
-                owner = "matrix-synapse";
-                group = "matrix-synapse";
-            };
-        };
+        sops.defaultSopsFile = ./secrets.yaml;
         bgp = {
             enable = true;
             upstream = {
@@ -46,7 +39,7 @@ lib: rec {
                 }];
             };
         };
-        firewall.publicTCPPorts = [ 80 443 ];
+        firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
             virtualHosts."dav.anillc.cn" = {

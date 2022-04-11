@@ -9,7 +9,6 @@ in {
     wgi = with machines.set; [
         { inherit (hk.meta)  name wg-public-key; peer = 11006; }
         { inherit (las.meta) name wg-public-key; peer = 11006; }
-        { inherit (jp.meta)  name wg-public-key; peer = 11006; }
         { inherit (fmt.meta) name wg-public-key; peer = 11006; }
     ];
     networking.nameservers = [ "8.8.8.8" ];

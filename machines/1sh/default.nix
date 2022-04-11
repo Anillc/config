@@ -10,11 +10,13 @@ lib: rec {
         imports = [
             ./hardware.nix
             ./networking.nix
+            ./bot.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.anillc-device = {};
             secrets.anillc-environment = {};
+            secrets.bot-env = {};
         };
         bgp.enable = true;
         # influxdb and go-cqhttp
