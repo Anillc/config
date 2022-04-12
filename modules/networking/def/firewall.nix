@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }: with lib; let
+{ config, pkgs, lib, ... }:
+
+with builtins;
+with lib;
+
+let
     cfg = config.firewall;
 in {
     options.firewall = {
@@ -54,38 +59,38 @@ in {
         };
     };
     config = {
+        boot.blacklistedKernelModules = [ "ip_tables" ];
+        environment.systemPackages = [ pkgs.nftables ];
         networking.firewall.enable = false;
-        networking.nftables = let
-            internalTCP = optionalString (builtins.length cfg.internalTCPPorts != 0) ''
+        systemd.services.firewall = let
+            internalTCP = optionalString (length cfg.internalTCPPorts != 0) ''
                 ip saddr 10.11.0.0/16 tcp dport { ${
-                    pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.internalTCPPorts)
+                    concatStringsSep ", " (map toString cfg.internalTCPPorts)
                 } } accept
                 ip6 saddr fd11::/16 tcp dport { ${
-                    pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.internalTCPPorts)
+                    concatStringsSep ", " (map toString cfg.internalTCPPorts)
                 } } accept
             '';
-            internalUDP = optionalString (builtins.length cfg.internalUDPPorts != 0) ''
+            internalUDP = optionalString (length cfg.internalUDPPorts != 0) ''
                 ip saddr 10.11.0.0/16 udp dport { ${
-                    pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.internalUDPPorts)
+                    concatStringsSep ", " (map toString cfg.internalUDPPorts)
                 } } accept
                 ip6 saddr fd11::/16 udp dport { ${
-                    pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.internalUDPPorts)
+                    concatStringsSep ", " (map toString cfg.internalUDPPorts)
                 } } accept
             '';
-            publicTCP = optionalString (builtins.length cfg.publicTCPPorts != 0) ''
+            publicTCP = optionalString (length cfg.publicTCPPorts != 0) ''
                 tcp dport { ${
-                    pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.publicTCPPorts)
+                    concatStringsSep ", " (map toString cfg.publicTCPPorts)
                 } } accept
             '';
-            publicUDP = optionalString (builtins.length cfg.publicUDPPorts != 0) ''
+            publicUDP = optionalString (length cfg.publicUDPPorts != 0) ''
                 udp dport { ${
-                    pkgs.lib.strings.concatStringsSep ", " (builtins.map builtins.toString cfg.publicUDPPorts)
+                    concatStringsSep ", " (map toString cfg.publicUDPPorts)
                 } } accept
             '';
-        in {
-            enable = true;
-            ruleset = ''
-                flush ruleset
+            script = pkgs.writeScript "nftables-rule" ''
+                #!${pkgs.nftables}/bin/nft -f
                 table inet firewall {
                     chain input {
                         type filter hook input priority filter; policy drop;
@@ -125,6 +130,17 @@ in {
                     }
                 }
             '';
+        in {
+            before = [ "network-pre.target" ];
+            wants = [ "network-pre.target" ];
+            wantedBy = [ "multi-user.target" ];
+            restartIfChanged = true;
+            serviceConfig = {
+                Type = "oneshot";
+                RemainAfterExit = true;
+                ExecStart = script;
+                ExecStop = "${pkgs.nftables}/bin/nft delete table inet firewall || true";
+            };
         };
     };
 }

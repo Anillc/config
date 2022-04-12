@@ -1,7 +1,7 @@
 { config, pkgs, ... }: {
     imports = [
         ./wg.nix
-        ./nftables.nix
+        ./firewall.nix
         ./babeld-override.nix
     ];
 }
