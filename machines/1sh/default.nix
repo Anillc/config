@@ -34,10 +34,6 @@ rec {
                 };
             };
         };
-        services.babelweb2 = {
-            enable = true;
-            nodes = builtins.map (x: "[${x.v6}]:33124") (map (x: x.meta) (import ../. lib).list);
-        };
         firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;

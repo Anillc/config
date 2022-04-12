@@ -50,6 +50,7 @@ in {
     config = mkIf cfg.enable {
         # bgp
         firewall.publicTCPPorts = [ 179 ];
+        firewall.extraInputRules = "ip6 daddr ff02::5/128 accept";
         services.bird2 = {
             enable = true;
             checkConfig = false;
@@ -58,6 +59,10 @@ in {
 
                 router id ${config.meta.v4};
                 include "${./utils.conf}";
+
+                ipv4 table igp_v4;
+                ipv6 table igp_v6;
+
                 protocol device {}
                 protocol direct {
                     ipv4;
@@ -87,6 +92,64 @@ in {
                             }
                             accept;
                         };
+                    };
+                }
+                protocol kernel {
+                    learn;
+                    kernel table 114;
+                    ipv4 {
+                        table igp_v4;
+                        import all;
+                        export none;
+                    };
+                }
+                protocol kernel {
+                    learn;
+                    kernel table 114;
+                    ipv6 {
+                        table igp_v6;
+                        import all;
+                        export none;
+                    };
+                }
+                protocol pipe {
+                    table igp_v4;
+                    peer table master4;
+                    import none;
+                    export all;
+                }
+                protocol pipe {
+                    table igp_v6;
+                    peer table master6;
+                    import none;
+                    export all;
+                }
+                protocol ospf v3 {
+                    ipv4 {
+                        table igp_v4;
+                        import all;
+                        export where source = RTS_INHERIT;
+                    };
+                    area 0 {
+                        ${concatStringsSep "\n" (flip map (config.wgi) (x: ''
+                            interface "i${x.name}" {
+                                cost ${toString x.cost};
+                            };
+                        ''))}
+                    };
+                }
+                protocol ospf v3 {
+                    ipv6 {
+                        table igp_v6;
+                        import all;
+                        export where source = RTS_INHERIT;
+                    };
+                    area 0 {
+                        ${concatStringsSep "\n" (flip map (config.wgi) (x: ''
+                            interface "i${x.name}" {
+                                cost ${toString x.cost};
+                            };
+                        ''))}
                     };
                 }
                 ${concatStringsSep "\n" (flip map

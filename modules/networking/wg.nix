@@ -26,6 +26,11 @@ with lib;
                     description = "peer port";
                     default = null;
                 };
+                options.cost = mkOption {
+                    type = types.int;
+                    description = "ospf cost";
+                    default = 65535;
+                };
             }));
             description = "internal wireguard interfaces";
             default = [];
@@ -40,7 +45,10 @@ with lib;
             }) config.wgi);
         systemd.network.networks = listToAttrs (map (x: nameValuePair "i${x.name}" {
             matchConfig.Name = "i${x.name}";
-            address = [ "fe80::10${toHexString config.meta.id}/64" ];
+            addresses = [
+                { addressConfig = { Address = "fe80::11${toHexString config.meta.id}/64"; }; }
+                { addressConfig = { Address = "169.254.11.${toString config.meta.id}/24"; Scope = "link"; }; }
+            ];
         }) config.wgi);
         systemd.services.setup-wireguard = {
             wantedBy = [ "multi-user.target" ];

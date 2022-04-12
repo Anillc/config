@@ -8,7 +8,6 @@ with lib;
         ./def
         ./bird
         ./wg.nix
-        ./babeld.nix
     ];
     services.resolved.enable = false;
     networking.useDHCP = false;
