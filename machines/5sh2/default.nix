@@ -1,5 +1,4 @@
-lib: rec {
-    machines = import ./.. lib;
+rec {
     meta = {
         id = 5;
         name = "sh2";
@@ -11,7 +10,7 @@ lib: rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            # ./nanahira.nix TODO
+            ./nanahira.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
@@ -62,11 +61,5 @@ lib: rec {
                 };
             };
         };
-        # Xiao Jin TODO
-        # net.routes = [
-        #     { dst = "10.0.0.0/16";     src = "172.22.167.106"; interface = "ens18"; gateway = "192.168.1.1"; onlink = true; proto = 114; table = 114; }
-        #     { dst = "192.168.2.0/24";  src = "172.22.167.106"; interface = "ens18"; gateway = "192.168.1.1"; onlink = true; proto = 114; table = 114; }
-        #     { dst = "192.168.22.0/24"; src = "172.22.167.106"; interface = "ens18"; gateway = "192.168.1.1"; onlink = true; proto = 114; table = 114; }
-        # ];
     };
 }

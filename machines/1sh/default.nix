@@ -1,4 +1,4 @@
-lib: rec {
+rec {
     meta = {
         id = 1;
         name = "sh";

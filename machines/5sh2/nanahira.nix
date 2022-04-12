@@ -1,17 +1,11 @@
-# TODO
-
 { config, pkgs, lib, ... }: {
     firewall.extraPostroutingRules = "meta iifname nnhr meta oifname ens18 masquerade";
-    systemd.services.net.partOf = [ "container@nanahira.service" ];
-    # TODO
-    systemd.services."container@nanahira".before = [ "net-online.service" ];
-    net = {
-        addresses = [
-            { address = "192.168.114.1/24"; interface = "nnhr"; }
-        ];
+    systemd.network.networks.nanahira = {
+        matchConfig.Name = "nnhr";
+        address = [ "192.168.114.1/24" ];
         routes = [
-            { dst = "10.198.0.0/16";    src = "172.22.167.106"; interface = "nnhr"; gateway = "192.168.114.2"; proto = 114; table = 114; }
-            { dst = "192.168.123.0/24"; src = "172.22.167.106"; interface = "nnhr"; gateway = "192.168.114.2"; proto = 114; table = 114; }
+            { routeConfig = { Destination = "10.198.0.0/16";    PreferredSource = config.meta.v4; Gateway = "192.168.114.2"; Table = 114; Protocol = 114; }; }
+            { routeConfig = { Destination = "192.168.123.0/24"; PreferredSource = config.meta.v4; Gateway = "192.168.114.2"; Table = 114; Protocol = 114; }; }
         ];
     };
     # use 192.168.114.1/24 and 192.168.114.2/24
@@ -40,8 +34,7 @@
                     peers = [{
                         publicKey = "cmcLT53EJSji4cWsvziFvSmX+elN05S0P9AQSCjpEQM=";
                         persistentKeepalive = 25;
-                        # yangtze-v4.mycard.moe
-                        endpoint = "58.32.12.110:28010";
+                        endpoint = "yangtze-v4.mycard.moe:28010";
                         allowedIPs = [ "0.0.0.0/0" "::/0" ];
                     }];
                 };
@@ -69,8 +62,7 @@
                 script = ''
                     ${pkgs.iproute2}/bin/ip address add 192.168.114.2/24 dev nnhr
                     ${pkgs.iproute2}/bin/ip route add default via 192.168.114.1
-                    ${pkgs.iproute2}/bin/ip route add 172.22.167.96/27 via 192.168.114.1 proto 114
-                    ${pkgs.iproute2}/bin/ip route add 10.127.20.0/24   via 192.168.114.1 proto 114
+                    ${pkgs.iproute2}/bin/ip route add 10.11.0.0/16 via 192.168.114.1 proto 114
                 '';
             };
         };

@@ -1,5 +1,4 @@
-lib: rec {
-    machines = import ./.. lib;
+rec {
     meta = {
         id = 4;
         name = "las";

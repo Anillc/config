@@ -2,6 +2,11 @@
     cfg = config.firewall;
 in {
     options.firewall = {
+        enableSourceFilter = mkOption {
+            type = types.bool;
+            description = "enable source filter";
+            default = true;
+        };
         internalTCPPorts = mkOption {
             type = types.listOf types.port;
             description = "internal tcp port";
@@ -96,14 +101,18 @@ in {
                     }
                     chain output {
                         type filter hook output priority filter; policy accept;
-                        ip  saddr 10.11.0.0/16 oifname "en*" reject
-                        ip6 saddr fd11::/16    oifname "en*" reject
+                        ${optionalString cfg.enableSourceFilter ''
+                            ip  saddr 10.11.0.0/16 oifname "en*" reject
+                            ip6 saddr fd11::/16    oifname "en*" reject
+                        ''}
                         ${cfg.extraOutRules}
                     }
                     chain forward {
                         type filter hook forward priority filter; policy accept;
-                        ip  saddr 10.11.0.0/16 oifname "en*" reject
-                        ip6 saddr fd11::/16    oifname "en*" reject
+                        ${optionalString cfg.enableSourceFilter ''
+                            ip  saddr 10.11.0.0/16 oifname "en*" reject
+                            ip6 saddr fd11::/16    oifname "en*" reject
+                        ''}
                         ${cfg.extraForwardRules}
                     }
                     chain prerouting {

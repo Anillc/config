@@ -13,7 +13,7 @@ let
 
     folders = attrNames (removeAttrs (readDir ./.) [ "default.nix" ]);
     machines = listToAttrs (map (folder: let
-        machine = import ./${folder} lib; # TODO: remove lib
+        machine = import ./${folder};
         meta = validate machine;
     in nameValuePair meta.name (machine // {
         inherit meta;
