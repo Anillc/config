@@ -13,7 +13,7 @@ let
     machines = import ./.. lib;
 in {
     wgi = with machines.set; [
-        { inherit (sh.meta) name wg-public-key; peer = 11008; }
+        { inherit (sh.meta) name wg-public-key; peer = 11008; cost = 200; }
     ];
     networking.nameservers = [ "223.5.5.5" ];
     systemd.network = mkMerge [{

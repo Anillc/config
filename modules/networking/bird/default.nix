@@ -247,7 +247,7 @@ in {
                     route 2a0d:2587:8100::/41 reject;
                     ipv6;
                 }
-            ''; # TODO: export where source = RTS_STATIC; to an alone table (for ospf)
+            '';
         };
     };
 }

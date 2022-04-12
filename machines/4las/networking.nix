@@ -7,9 +7,9 @@ let
     machines = import ./.. lib;
 in {
     wgi = with machines.set; [
-        { inherit (hk.meta)  name wg-public-key; listen = 11003; peer = 11004; }
-        { inherit (de.meta)  name wg-public-key; listen = 11006; }
-        { inherit (fmt.meta) name wg-public-key; listen = 11009; peer = 11004; }
+        { inherit (hk.meta)  name wg-public-key; listen = 11003; peer = 11004; cost = 1500; }
+        { inherit (de.meta)  name wg-public-key; listen = 11006;               cost = 1400; }
+        { inherit (fmt.meta) name wg-public-key; listen = 11009; peer = 11004; cost = 170;  }
     ];
     networking.nameservers = [ "8.8.8.8" ];
     systemd.network.networks.default-network = {
