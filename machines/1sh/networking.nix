@@ -28,4 +28,5 @@ in {
             { routeConfig = { Destination = "fd11:1::1/128"; Table = 114; Protocol = 114; }; }
         ];
     };
+    clash.enable = true;
 }
