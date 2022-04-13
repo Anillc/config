@@ -50,6 +50,7 @@ in {
     config = mkIf cfg.enable {
         # bgp
         firewall.publicTCPPorts = [ 179 ];
+        firewall.publicUDPPorts = [ 3784 ];
         firewall.extraInputRules = "ip6 daddr ff02::5/128 accept";
         services.bird2 = {
             enable = true;
@@ -124,15 +125,23 @@ in {
                     import none;
                     export all;
                 }
+                protocol bfd {
+                    accept direct;
+                    interface "i*";
+                }
                 protocol ospf v3 {
                     ipv4 {
                         table igp_v4;
-                        import all;
+                        import filter {
+                            krt_prefsrc = ${config.meta.v4};
+                            accept;
+                        };
                         export where source = RTS_INHERIT;
                     };
                     area 0 {
                         ${concatStringsSep "\n" (flip map (config.wgi) (x: ''
                             interface "i${x.name}" {
+                                bfd;
                                 cost ${toString x.cost};
                             };
                         ''))}
@@ -141,12 +150,16 @@ in {
                 protocol ospf v3 {
                     ipv6 {
                         table igp_v6;
-                        import all;
+                        import filter {
+                            krt_prefsrc = ${config.meta.v6};
+                            accept;
+                        };
                         export where source = RTS_INHERIT;
                     };
                     area 0 {
                         ${concatStringsSep "\n" (flip map (config.wgi) (x: ''
                             interface "i${x.name}" {
+                                bfd;
                                 cost ${toString x.cost};
                             };
                         ''))}
