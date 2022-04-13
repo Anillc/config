@@ -135,11 +135,11 @@ in {
             wants = [ "network-pre.target" ];
             wantedBy = [ "multi-user.target" ];
             restartIfChanged = true;
+            postStop = "${pkgs.nftables}/bin/nft delete table inet firewall || true";
             serviceConfig = {
                 Type = "oneshot";
                 RemainAfterExit = true;
                 ExecStart = script;
-                ExecStop = "${pkgs.nftables}/bin/nft delete table inet firewall || true";
             };
         };
     };
