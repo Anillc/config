@@ -10,7 +10,6 @@ with lib;
     networking.hostName = config.meta.name;
     time.timeZone = "Asia/Shanghai";
     firewall.publicTCPPorts = [ 22 ];
-    firewall.internalTCPPorts = [ 5201 ];
     services.iperf3.enable = true;
     users = {
         mutableUsers = false;

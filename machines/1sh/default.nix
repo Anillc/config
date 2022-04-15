@@ -19,8 +19,6 @@ rec {
             secrets.bot-env = {};
         };
         bgp.enable = true;
-        # influxdb and go-cqhttp
-        firewall.internalTCPPorts = [ 8086 6700 ];
         services.influxdb2.enable = true;
         services.go-cqhttp = {
             enable = true;
@@ -31,18 +29,6 @@ rec {
                 account = {
                     uin = "\${UIN}";
                     password = "\${PASSWORD}";
-                };
-            };
-        };
-        firewall.publicTCPPorts = [ 80 ];
-        services.nginx = {
-            enable = true;
-            virtualHosts = {
-                "babeld.anillc.cn" = {
-                    locations."/" = {
-                        proxyPass = "http://127.0.0.1:8080";
-                        proxyWebsockets = true;
-                    };
                 };
             };
         };

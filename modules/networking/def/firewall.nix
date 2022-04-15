@@ -12,16 +12,6 @@ in {
             description = "enable source filter";
             default = true;
         };
-        internalTCPPorts = mkOption {
-            type = types.listOf types.port;
-            description = "internal tcp port";
-            default = [];
-        };
-        internalUDPPorts = mkOption {
-            type = types.listOf types.port;
-            description = "internal udp port";
-            default = [];
-        };
         publicTCPPorts = mkOption {
             type = types.listOf types.port;
             description = "public tcp port";
@@ -63,22 +53,6 @@ in {
         environment.systemPackages = [ pkgs.nftables ];
         networking.firewall.enable = false;
         systemd.services.firewall = let
-            internalTCP = optionalString (length cfg.internalTCPPorts != 0) ''
-                ip saddr 10.11.0.0/16 tcp dport { ${
-                    concatStringsSep ", " (map toString cfg.internalTCPPorts)
-                } } accept
-                ip6 saddr fd11::/16 tcp dport { ${
-                    concatStringsSep ", " (map toString cfg.internalTCPPorts)
-                } } accept
-            '';
-            internalUDP = optionalString (length cfg.internalUDPPorts != 0) ''
-                ip saddr 10.11.0.0/16 udp dport { ${
-                    concatStringsSep ", " (map toString cfg.internalUDPPorts)
-                } } accept
-                ip6 saddr fd11::/16 udp dport { ${
-                    concatStringsSep ", " (map toString cfg.internalUDPPorts)
-                } } accept
-            '';
             publicTCP = optionalString (length cfg.publicTCPPorts != 0) ''
                 tcp dport { ${
                     concatStringsSep ", " (map toString cfg.publicTCPPorts)
@@ -98,8 +72,8 @@ in {
                         meta iifname lo accept
                         ip protocol icmp accept
                         ip6 nexthdr icmpv6 accept
-                        ${internalTCP}
-                        ${internalUDP}
+                        ip saddr 10.11.0.0/16 accept
+                        ip6 saddr fd11::/16 accept
                         ${publicTCP}
                         ${publicUDP}
                         ${cfg.extraInputRules}

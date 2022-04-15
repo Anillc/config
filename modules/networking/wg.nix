@@ -37,7 +37,7 @@ with lib;
         };
     };
     config = {
-        # interfaces starts with i will add to babeld
+        # interfaces starts with i will add to ospf
         wg = listToAttrs (map
             (x: nameValuePair "i${x.name}" {
                 publicKey = x.wg-public-key;

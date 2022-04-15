@@ -33,6 +33,4 @@ with lib;
             ports = [ "8444:80" ];
         };
     };
-    # bot
-    firewall.internalTCPPorts = [ 8056 8444 ];
 }
