@@ -2,6 +2,5 @@
     imports = [
         ./wg.nix
         ./firewall.nix
-        ./frr-override.nix
     ];
 }

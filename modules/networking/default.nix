@@ -6,7 +6,7 @@ with lib;
 {
     imports = [
         ./def
-        ./frr
+        ./bird
         ./wg.nix
     ];
     services.resolved.enable = false;
@@ -16,10 +16,6 @@ with lib;
         "net.ipv6.conf.all.forwarding" = 1;
         "net.ipv4.conf.all.rp_filter" = 0;
     };
-    environment.etc."systemd/networkd.conf".text = ''
-        [Network]
-        ManageForeignRoutes=no
-    '';
     systemd.network = {
         enable = true;
         netdevs.dmy11.netdevConfig = {
@@ -33,6 +29,17 @@ with lib;
                 "${config.meta.v6}/128"
                 "2602:feda:da0::${toHexString config.meta.id}/128"
             ];
+            routes = [
+                { routeConfig = { Destination = "${config.meta.v4}/32";  Table = 114; Protocol = 114; }; }
+                { routeConfig = { Destination = "${config.meta.v6}/128"; Table = 114; Protocol = 114; }; }
+                { routeConfig = { Destination = "2602:feda:da0::${toHexString config.meta.id}/128"; Table = 114; Protocol = 114; }; }
+            ];
+            routingPolicyRules = [{
+                routingPolicyRuleConfig = {
+                    Family = "both";
+                    Table = "114";
+                };
+            }];
         };
     };
 }
