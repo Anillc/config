@@ -25,11 +25,9 @@ in {
     systemd.network = mkMerge ([
         { enable = true; }
         {
-            netdevs = {
-                dmy11.netdevConfig = {
-                    Name = "dmy11";
-                    Kind = "dummy";
-                };
+            netdevs.dmy11.netdevConfig = {
+                Name = "dmy11";
+                Kind = "dummy";
             };
             networks.dmy11 = {
                 matchConfig.Name = "dmy11";

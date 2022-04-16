@@ -22,6 +22,22 @@
         "type": "github"
       }
     },
+    "china-ip": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1647825167,
+        "narHash": "sha256-5jnXMKPZNBBxVOWJrVg7SXyGCafl3HyuQgHnWLRu94U=",
+        "owner": "17mon",
+        "repo": "china_ip_list",
+        "rev": "28e7ddb10c81f6e77ea43cb280f648dac3d4a38d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "17mon",
+        "repo": "china_ip_list",
+        "type": "github"
+      }
+    },
     "deploy-rs": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -178,6 +194,7 @@
     "root": {
       "inputs": {
         "anillc": "anillc",
+        "china-ip": "china-ip",
         "deploy-rs": "deploy-rs",
         "dns": "dns",
         "flake-utils": "flake-utils_3",

@@ -22,8 +22,12 @@
         url = "github:kirelagin/dns.nix";
         inputs.nixpkgs.follows = "nixpkgs";
     };
+    inputs.china-ip = {
+        url = "github:17mon/china_ip_list";
+        flake = false;
+    };
 
-    outputs = inputs@{ self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, dns }: let
+    outputs = { self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, dns, china-ip }: let
         machines = import ./machines nixpkgs.lib;
         modules = import ./modules;
     in flake-utils.lib.eachDefaultSystem (system: let 
@@ -57,7 +61,7 @@
             inherit (meta) system;
             modules = [
                 { nixpkgs.overlays = [(self: super: {
-                    inherit dns;
+                    inherit dns china-ip;
                 })]; }
                 sops-nix.nixosModules.sops
                 anillc.nixosModule.${meta.system}

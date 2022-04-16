@@ -4,7 +4,14 @@ rec {
         name = "jx";
         wg-public-key = "2YSajirzbCUK4h3NbuBgpZPOypjrhtrLnT5pJp2K9HU=";
     };
-    configuration = { config, pkgs, ... }: {
+    configuration = { config, pkgs, lib, ... }:
+    
+    with builtins;
+    with lib;
+
+    let
+        china-ip = filter (x: x != "") (splitString "\n" (readFile "${pkgs.china-ip}/china_ip_list.txt"));
+    in {
         inherit meta;
         imports = [
             ./hardware.nix
