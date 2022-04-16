@@ -80,10 +80,18 @@ in {
                     }
                     chain output {
                         type filter hook output priority filter; policy accept;
+                        ${optionalString cfg.enableSourceFilter ''
+                            ip  saddr 10.11.0.0/16 meta oifname "en*" reject
+                            ip6 saddr fd11::/16    meta oifname "en*" reject
+                        ''}
                         ${cfg.extraOutRules}
                     }
                     chain forward {
                         type filter hook forward priority filter; policy accept;
+                        ${optionalString cfg.enableSourceFilter ''
+                            ip  saddr 10.11.0.0/16 meta iifname != "g*" meta oifname "en*" reject
+                            ip6 saddr fd11::/16    meta iifname != "g*" meta oifname "en*" reject
+                        ''}
                         ${cfg.extraForwardRules}
                     }
                     chain prerouting {
@@ -92,12 +100,8 @@ in {
                     }
                     chain postrouting {
                         type nat hook postrouting priority srcnat; policy accept;
-                        ip  saddr 10.11.0.0/16 iifname "g*" masquerade
-                        ip6 saddr fd11::/16    iifname "g*" masquerade
-                        ${optionalString cfg.enableSourceFilter ''
-                            ip  saddr 10.11.0.0/16 meta oifname "en*" drop
-                            ip6 saddr fd11::/16    meta oifname "en*" drop
-                        ''}
+                        ip  saddr 10.11.0.0/16 meta iifname "g*" masquerade
+                        ip6 saddr fd11::/16    meta iifname "g*" masquerade
                         ${cfg.extraPostroutingRules}
                     }
                 }
