@@ -11,7 +11,6 @@ let
         ${config.sops.secrets.school-network.path}
     '';
     machines = import ./.. lib;
-    china-ip = filter (x: x != "") (splitString "\n" (readFile "${pkgs.china-ip}/china_ip_list.txt"));
 in {
     wgi = with machines.set; [
         { inherit (sh.meta) name wg-public-key; peer = 11008; cost = 200; }
@@ -34,13 +33,6 @@ in {
         networks.default-network = {
             matchConfig.Name = "enp1s0";
             DHCP = "ipv4";
-            dhcpV4Config.UseRoutes = false;
-            routingPolicyRules = [{
-                routingPolicyRuleConfig = {
-                    Family = "ipv4";
-                    Table = "10";
-                };
-            }];
         };
     } {
         # for masquerade
@@ -48,27 +40,6 @@ in {
             address = [ "${config.meta.v4}/32" "${config.meta.v6}/128" "2602:feda:da0::${toHexString config.meta.id}/128" ];
         }) config.wgi);
     }];
-    systemd.services.net = {
-        after = [ "systemd-networkd.service" ];
-        wantedBy = [ "multi-user.target" ];
-        path = with pkgs; [ iproute2 ];
-        restartIfChanged = true;
-        serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-        };
-        script = concatStringsSep "\n" (flip map china-ip (x: ''
-            ip route add ${x} dev enp1s0 table 10
-        '')) + ''
-            ip route add 172.16.2.100/32 dev enp1s0 table 10
-            ip route add default via 10.11.2.3
-        '';
-        postStop = ''
-            ip route del 172.16.2.100/32 || true
-            ip route del default || true
-            ip route flush table 10 || true
-        '';
-    };
 
     services.cron = {
         enable = true;
