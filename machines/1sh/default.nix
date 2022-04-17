@@ -17,9 +17,24 @@ rec {
             secrets.anillc-device = {};
             secrets.anillc-environment = {};
             secrets.bot-env = {};
+            secrets.grafana-smtp = {
+                owner = "grafana";
+                group = "grafana";
+            };
         };
         bgp.enable = true;
         services.influxdb2.enable = true;
+        services.grafana = {
+            enable = true;
+            addr = "0.0.0.0";
+            smtp = {
+                enable = true;
+                user = "alert@anillc.cn";
+                host = "smtp.ym.163.com:25";
+                passwordFile = config.sops.secrets.grafana-smtp.path;
+                fromAddress = "alert@anillc.cn";
+            };
+        };
         services.go-cqhttp = {
             enable = true;
             device = config.sops.secrets.anillc-device.path;
