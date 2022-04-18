@@ -11,6 +11,7 @@ with lib;
             name = "bot";
         }];
     };
+    services.telegraf.extraConfig.mysql.servers = [ "$MYSQL_SERVER" ];
     virtualisation.oci-containers = {
         backend = "podman";
         containers.bot = {

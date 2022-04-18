@@ -1,6 +1,12 @@
-{ pkgs, ...}: {
+{ config, pkgs, ...}: {
+    sops.secrets.telegraf-env = {
+        sopsFile = ./secrets.yaml;
+        owner = "telegraf";
+        group = "telegraf";
+    };
     services.telegraf = {
         enable = true;
+        environmentFiles = [ config.sops.secrets.telegraf-env.path ];
         extraConfig = {
             inputs = {
                 cpu = {
@@ -13,10 +19,11 @@
                 disk.ignore_fs = [ "tmpfs" "devtmpfs" "devfs" "iso9660" "overlay" "aufs" "squashfs" ];
                 diskio = {};
                 net = {};
+                system = {};
             };
             outputs.influxdb_v2 = {
                 urls = ["http://10.11.0.1:8086"];
-                token = "d2r575_TnHszNBVnApmX9-wwSFvpf0CQlCT85x8XGSa8hAMia6sjm4DCDwFhY42_oJR0_ie-ju1CYn8iYHI0HQ==";
+                token = "$TOKEN";
                 organization = "AnillcNetwork";
                 bucket = "servers";
             };
