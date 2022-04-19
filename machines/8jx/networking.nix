@@ -64,22 +64,27 @@ in {
         ip saddr 10.11.0.0/16 ip daddr 10.11.0.8 tcp dport 8005 dnat to 192.168.233.241
     '';
 
+    firewall.extraInputRules = ''
+        ip saddr 0.0.0.0/32 accept # DHCP
+        ip  saddr 192.168.233.0/24 accept
+        ip6 saddr fdff:233::/64 accept
+    '';
+
     networking.resolvconf.useLocalResolver = lib.mkForce false;
     firewall.publicTCPPorts = [ 53 ];
     firewall.publicUDPPorts = [ 53 ];
-    # dhcp
-    firewall.extraInputRules = "ip saddr 0.0.0.0/32 accept";
+    services.adguardhome.enable = true;
     services.dnsmasq = {
         enable = true;
         resolveLocalQueries = false;
-        # servers = [ "172.22.167.125" ];
-        servers = [ "223.5.5.5" ];
         extraConfig = ''
+            port=0
             interface=br0
             bogus-priv
             enable-ra
             dhcp-range=192.168.233.2,192.168.233.254,24h
             dhcp-range=fdff:233::2,fdff:233::fff,ra-only
+            dhcp-option=option:dns-server,192.168.233.1
         '';
     };
     systemd.services.hostapd = let
