@@ -18,10 +18,6 @@ in {
         "net.ipv6.conf.all.forwarding" = 1;
         "net.ipv4.conf.all.rp_filter" = 0;
     };
-    environment.etc."systemd/networkd.conf".text = ''
-        [Network]
-        ManageForeignRoutes=no
-    '';
     systemd.network = mkMerge ([
         { enable = true; }
         {
