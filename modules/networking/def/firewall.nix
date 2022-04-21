@@ -100,8 +100,6 @@ in {
                     }
                     chain postrouting {
                         type nat hook postrouting priority srcnat; policy accept;
-                        ip  saddr 10.11.0.0/16 meta iifname "g*" masquerade
-                        ip6 saddr fd11::/16    meta iifname "g*" masquerade
                         ${cfg.extraPostroutingRules}
                     }
                 }
