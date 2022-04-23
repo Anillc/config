@@ -94,7 +94,7 @@ in {
             driver=nl80211
             ssid=Anillc's AP
             hw_mode=a
-            channel=48
+            channel=165
             ctrl_interface=/run/hostapd
             ctrl_interface_group=wheel
             wpa=2
