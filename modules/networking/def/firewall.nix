@@ -47,6 +47,11 @@ in {
             description = "extraPostroutingRules";
             default = "";
         };
+        extraPostroutingFilterRules = mkOption {
+            type = types.lines;
+            description = "extraPostroutingFilterRules";
+            default = "";
+        };
     };
     config = {
         boot.blacklistedKernelModules = [ "ip_tables" ];
@@ -80,18 +85,10 @@ in {
                     }
                     chain output {
                         type filter hook output priority filter; policy accept;
-                        ${optionalString cfg.enableSourceFilter ''
-                            ip  saddr 10.11.0.0/16 meta oifname "en*" reject
-                            ip6 saddr fd11::/16    meta oifname "en*" reject
-                        ''}
                         ${cfg.extraOutRules}
                     }
                     chain forward {
                         type filter hook forward priority filter; policy accept;
-                        ${optionalString cfg.enableSourceFilter ''
-                            ip  saddr 10.11.0.0/16 meta iifname != "g*" meta oifname "en*" reject
-                            ip6 saddr fd11::/16    meta iifname != "g*" meta oifname "en*" reject
-                        ''}
                         ${cfg.extraForwardRules}
                     }
                     chain prerouting {
@@ -101,6 +98,14 @@ in {
                     chain postrouting {
                         type nat hook postrouting priority srcnat; policy accept;
                         ${cfg.extraPostroutingRules}
+                    }
+                    chain postrouting-filter {
+                        type filter hook postrouting priority filter; policy accept;
+                        ${cfg.extraPostroutingFilterRules}
+                        ${optionalString cfg.enableSourceFilter ''
+                            ip  saddr 10.11.0.0/16 meta iifname != "g*" meta oifname "en*" drop
+                            ip6 saddr fd11::/16    meta iifname != "g*" meta oifname "en*" drop
+                        ''}
                     }
                 }
             '';

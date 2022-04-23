@@ -11,7 +11,6 @@ in {
         { inherit (hk.meta)  name wg-public-key; listen = 21121; peer = 11007; cost = 260; }
         { inherit (jx.meta)  name wg-public-key; listen = 21122;               cost = 160; }
     ];
-    networking.nameservers = [ "223.5.5.5" ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens18";
         address = [ "10.56.1.12/24" "2404:f4c0:5156:1::12/64" ];

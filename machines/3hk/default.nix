@@ -23,7 +23,6 @@ rec {
                 address = "2406:4440::100";
             };
         };
-        networking.nameservers = [ "8.8.8.8" ];
         services.webdav = {
             enable = true;
             settings = {

@@ -25,6 +25,7 @@
         extraVeths.nnhr = {};
         bindMounts."/run/secrets".isReadOnly = true;
         config = { pkgs, ... }: {
+            documentation.enable = false;
             environment.systemPackages = with pkgs; [ tcpdump iptables ];
             boot.kernel.sysctl = pkgs.lib.mkForce {
                 "net.ipv4.ip_forward" = 1;

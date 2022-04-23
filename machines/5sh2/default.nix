@@ -19,7 +19,6 @@ rec {
             secrets.wg-nanahira-private-key = {};
         };
         bgp.enable = true;
-        networking.nameservers = [ "223.5.5.5" ];
         
         services.go-cqhttp = {
             enable = true;

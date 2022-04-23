@@ -11,7 +11,6 @@ rec {
             ./networking.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
-        networking.nameservers = [ "8.8.8.8" ];
         bgp = {
             enable = true;
             upstream = {

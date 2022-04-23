@@ -16,7 +16,6 @@ in {
         { inherit (sh.meta) name wg-public-key; peer = 11008; cost = 200; }
         { inherit (wh.meta) name wg-public-key; peer = 21122; cost = 160; }
     ];
-    networking.nameservers = [ "223.5.5.5" ];
     systemd.network = mkMerge [{
         netdevs.br0.netdevConfig = {
             Name = "br0";

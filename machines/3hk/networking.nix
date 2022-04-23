@@ -13,7 +13,6 @@ in {
         { inherit (wh.meta)  name wg-public-key; listen = 11007; peer = 21121; cost = 260;  }
         { inherit (fmt.meta) name wg-public-key; listen = 11009; peer = 11003; cost = 1500; }
     ];
-    networking.nameservers = [ "8.8.8.8" ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens192";
         address = [ "103.152.35.32/24" "2406:4440::32/64" ];

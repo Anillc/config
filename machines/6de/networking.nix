@@ -11,7 +11,6 @@ in {
         { inherit (las.meta) name wg-public-key; peer = 11006; cost = 1400; }
         { inherit (fmt.meta) name wg-public-key; peer = 11006; cost = 1500; }
     ];
-    networking.nameservers = [ "8.8.8.8" ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens160";
         DHCP = "ipv4";

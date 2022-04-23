@@ -9,7 +9,6 @@ in {
     wgi = with machines.set; [
         { inherit (sh.meta) name wg-public-key; peer = 11005; cost = 80; }
     ];
-    networking.nameservers = [ "223.5.5.5" ];
     firewall.enableSourceFilter = false;
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens18";
