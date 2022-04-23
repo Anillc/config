@@ -29,19 +29,59 @@ in {
             address = [
                 "${config.meta.v4}/32"
                 "${config.meta.v6}/128"
-                "2602:feda:da0::${toHexString config.meta.id}/128"
+                "${config.meta.externalV6}/128"
             ];
-            routes = [
-                { routeConfig = { Destination = "${config.meta.v4}/32";  Table = 114; Protocol = 114; }; }
-                { routeConfig = { Destination = "${config.meta.v6}/128"; Table = 114; Protocol = 114; }; }
-                { routeConfig = { Destination = "2602:feda:da0::${toHexString config.meta.id}/128"; Table = 114; Protocol = 114; }; }
-            ];
-            routingPolicyRules = [{
-                routingPolicyRuleConfig = {
-                    Family = "both";
-                    Table = "114";
-                };
-            }];
         };
     };
+    bgp.extraBirdConfig = ''
+        protocol static {
+            route 2a0e:b107:1170::/48 reject;
+            ipv6 {
+                table bgp_v6;
+            };
+        }
+        protocol static {
+            route 2a0e:b107:1171::/48 reject;
+            ipv6 {
+                table bgp_v6;
+            };
+        }
+        protocol static {
+            route 2a0e:b107:df5::/48 reject;
+            ipv6 {
+                table bgp_v6;
+            };
+        }
+        protocol static {
+            route 2602:feda:da0::/44 reject;
+            ipv6 {
+                table bgp_v6;
+            };
+        }
+        protocol static {
+            route 2a0d:2587:8100::/41 reject;
+            ipv6 {
+                table bgp_v6;
+            };
+        }
+
+        protocol static {
+            route ${config.meta.v4}/32 via "dmy11";
+            ipv4 {
+                table igp_v4;
+            };
+        }
+        protocol static {
+            route ${config.meta.v6}/128 via "dmy11";
+            ipv6 {
+                table igp_v6;
+            };
+        }
+        protocol static {
+            route ${config.meta.externalV6}/128 via "dmy11";
+            ipv6 {
+                table igp_v6;
+            };
+        }
+    '';
 }

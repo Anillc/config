@@ -3,11 +3,21 @@
     systemd.network.networks.nanahira = {
         matchConfig.Name = "nnhr";
         address = [ "192.168.114.1/24" ];
-        routes = [
-            { routeConfig = { Destination = "10.198.0.0/16";    PreferredSource = config.meta.v4; Gateway = "192.168.114.2"; Table = 114; Protocol = 114; }; }
-            { routeConfig = { Destination = "192.168.123.0/24"; PreferredSource = config.meta.v4; Gateway = "192.168.114.2"; Table = 114; Protocol = 114; }; }
-        ];
     };
+    bgp.extraBirdConfig = ''
+        protocol static {
+            route 10.198.0.0/16 via 192.168.114.2;
+            ipv4 {
+                table igp_v4;
+            };
+        }
+        protocol static {
+            route 192.168.123.0/24 via 192.168.114.2;
+            ipv4 {
+                table igp_v4;
+            };
+        }
+    '';
     # use 192.168.114.1/24 and 192.168.114.2/24
     containers.nanahira = {
         autoStart = true;

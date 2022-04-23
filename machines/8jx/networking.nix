@@ -37,7 +37,7 @@ in {
     } {
         # for masquerade
         networks = listToAttrs (map (x: nameValuePair "i${x.name}" {
-            address = [ "${config.meta.v4}/32" "${config.meta.v6}/128" "2602:feda:da0::${toHexString config.meta.id}/128" ];
+            address = [ "${config.meta.v4}/32" "${config.meta.v6}/128" "${config.meta.externalV6}/128" ];
         }) config.wgi);
     }];
 

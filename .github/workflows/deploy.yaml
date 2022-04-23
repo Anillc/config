@@ -10,7 +10,7 @@ jobs:
       with:
         endpoint: ${{ secrets.WG_ENDPOINT }}
         endpoint_public_key: NQfs6evQLemuJcdcvpO4ds1wXwUHTlzlQXWTJv+WCXY=
-        ips: 10.11.1.2/32
+        ips: 10.11.2.2/32
         allowed_ips: 0.0.0.0/0, ::/0
         private_key: ${{ secrets.WG_PRIVATE_KEY }}
     - name: setup network

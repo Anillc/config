@@ -29,10 +29,13 @@ in {
         listen = 12001;
         publicKey = "QQZ7pArhUyhdYYDhlv+x3N4G/+Uwu9QAdbWoNWAIRGg=";
     };
-    systemd.network.networks.deploy = {
-        matchConfig.Name = "deploy";
-        routes = [
-            { routeConfig = { Destination = "10.11.1.2/32";  Table = 114; Protocol = 114; }; }
-        ];
-    };
+    systemd.network.networks.deploy.matchConfig.Name = "deploy";
+    bgp.extraBirdConfig = ''
+        protocol static {
+            route 10.11.2.2/32 via "deploy";
+            ipv4 {
+                table igp_v4;
+            };
+        }
+    '';
 }

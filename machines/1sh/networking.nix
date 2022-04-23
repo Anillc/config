@@ -23,10 +23,20 @@ in {
     };
     systemd.network.networks.phone = {
         matchConfig.Name = "phone";
-        routes = [
-            { routeConfig = { Destination = "10.11.1.1/32";  Table = 114; Protocol = 114; }; }
-            { routeConfig = { Destination = "fd11:1::1/128"; Table = 114; Protocol = 114; }; }
-        ];
     };
+    bgp.extraBirdConfig = ''
+        protocol static {
+            route 10.11.2.1/32 via "phone";
+            ipv4 {
+                table igp_v4;
+            };
+        }
+        protocol static {
+            route fd11:1::1/128 via "phone";
+            ipv6 {
+                table igp_v6;
+            };
+        }
+    '';
     clash.enable = true;
 }

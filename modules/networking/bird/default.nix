@@ -46,6 +46,11 @@ in {
             description = "peers";
             default = {};
         };
+        extraBirdConfig = mkOption {
+            type = types.lines;
+            description = "extraBirdConfig";
+            default = "";
+        };
     };
     config = mkIf cfg.enable {
         # bgp
@@ -63,6 +68,7 @@ in {
 
                 ipv4 table igp_v4;
                 ipv6 table igp_v6;
+                ipv6 table bgp_v6;
 
                 protocol device {}
                 protocol direct {
@@ -79,38 +85,13 @@ in {
                 protocol kernel {
                     learn;
                     ipv6 {
-                        import filter {
-                            ${optionalString cfg.upstream.enable ''
-                                if net = ::/0 then {
-                                    preference = 200;
-                                }
-                            ''}
-                            accept;
-                        };
+                        import all;
                         export filter {
                             if net = ::/0 || net ~ [2000::/3+] then {
-                                krt_prefsrc = 2602:feda:da0::${toHexString config.meta.id};
+                                krt_prefsrc = ${config.meta.externalV6};
                             }
                             accept;
                         };
-                    };
-                }
-                protocol kernel {
-                    learn;
-                    kernel table 114;
-                    ipv4 {
-                        table igp_v4;
-                        import all;
-                        export none;
-                    };
-                }
-                protocol kernel {
-                    learn;
-                    kernel table 114;
-                    ipv6 {
-                        table igp_v6;
-                        import all;
-                        export none;
                     };
                 }
                 protocol pipe {
@@ -121,6 +102,12 @@ in {
                 }
                 protocol pipe {
                     table igp_v6;
+                    peer table master6;
+                    import none;
+                    export all;
+                }
+                protocol pipe {
+                    table bgp_v6;
                     peer table master6;
                     import none;
                     export all;
@@ -136,7 +123,7 @@ in {
                             krt_prefsrc = ${config.meta.v4};
                             accept;
                         };
-                        export where source = RTS_INHERIT;
+                        export where source = RTS_STATIC;
                     };
                     area 0 {
                         ${concatStringsSep "\n" (flip map (config.wgi) (x: ''
@@ -154,7 +141,7 @@ in {
                             krt_prefsrc = ${config.meta.v6};
                             accept;
                         };
-                        export where source = RTS_INHERIT;
+                        export where source = RTS_STATIC;
                     };
                     area 0 {
                         ${concatStringsSep "\n" (flip map (config.wgi) (x: ''
@@ -176,22 +163,13 @@ in {
                             export none;
                         };
                         ipv6 {
+                            table bgp_v6;
                             next hop self ebgp;
                             import filter {
                                 bgp_local_pref = 50;
                                 accept;
                             };
-                            export filter {
-                                ${optionalString cfg.upstream.enable ''
-                                    if net = ::/0 && source = RTS_INHERIT then {
-                                        bgp_path.prepend(${cfg.upstream.asn});
-                                        bgp_next_hop = ${config.meta.v6};
-                                        accept;
-                                    }
-                                ''}
-                                if source = RTS_BGP then accept;
-                                reject;
-                            };
+                            export where source = RTS_STATIC && net = ::/0 || source = RTS_BGP;
                         };
                     }
                 ''))}
@@ -207,13 +185,13 @@ in {
                             export none;
                         };
                         ipv6 {
+                            table bgp_v6;
                             next hop self;
                             import none;
                             export where source = RTS_STATIC;
                         };
                     }
                 ''}
-
                 ${concatStringsSep "\n" (flip mapAttrsToList cfg.peers (name: value: ''
                     protocol bgp e${name} {
                         graceful restart on;
@@ -224,6 +202,7 @@ in {
                             export none;
                         };
                         ipv6 {
+                            table bgp_v6;
                             next hop self;
                             import filter {
                                 utils_internet_reject_small_prefixes_v6();
@@ -238,28 +217,18 @@ in {
                         };
                     }
                 ''))}
-
-
-                protocol static {
-                    route 2a0e:b107:1170::/48 reject;
-                    ipv6;
-                }
-                protocol static {
-                    route 2a0e:b107:1171::/48 reject;
-                    ipv6;
-                }
-                protocol static {
-                    route 2a0e:b107:df5::/48 reject;
-                    ipv6;
-                }
-                protocol static {
-                    route 2602:feda:da0::/44 reject;
-                    ipv6;
-                }
-                protocol static {
-                    route 2a0d:2587:8100::/41 reject;
-                    ipv6;
-                }
+                ${optionalString cfg.upstream.enable ''
+                    protocol static {
+                        route ::/0 reject {
+                            bgp_path.prepend(${cfg.upstream.asn});
+                            bgp_next_hop = ${config.meta.v6};
+                        };
+                        ipv6 {
+                            table bgp_v6;
+                        };
+                    }
+                ''}
+                ${cfg.extraBirdConfig}
             '';
         };
     };
