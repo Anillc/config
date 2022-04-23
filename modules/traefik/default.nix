@@ -37,7 +37,7 @@ in {
                 certificatesResolvers.le.acme = {
                     email = "acme@anillc.cn";
                     storage = config.services.traefik.dataDir + "/acme.json";
-                    tlsChallenge = { };
+                    tlsChallenge = {};
                 };
             };
             dynamicConfigFile = "/var/traefik/config.yaml";

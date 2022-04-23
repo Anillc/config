@@ -27,6 +27,8 @@
             "jx".AAAA  = [ "fd11::8"   ];
             "fmt".A    = [ "10.11.0.9" ];
             "fmt".AAAA = [ "fd11::9"   ];
+
+            "ca".CNAME = [ "fmt.a." ];
         };
     };
 in pkgs.writeText name (dns.lib.toString name zone)

@@ -2,6 +2,7 @@ rec {
     meta = {
         id = 7;
         name = "wh";
+        enable = false;
         wg-public-key = "xUjqZwuOHxg4FOzU/W6y4/sNpRC/ux7duj5PBscIKTQ=";
     };
     configuration = { config, pkgs, ... }: {

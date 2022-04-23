@@ -9,8 +9,12 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
+            ./ca
         ];
-        sops.defaultSopsFile = ./secrets.yaml;
+        sops = {
+            defaultSopsFile = ./secrets.yaml;
+            secrets.ca-key = {};
+        };
         bgp = {
             enable = true;
             upstream = {
@@ -18,6 +22,20 @@ rec {
                 asn = "7720";
                 address = "2602:fc1d:0:2::1";
                 multihop = true;
+            };
+        };
+        firewall.publicTCPPorts = [ 80 443 ];
+        services.nginx = {
+            enable = false;
+            recommendedProxySettings = true;
+            recommendedTlsSettings = true;
+            virtualHosts = {
+                "ca.a" = {
+                    enableACME = true;
+                    locations."/" = {
+                        proxyPass = "https://ca.a:8443";
+                    };
+                };
             };
         };
     };
