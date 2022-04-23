@@ -26,12 +26,13 @@ rec {
         };
         firewall.publicTCPPorts = [ 80 443 ];
         services.nginx = {
-            enable = false;
+            enable = true;
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
             virtualHosts = {
                 "ca.a" = {
                     enableACME = true;
+                    forceSSL = true;
                     locations."/" = {
                         proxyPass = "https://ca.a:8443";
                     };
