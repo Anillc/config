@@ -79,7 +79,6 @@
             inherit (machine) meta;
         in nameValuePair meta.name {
             sshUser = "root";
-            sshOpts = [ "-4" "-o" "ServerAliveInterval=30" "-o" "StrictHostKeyChecking=no" ];
             hostname = meta.address;
             confirmTimeout = 300;
             profiles.system.path = deploy-rs.lib.${meta.system}.activate.nixos self.nixosConfigurations.${meta.name};

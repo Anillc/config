@@ -20,10 +20,15 @@ in {
             type = types.str;
             description = "name";
         };
+        domain = mkOption {
+            type = types.str;
+            description = "internal domain";
+            default = "${cfg.name}.a";
+        };
         address = mkOption {
             type = types.str;
             description = "address";
-            default = cfg.v4;
+            default = cfg.domain;
         };
         system = mkOption {
             type = types.str;

@@ -16,9 +16,9 @@ jobs:
     - name: setup network
       run: |
         sudo apt install -y iproute2
-        # sudo tee /etc/resolv.conf <<EOF
-        # nameserver 172.22.167.125
-        # EOF
+        sudo tee /etc/resolv.conf <<EOF
+        nameserver 10.11.1.2
+        EOF
         sudo ip route add 10.11.0.0/16 dev deploy
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v15
@@ -29,7 +29,8 @@ jobs:
     - uses: shimataro/ssh-key-action@v2
       with:
         key: '${{ secrets.DEPLOY_KEY }}'
-        known_hosts: unnecessary
+        known_hosts: |
+          @cert-authority *.a ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOiNWW0uoDrXANlbj8lVyGfUMOL9y8uBrbAfdqi9obntEZfwiDp02Pq3rl74W4kDF4TzL6qroXeNeg0hkHBqH/Q=
     - name: deploy
       run: |
         nix develop -c deploy-all
