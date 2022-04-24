@@ -55,14 +55,24 @@ in {
         };
         script = "${connect}";
     };
+    
+    bgp.extraBirdConfig = ''
+        protocol static {
+            route 10.11.5.0/24 via "br0";
+            ipv4 {
+                table igp_v4;
+            };
+        }
+    '';
+    firewall.extraPreroutingRules = ''
+        ip saddr 10.11.0.0/16     ip daddr 10.11.5.0/24 dnat to ip daddr & 0.0.0.255 | 192.168.233.0
+        ip saddr 192.168.233.0/24 ip daddr 10.11.5.0/24 dnat to ip daddr & 0.0.0.255 | 192.168.233.0
+    '';
+
     firewall.extraPostroutingRules = ''
         ip  saddr 192.168.233.0/24 meta iifname br0 masquerade
         ip6 saddr fdff:233::/64    meta iifname br0 masquerade
     '';
-    firewall.extraPreroutingRules = ''
-        ip saddr 10.11.0.0/16 ip daddr 10.11.0.8 tcp dport 8005 dnat to 192.168.233.241
-    '';
-
     firewall.extraInputRules = ''
         ip saddr 0.0.0.0/32 accept # DHCP
         ip  saddr 192.168.233.0/24 accept
