@@ -28,6 +28,10 @@
             "fmt".A    = [ "10.11.0.9" ];
             "fmt".AAAA = [ "fd11::9"   ];
 
+            "pve".CNAME = [ "jx.a." ];
+            "panel".CNAME = [ "sh.a." ];
+            "db".CNAME = [ "sh.a." ];
+
             "ca".CNAME = [ "fmt.a." ];
         };
     };

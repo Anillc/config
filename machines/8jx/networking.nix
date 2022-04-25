@@ -74,9 +74,9 @@ in {
         ip6 saddr fdff:233::/64    meta iifname br0 masquerade
     '';
     firewall.extraInputRules = ''
-        ip saddr 0.0.0.0/32 accept # DHCP
+        ip  saddr 0.0.0.0/32       accept # DHCP
         ip  saddr 192.168.233.0/24 accept
-        ip6 saddr fdff:233::/64 accept
+        ip6 saddr fdff:233::/64    accept
     '';
 
     networking.resolvconf.useLocalResolver = lib.mkForce false;

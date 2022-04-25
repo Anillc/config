@@ -19,5 +19,23 @@ rec {
             };
         };
         bgp.enable = true;
+        services.nginx = {
+            enable = true;
+            recommendedProxySettings = true;
+            recommendedTlsSettings = true;
+            virtualHosts = {
+                "pve.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "https://192.168.233.97:8006";
+                        extraConfig = ''
+                            proxy_ssl_verify off;
+                        '';
+                    };
+                };
+            };
+        };
     };
 }

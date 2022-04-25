@@ -47,5 +47,27 @@ rec {
                 };
             };
         };
+        services.nginx = {
+            enable = true;
+            recommendedProxySettings = true;
+            recommendedTlsSettings = true;
+            virtualHosts = {
+                "panel.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:3000";
+                    };
+                };
+                "db.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:8444";
+                    };
+                };
+            };
+        };
     };
 }
