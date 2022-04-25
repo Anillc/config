@@ -7,7 +7,7 @@ with lib;
     sops.secrets.jwk-key.sopsFile = ./secrets.yaml;
     services.openssh.startWhenNeeded = false;
     systemd.services.sshd.preStart = mkAfter (flip concatMapStrings config.services.openssh.hostKeys (x: ''
-        if [ -s "${x.path}.pub" ]; then
+        if [ -s "${x.path}.pub" ] && [ ! -s "${x.path}-cert.pub" ]; then
             ${pkgs.step-cli}/bin/step ssh certificate ${config.meta.name} ${x.path}.pub \
                 --host --sign --ca-url https://ca.a \
                 --root ${./root_ca.crt} \
