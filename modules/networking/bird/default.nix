@@ -110,7 +110,14 @@ in {
                     table bgp_v6;
                     peer table master6;
                     import none;
-                    export all;
+                    export filter {
+                        ${optionalString cfg.upstream.enable ''
+                            if net = ::/0 then {
+                                reject;
+                            }
+                        ''}
+                        accept;
+                    };
                 }
                 protocol bfd {
                     accept direct;
@@ -164,6 +171,7 @@ in {
                         };
                         ipv6 {
                             table bgp_v6;
+                            igp table master6;
                             next hop self ebgp;
                             import filter {
                                 bgp_local_pref = 50;
@@ -186,6 +194,7 @@ in {
                         };
                         ipv6 {
                             table bgp_v6;
+                            igp table master6;
                             next hop self;
                             import none;
                             export where source = RTS_STATIC;
@@ -203,6 +212,7 @@ in {
                         };
                         ipv6 {
                             table bgp_v6;
+                            igp table master6;
                             next hop self;
                             import filter {
                                 utils_internet_reject_small_prefixes_v6();
