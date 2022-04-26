@@ -13,7 +13,7 @@ with lib;
                 --root ${./root_ca.crt} \
                 --provisioner jwk --provisioner-password-file ${config.sops.secrets.jwk-key.path} \
                 --principal ${config.meta.domain} \
-                --force
+                --force || true
         fi
     ''));
     services.openssh.extraConfig = ''

@@ -4,15 +4,21 @@
     boot.initrd.kernelModules = [ ];
     boot.kernelModules = [ ];
     boot.extraModulePackages = [ ];
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
+    boot.loader.grub = {
+        enable = true;
+        efiSupport = true;
+        device = "nodev";
+    };
+    boot.loader.efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot/efi";
+    };
     fileSystems."/" = {
-        device = "/dev/disk/by-uuid/0e0a3cb9-31e7-463d-b747-889ee42fa790";
+        device = "/dev/disk/by-uuid/c2da9304-bd89-49d9-940d-e79f1b2379fc";
         fsType = "ext4";
     };
-    fileSystems."/boot" = {
-        device = "/dev/disk/by-uuid/A390-0EBB";
+    fileSystems."/boot/efi" = {
+        device = "/dev/disk/by-uuid/8A46-C7E2";
         fsType = "vfat";
     };
-    swapDevices = [{ device = "/dev/disk/by-uuid/17ff6bd3-5a1d-4dab-a844-77c82656c18b"; }];
 }
