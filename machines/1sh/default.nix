@@ -16,7 +16,7 @@ rec {
             defaultSopsFile = ./secrets.yaml;
             secrets.anillc-device = {};
             secrets.anillc-environment = {};
-            secrets.bot-env = {};
+            secrets.bot-secrets = {};
             secrets.grafana-smtp = {
                 owner = "grafana";
                 group = "grafana";

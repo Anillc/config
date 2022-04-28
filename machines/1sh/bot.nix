@@ -15,12 +15,17 @@ with lib;
     virtualisation.oci-containers = {
         backend = "podman";
         containers.bot = {
-            image = "docker.io/anillc/cllina:ca1cead";
+            image = "docker.io/anillc/cllina:145d79a";
             volumes = [
                 "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
-                "${config.sops.secrets.bot-env.path}:/root/cllina/.env"
+                "${config.sops.secrets.bot-secrets.path}:/root/cllina/secrets.dhall"
                 "/var/koishi:/root/cllina/.koishi"
             ];
+            environment = {
+                http_proxy = "http://127.0.0.1:7890";
+                https_proxy = "http://127.0.0.1:7890";
+                no_proxy = "10.11.0.1,10.11.0.5,127.0.0.1,a";
+            };
             extraOptions = [ "--network=host" ];
         };
         containers.pma = {
