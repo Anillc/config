@@ -31,7 +31,7 @@ in {
     systemd.network.networks.deploy.matchConfig.Name = "deploy";
     bgp.extraBirdConfig = ''
         protocol static {
-            route 10.11.2.2/32 via "deploy";
+            route 10.11.1.3/32 via "deploy";
             ipv4 {
                 table igp_v4;
             };

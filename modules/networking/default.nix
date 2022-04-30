@@ -3,12 +3,11 @@
 with builtins;
 with lib;
 
-let
-    machines = import ../../machines lib;
-in {
+{
     imports = [
         ./def
         ./bird
+        ./frr
         ./wg.nix
     ];
     services.resolved.enable = false;
