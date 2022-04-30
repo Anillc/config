@@ -59,6 +59,7 @@ with lib;
         defaults = {
             server = "https://ca.a/acme/acme/directory";
             email = "acme@a";
+            renewInterval = "00/12:00";
         };
         acceptTerms = true;
     };
