@@ -18,11 +18,8 @@ with lib;
             };
         }
     '';
-    firewall.extraPostroutingRules = ''
-        meta mark 0x114 masquerade
-    '';
     firewall.extraPostroutingFilterRules = ''
-        meta iifname dnsmasq meta oifname "en*" meta mark set 0x114 accept
+        meta iifname dnsmasq meta oifname "en*" meta mark set 0x114
     '';
     containers.dnsmasq = {
         autoStart = true;

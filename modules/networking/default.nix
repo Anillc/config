@@ -32,6 +32,9 @@ with lib;
             ];
         };
     };
+    firewall.extraPostroutingFilterRules = ''
+        meta iifname br11 meta mark set 0x114
+    '';
     bgp.extraBirdConfig = ''
         protocol static {
             route 2a0e:b107:1170::/48 reject;

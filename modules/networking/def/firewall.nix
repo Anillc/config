@@ -95,17 +95,19 @@ in {
                         type nat hook prerouting priority dstnat; policy accept;
                         ${cfg.extraPreroutingRules}
                     }
-                    chain postrouting {
-                        type nat hook postrouting priority srcnat; policy accept;
-                        ${cfg.extraPostroutingRules}
-                    }
                     chain postrouting-filter {
                         type filter hook postrouting priority filter; policy accept;
                         ${cfg.extraPostroutingFilterRules}
+                        meta mark 0x114 accept
                         ${optionalString cfg.enableSourceFilter ''
-                            ip  saddr 10.11.0.0/16 meta iifname != "g*" meta oifname "en*" drop
-                            ip6 saddr fd11::/16    meta iifname != "g*" meta oifname "en*" drop
+                            ip  saddr 10.11.0.0/16 meta oifname "en*" drop
+                            ip6 saddr fd11::/16    meta oifname "en*" drop
                         ''}
+                    }
+                    chain postrouting {
+                        type nat hook postrouting priority srcnat; policy accept;
+                        meta mark 0x114 masquerade
+                        ${cfg.extraPostroutingRules}
                     }
                 }
             '';

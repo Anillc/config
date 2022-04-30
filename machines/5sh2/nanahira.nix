@@ -1,5 +1,5 @@
 { config, pkgs, lib, ... }: {
-    firewall.extraPostroutingRules = "meta iifname nnhr meta oifname ens18 masquerade";
+    firewall.extraPostroutingFilterRules = "meta iifname nnhr meta oifname ens18 meta mark set 0x114";
     systemd.network.networks.nanahira = {
         matchConfig.Name = "nnhr";
         address = [ "192.168.114.1/24" ];

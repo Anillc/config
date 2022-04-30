@@ -17,18 +17,11 @@ in {
         { inherit (wh.meta) name wg-public-key; peer = 21122; cost = 160; }
     ];
     systemd.network = mkMerge [{
-        netdevs.br0.netdevConfig = {
-            Name = "br0";
-            Kind = "bridge";
-        };
-        networks.bre = {
+        networks.enp2s0 = {
             matchConfig.Name = "enp2s0";
-            bridge = [ "br0" ];
+            bridge = [ "br11" ];
         };
-        networks.br0 = {
-            matchConfig.Name = "br0";
-            address = [ "192.168.233.1/24" "fdff:233::1/64" ];
-        };
+        networks.br11.address = [ "192.168.233.1/24" "fdff:233::1/64" ];
         networks.default-network = {
             matchConfig.Name = "enp1s0";
             DHCP = "ipv4";
@@ -58,7 +51,7 @@ in {
     
     bgp.extraBirdConfig = ''
         protocol static {
-            route 10.11.5.0/24 via "br0";
+            route 10.11.5.0/24 via "br11";
             ipv4 {
                 table igp_v4;
             };
@@ -69,9 +62,9 @@ in {
         ip saddr 192.168.233.0/24 ip daddr 10.11.5.0/24 dnat to ip daddr & 0.0.0.255 | 192.168.233.0
     '';
 
-    firewall.extraPostroutingRules = ''
-        ip  saddr 192.168.233.0/24 meta iifname br0 masquerade
-        ip6 saddr fdff:233::/64    meta iifname br0 masquerade
+    firewall.extraPostroutingFilterRules = ''
+        ip  saddr 192.168.233.0/24 meta iifname br11 meta mark set 0x114
+        ip6 saddr fdff:233::/64    meta iifname br11 meta mark set 0x114
     '';
     firewall.extraInputRules = ''
         ip  saddr 0.0.0.0/32       accept # DHCP
@@ -88,7 +81,7 @@ in {
         resolveLocalQueries = false;
         extraConfig = ''
             port=0
-            interface=br0
+            interface=br11
             bogus-priv
             enable-ra
             dhcp-range=192.168.233.2,192.168.233.254,24h
@@ -108,7 +101,7 @@ in {
             ctrl_interface_group=wheel
             wpa=2
             wpa_passphrase=AnillcDayo
-            bridge=br0
+            bridge=br11
             ieee80211n=1
             ieee80211ac=1
             wmm_enabled=1
@@ -126,7 +119,7 @@ in {
             ctrl_interface_group=wheel
             wpa=2
             wpa_passphrase=AnillcDayo
-            bridge=br0
+            bridge=br11
             ieee80211n=1
             wmm_enabled=1
             auth_algs=1
