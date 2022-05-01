@@ -17,4 +17,7 @@ in {
         address = [ "2a0f:9400:7a00:1111:8ba5::/48" "2a0f:9400:7a00:3333:f81c::1/64" ];
         gateway = [ "2a0f:9400:7a00::1" ];
     };
+    firewall.extraForwardRules = ''
+        meta iifname != dnsmasq meta oifname "en*" drop
+    '';
 }
