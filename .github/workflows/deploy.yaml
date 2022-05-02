@@ -9,7 +9,7 @@ jobs:
       uses: Anillc/setup-wireguard@v2
       with:
         endpoint: ${{ secrets.WG_ENDPOINT }}
-        endpoint_public_key: NQfs6evQLemuJcdcvpO4ds1wXwUHTlzlQXWTJv+WCXY=
+        endpoint_public_key: 3jCbL/4+/Sdk2NuDQGln09AKj8v29GnxyS/0WSzJ0Ck=
         ips: 10.11.1.3/32
         allowed_ips: 0.0.0.0/0, ::/0
         private_key: ${{ secrets.WG_PRIVATE_KEY }}
