@@ -65,7 +65,7 @@
             inherit (meta) system;
             modules = [
                 { nixpkgs.overlays = [(self: super: {
-                    inherit dns china-ip;
+                    inherit nixpkgs dns china-ip;
                 })]; }
                 sops-nix.nixosModules.sops
                 anillc.nixosModule.${meta.system}

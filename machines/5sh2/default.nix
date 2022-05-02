@@ -4,9 +4,9 @@ rec {
         name = "sh2";
         wg-public-key = "RBjfmCcZywc4KhQA1Mv/hzm6+I52R0DrHPT7DzLzWGI=";
     };
-    configuration = { config, pkgs, ... }: {
+    configuration = { config, pkgs, lib, ... }: {
         inherit meta;
-        nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+        nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
             ./networking.nix

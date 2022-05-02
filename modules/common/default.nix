@@ -24,6 +24,7 @@ with lib;
     };
     nix = {
         package = pkgs.nixUnstable;
+        nixPath = [ "nixpkgs=${pkgs.nixpkgs}" ];
         extraOptions = ''
             experimental-features = nix-command flakes
         '';

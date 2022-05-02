@@ -6,7 +6,7 @@ rec {
     };
     configuration = { config, pkgs, lib, ... }: {
         inherit meta;
-        nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+        nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
             ./networking.nix
