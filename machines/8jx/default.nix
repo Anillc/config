@@ -23,6 +23,7 @@ rec {
             enable = true;
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
+            clientMaxBodySize = "10G";
             virtualHosts = {
                 "pve.a" = {
                     enableACME = true;

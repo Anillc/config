@@ -34,9 +34,9 @@ in {
                     default = null;
                 };
                 refresh = mkOption {
-                    type = types.int;
+                    type = types.bool;
                     description = "refresh";
-                    default = 0;
+                    default = false;
                 };
             };
         };
@@ -66,25 +66,24 @@ in {
                 };
             }];
         }) cfg;
+        systemd.timers.wireguard-refresh = {
+            wantedBy = [ "timers.target" ];
+            partOf = [ "wireguard-refresh.service" ];
+            timerConfig = {
+                OnCalendar = "*:0/30";
+                Unit = "wireguard-refresh.service";
+                Persistent = true;
+            };
+        };
         systemd.services.wireguard-refresh = {
             wantedBy = [ "multi-user.target" ];
             after = [ "network-online.target" ];
             restartIfChanged = true;
             path = with pkgs; [ wireguard-tools ];
-            script = ''
-                ${concatStringsSep "\n" (mapAttrsToList (name: value: ''
-                    ${optionalString (value.refresh != 0) ''
-                        function wg_${name}() {
-                            while :; do
-                                sleep ${toString value.refresh}
-                                wg set ${name} peer ${value.publicKey} endpoint ${value.endpoint} || true
-                            done
-                        }
-                        wg_${name} &
-                    ''}
-                '') cfg)}
-                wait
-            '';
+            serviceConfig.Type = "oneshot";
+            script = concatStringsSep "\n" (mapAttrsToList (name: value: optionalString value.refresh ''
+                wg set ${name} peer ${value.publicKey} endpoint ${value.endpoint} || true
+            '') cfg);
         };
     };
 }

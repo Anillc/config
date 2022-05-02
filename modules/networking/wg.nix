@@ -50,6 +50,15 @@ with lib;
                 { addressConfig = { Address = "169.254.11.${toString config.meta.id}/24"; Scope = "link"; }; }
             ];
         }) config.wgi);
+        systemd.timers.setup-wireguard = {
+            wantedBy = [ "timers.target" ];
+            partOf = [ "setup-wireguard.service" ];
+            timerConfig = {
+                OnCalendar = "*:0/1";
+                Unit = "setup-wireguard.service";
+                Persistent = true;
+            };
+        };
         systemd.services.setup-wireguard = {
             wantedBy = [ "multi-user.target" ];
             after = [ "network-online.target" "systemd-networkd.service" ];
@@ -57,7 +66,6 @@ with lib;
             path = with pkgs; [ wireguard-tools jq ];
             serviceConfig = {
                 Type = "oneshot";
-                RemainAfterExit = true;
                 Restart = "on-failure";
             };
             script = concatStringsSep "\n" (map (x: ''
