@@ -13,7 +13,6 @@ in {
             Name=evpn
             [VXLAN]
             VNI=11
-            MacLearning=no
             Local=${config.meta.v4}
             Independent=yes
         '';
