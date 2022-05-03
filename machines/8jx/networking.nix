@@ -21,7 +21,6 @@ in {
             matchConfig.Name = "enp2s0";
             bridge = [ "br11" ];
         };
-        networks.br11.address = [ "192.168.233.1/24" "fdff:233::1/64" ];
         networks.default-network = {
             matchConfig.Name = "enp1s0";
             DHCP = "ipv4";
@@ -47,47 +46,6 @@ in {
             Restart = "on-failure";
         };
         script = "${connect}";
-    };
-    
-    bgp.extraBirdConfig = ''
-        protocol static {
-            route 10.11.5.0/24 via "br11";
-            ipv4 {
-                table igp_v4;
-            };
-        }
-    '';
-    firewall.extraPreroutingRules = ''
-        ip saddr 10.11.0.0/16     ip daddr 10.11.5.0/24 dnat to ip daddr & 0.0.0.255 | 192.168.233.0
-        ip saddr 192.168.233.0/24 ip daddr 10.11.5.0/24 dnat to ip daddr & 0.0.0.255 | 192.168.233.0
-    '';
-
-    firewall.extraPostroutingFilterRules = ''
-        ip  saddr 192.168.233.0/24 meta iifname br11 meta mark set 0x114
-        ip6 saddr fdff:233::/64    meta iifname br11 meta mark set 0x114
-    '';
-    firewall.extraInputRules = ''
-        ip  saddr 0.0.0.0/32       accept # DHCP
-        ip  saddr 192.168.233.0/24 accept
-        ip6 saddr fdff:233::/64    accept
-    '';
-
-    networking.resolvconf.useLocalResolver = lib.mkForce false;
-    firewall.publicTCPPorts = [ 53 ];
-    firewall.publicUDPPorts = [ 53 ];
-    services.adguardhome.enable = true;
-    services.dnsmasq = {
-        enable = true;
-        resolveLocalQueries = false;
-        extraConfig = ''
-            port=0
-            interface=br11
-            bogus-priv
-            enable-ra
-            dhcp-range=192.168.233.2,192.168.233.254,24h
-            dhcp-range=fdff:233::2,fdff:233::fff,ra-only
-            dhcp-option=option:dns-server,192.168.233.1
-        '';
     };
     systemd.services.hostapd = let
         # RTL8812BU
