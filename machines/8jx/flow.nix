@@ -38,10 +38,12 @@ in {
             firewall.extraInputRules = "ip saddr 0.0.0.0/32 accept";
             firewall.publicTCPPorts = [ 53 ];
             firewall.publicUDPPorts = [ 53 ];
+            networking.nameservers = mkForce [ "127.0.0.1" ];
+            networking.resolvconf.useLocalResolver = false;
             services.dnsmasq = {
                 enable = true;
-                resolveLocalQueries = false;
                 servers = [ "/a/10.11.1.1" "8.8.8.8" ];
+                resolveLocalQueries = false;
                 extraConfig = ''
                     interface=flow
                     bogus-priv
