@@ -20,8 +20,15 @@ in {
         listen = 11451;
         publicKey = "Pm7l051569YlVKkaCItUR8TmeAp7m6od3RhSkOGPriA=";
     };
+    wg.maiko = {
+        listen = 11452;
+        publicKey = "F+FfMqX4hMESHceIC8vPQ7aZXzaeDk/BTG/GD0RgCGQ=";
+    };
     systemd.network.networks.phone = {
         matchConfig.Name = "phone";
+    };
+    systemd.network.networks.maiko = {
+        matchConfig.Name = "maiko";
     };
     bgp.extraBirdConfig = ''
         protocol static {
@@ -34,6 +41,12 @@ in {
             route fd11:1::4/128 via "phone";
             ipv6 {
                 table igp_v6;
+            };
+        }
+        protocol static {
+            route 10.11.1.5/32 via "maiko";
+            ipv4 {
+                table igp_v4;
             };
         }
     '';
