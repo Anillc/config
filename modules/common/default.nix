@@ -58,7 +58,7 @@ with lib;
     documentation.enable = false;
     security.acme = {
         defaults = {
-            server = "https://ca.a/acme/acme/directory";
+            server = "https://ca.a:8443/acme/acme/directory";
             email = "acme@a";
             renewInterval = "00/8:00";
         };
