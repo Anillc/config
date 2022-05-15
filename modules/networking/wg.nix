@@ -46,7 +46,8 @@ with lib;
         systemd.network.networks = listToAttrs (map (x: nameValuePair "i${x.name}" {
             matchConfig.Name = "i${x.name}";
             addresses = [
-                { addressConfig = { Address = "fe80::11${toHexString config.meta.id}/64"; }; }
+                { addressConfig = { Address = "fe80::11${toHexString config.meta.id}/64"; }; } # TODO: to 0x1100 + id
+                # TODO: sid on link for srv6-te
                 { addressConfig = { Address = "169.254.11.${toString config.meta.id}/24"; Scope = "link"; }; }
             ];
         }) config.wgi);
