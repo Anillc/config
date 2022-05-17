@@ -197,7 +197,7 @@ in {
                             igp table master6;
                             next hop self;
                             import none;
-                            export where source = RTS_STATIC;
+                            export where source = RTS_STATIC && net != ::/0;
                         };
                     }
                 ''}
@@ -222,7 +222,7 @@ in {
                                 utils_internet_roa();
                                 accept;
                             };
-                            export where source = RTS_STATIC;
+                            export where source = RTS_STATIC && net != ::/0;
                             import limit 1000 action block;
                         };
                     }
