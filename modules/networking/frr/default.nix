@@ -35,6 +35,12 @@ in {
             config = ''
                 ip   nht resolve-via-default
                 ipv6 nht resolve-via-default
+                segment-routing
+                 srv6
+                  locators
+                   locator ${config.meta.name}
+                   ! 20992 -> 5200
+                   prefix fd11:${toHexString (20992 + config.meta.id)}::/32
             '';
         };
         bgp = {
@@ -47,7 +53,9 @@ in {
                  no bgp default ipv6-unicast
                  neighbor ipeers peer-group
                  neighbor ipeers remote-as 142055
-                 !neighbor ipeers port 180
+                 segment-routing srv6
+                  locator ${config.meta.name}
+                 exit
                  ${concatStringsSep "\n" (map
                      (x: " neighbor ${x.meta.v4} peer-group ipeers")
                  (filter (x: x.meta.id != config.meta.id) machines.list))}
@@ -55,6 +63,32 @@ in {
                   neighbor ipeers activate
                   advertise-all-vni
                  exit-address-family
+                 address-family ipv4 vpn
+                  neighbor ipeers activate
+                 exit-address-family
+                 address-family ipv6 vpn
+                  neighbor ipeers activate
+                 exit-address-family
+                exit
+                router bgp 142055 vrf red
+                 bgp router-id ${config.meta.v4}
+                 no bgp ebgp-requires-policy
+                 no bgp default ipv4-unicast
+                 address-family ipv4 unicast
+                  redistribute connected
+                  rd vpn export ${config.meta.v4}:114
+                  rt vpn both 142055:114
+                  export vpn
+                  import vpn
+                 exit-address-family
+                 address-family ipv6 unicast
+                  redistribute connected
+                  rd vpn export ${config.meta.v4}:114
+                  rt vpn both 142055:114
+                  export vpn
+                  import vpn
+                 exit-address-family
+                exit
             '';
         };
     };

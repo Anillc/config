@@ -32,28 +32,14 @@ with lib;
                 "${config.meta.externalV6}/128"
             ];
         };
-    };
-    systemd.services.srv6 = {
-        after = [ "network-online.target" "systemd-networkd.service" ];
-        partOf = [ "systemd-networkd.service" ];
-        wantedBy = [ "multi-user.target" ];
-        path = with pkgs; [ iproute2 ];
-        serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-            Restart = "on-failure";
+        netdevs.red = {
+            netdevConfig = {
+                Name = "red";
+                Kind = "vrf";
+            };
+            vrfConfig.Table = 114;
         };
-        # 0x5200 -> 20992
-        script = ''
-            ip route add fd11:${toHexString (20992 + config.meta.id)}::1/128 encap seg6local action End dev dmy11
-            ip route add fd11:${toHexString (20992 + config.meta.id)}::2/128 encap seg6local action End.DX4 nh4 ${config.meta.v4} dev dmy11
-            ip route add fd11:${toHexString (20992 + config.meta.id)}::3/128 encap seg6local action End.DX6 nh6 ${config.meta.v6} dev dmy11
-        '';
-        postStop = ''
-            ip route del fd11:${toHexString (20992 + config.meta.id)}::1/128 | true
-            ip route del fd11:${toHexString (20992 + config.meta.id)}::2/128 | true
-            ip route del fd11:${toHexString (20992 + config.meta.id)}::3/128 | true
-        '';
+        networks.red.matchConfig.Name = "red";
     };
     firewall.extraPostroutingFilterRules = ''
         meta iifname br11 meta mark set 0x114
