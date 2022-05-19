@@ -78,6 +78,7 @@ in {
                   redistribute connected
                   rd vpn export ${config.meta.v4}:114
                   rt vpn both 142055:114
+                  sid vpn export auto
                   export vpn
                   import vpn
                  exit-address-family
@@ -85,6 +86,7 @@ in {
                   redistribute connected
                   rd vpn export ${config.meta.v4}:114
                   rt vpn both 142055:114
+                  sid vpn export auto
                   export vpn
                   import vpn
                  exit-address-family
