@@ -5,8 +5,18 @@ with lib;
 let
     machines = import ../../../machines lib;
 in {
-    imports = [ ./frr-override.nix ];
+    nixpkgs.overlays = [(self: super: {
+        frr = super.frr.overrideAttrs (old: {
+            src = pkgs.fetchFromGitHub {
+                owner = "FRRouting";
+                repo = "frr";
+                rev = "8eeadd88e9825396fe0e542431befec9829b76f1";
+                sha256 = "sha256-j6puKho0qHsxIeYBXVfqfqsRtA6+VmHAqAbpxQNLAf8=";
+            };
+        });
+    })];
     systemd.network = {
+        # TODO: https://github.com/NixOS/nixpkgs/pull/170632
         units."evpn.netdev".text = ''
             [NetDev]
             Kind=vxlan
@@ -29,7 +39,7 @@ in {
             address = [ "10.11.2.${toString config.meta.id}/24" ];
         };
     };
-    services.frr-override = {
+    services.frr = {
         zebra = {
             enable = true;
             config = ''
@@ -43,9 +53,10 @@ in {
                    prefix fd11:${toHexString (20992 + config.meta.id)}::/32
             '';
         };
+        # TODO: vrf red to another name
         bgp = {
             enable = true;
-            extraOptions = "-M rpki";
+            extraOptions = [ "-M rpki" ];
             config = ''
                 router bgp 142055
                  bgp router-id ${config.meta.v4}
