@@ -64,6 +64,9 @@ with lib;
         };
         acceptTerms = true;
     };
+    systemd.services = mapAttrs' (name: value: nameValuePair "acme-${name}" {
+        serviceConfig.Restart = "on-failure";
+    }) config.security.acme.certs;
     services.nscd.enable = false;
     system.nssModules = mkForce [];
     services.cron = let
