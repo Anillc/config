@@ -53,7 +53,6 @@ in {
                    prefix fd11:${toHexString (20992 + config.meta.id)}::/32
             '';
         };
-        # TODO: vrf red to another name
         bgp = {
             enable = true;
             extraOptions = [ "-M rpki" ];
@@ -81,7 +80,7 @@ in {
                   neighbor ipeers activate
                  exit-address-family
                 exit
-                router bgp 142055 vrf red
+                router bgp 142055 vrf seg
                  bgp router-id ${config.meta.v4}
                  no bgp ebgp-requires-policy
                  no bgp default ipv4-unicast

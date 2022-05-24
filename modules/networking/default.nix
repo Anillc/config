@@ -33,14 +33,14 @@ with lib;
                 "${config.meta.externalV6}/128"
             ];
         };
-        netdevs.red = {
+        netdevs.seg = {
             netdevConfig = {
-                Name = "red";
+                Name = "seg";
                 Kind = "vrf";
             };
             vrfConfig.Table = 114;
         };
-        networks.red.matchConfig.Name = "red";
+        networks.seg.matchConfig.Name = "seg";
     };
     firewall.extraPostroutingFilterRules = ''
         meta iifname br11 meta mark set 0x114
