@@ -6,16 +6,32 @@ with lib;
 {
     sops.secrets.jwk-key.sopsFile = ./secrets.yaml;
     services.openssh.startWhenNeeded = false;
-    systemd.services.sshd.preStart = mkAfter (flip concatMapStrings config.services.openssh.hostKeys (x: ''
-        if [ -s "${x.path}.pub" ] && [ ! -s "${x.path}-cert.pub" ]; then
-            ${pkgs.step-cli}/bin/step ssh certificate ${config.meta.name} ${x.path}.pub \
+    systemd.timers.ssh-cert = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "setup-wireguard.service" ];
+        timerConfig = {
+            OnCalendar = "00/8:00";
+            Unit = "ssh-cert.service";
+            Persistent = true;
+        };
+    };
+    systemd.services.ssh-cert = {
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network-online.target" ];
+        path = with pkgs; [ step-cli ];
+        serviceConfig = {
+            Type = "oneshot";
+            Restart = "on-failure";
+        };
+        script = flip concatMapStrings config.services.openssh.hostKeys (x: ''
+            step ssh certificate ${config.meta.name} ${x.path}.pub \
                 --host --sign --ca-url https://ca.a \
                 --root ${./root_ca.crt} \
                 --provisioner jwk --provisioner-password-file ${config.sops.secrets.jwk-key.path} \
                 --principal ${config.meta.domain} \
-                --force || true
-        fi
-    ''));
+                --force
+        '');
+    };
     services.openssh.extraConfig = ''
         TrustedUserCAKeys ${./ssh_user_ca.pub}
     '' + flip concatMapStrings config.services.openssh.hostKeys (x: ''

@@ -56,7 +56,7 @@ with lib;
             wantedBy = [ "timers.target" ];
             partOf = [ "setup-wireguard.service" ];
             timerConfig = {
-                OnCalendar = "*:0/1";
+                OnCalendar = "*:0";
                 Unit = "setup-wireguard.service";
                 Persistent = true;
             };
