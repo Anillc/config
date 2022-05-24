@@ -69,6 +69,7 @@ with lib;
     }) config.security.acme.certs;
     services.nscd.enable = false;
     system.nssModules = mkForce [];
+    boot.kernelModules = [ "vrf" ];
     services.cron = let
         script = pkgs.writeScript "sync" ''
             export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
