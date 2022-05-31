@@ -7,6 +7,7 @@ with lib;
     imports = [
         ./meta.nix
     ];
+    system.stateVersion = "22.05";
     networking.hostName = config.meta.name;
     time.timeZone = "Asia/Shanghai";
     firewall.publicTCPPorts = [ 22 ];
@@ -56,17 +57,6 @@ with lib;
         };
     };
     documentation.enable = false;
-    security.acme = {
-        defaults = {
-            server = "https://ca.a:8443/acme/acme/directory";
-            email = "acme@a";
-            renewInterval = "00/8:00";
-        };
-        acceptTerms = true;
-    };
-    systemd.services = mapAttrs' (name: value: nameValuePair "acme-${name}" {
-        serviceConfig.Restart = "on-failure";
-    }) config.security.acme.certs;
     services.nscd.enable = false;
     system.nssModules = mkForce [];
     boot.kernelModules = [ "vrf" ];

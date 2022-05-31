@@ -6,6 +6,14 @@ with lib;
 {
     sops.secrets.jwk-key.sopsFile = ./secrets.yaml;
     services.openssh.startWhenNeeded = false;
+    security.acme = {
+        defaults = {
+            server = "https://ca.a:8443/acme/acme/directory";
+            email = "acme@a";
+            renewInterval = "00/8:00";
+        };
+        acceptTerms = true;
+    };
     systemd.timers.ssh-cert = {
         wantedBy = [ "timers.target" ];
         partOf = [ "setup-wireguard.service" ];
@@ -15,23 +23,27 @@ with lib;
             Persistent = true;
         };
     };
-    systemd.services.ssh-cert = {
-        wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" ];
-        path = with pkgs; [ step-cli ];
-        serviceConfig = {
-            Type = "oneshot";
-            Restart = "on-failure";
+    systemd.services = {
+        ssh-cert = {
+            wantedBy = [ "multi-user.target" ];
+            after = [ "network-online.target" ];
+            path = with pkgs; [ step-cli ];
+            serviceConfig = {
+                Type = "oneshot";
+                ExecStart = "-${pkgs.writeScript "ssh-cert" (flip concatMapStrings config.services.openssh.hostKeys (x: ''
+                    #!${pkgs.runtimeShell}
+                    step ssh certificate ${config.meta.name} ${x.path}.pub \
+                        --host --sign --ca-url https://ca.a \
+                        --root ${./root_ca.crt} \
+                        --provisioner jwk --provisioner-password-file ${config.sops.secrets.jwk-key.path} \
+                        --principal ${config.meta.domain} \
+                        --force
+                ''))}";
+            };
         };
-        script = flip concatMapStrings config.services.openssh.hostKeys (x: ''
-            step ssh certificate ${config.meta.name} ${x.path}.pub \
-                --host --sign --ca-url https://ca.a \
-                --root ${./root_ca.crt} \
-                --provisioner jwk --provisioner-password-file ${config.sops.secrets.jwk-key.path} \
-                --principal ${config.meta.domain} \
-                --force
-        '');
-    };
+    } // mapAttrs' (name: value: nameValuePair "acme-${name}" {
+        serviceConfig.Restart = "on-failure";
+    }) config.security.acme.certs;
     services.openssh.extraConfig = ''
         TrustedUserCAKeys ${./ssh_user_ca.pub}
     '' + flip concatMapStrings config.services.openssh.hostKeys (x: ''
