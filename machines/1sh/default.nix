@@ -23,6 +23,7 @@ rec {
             };
         };
         bgp.enable = true;
+        services.youtrack.enable = true;
         services.influxdb2.enable = true;
         services.grafana = {
             enable = true;
@@ -47,6 +48,7 @@ rec {
                 };
             };
         };
+        firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;
@@ -66,6 +68,18 @@ rec {
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:8444";
                     };
+                };
+                "yt.anillc.cn" = {
+                    extraConfig = ''
+                        location / {
+                              proxy_pass http://127.0.0.1:8080;
+                              proxy_set_header Host $host;
+                              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                              proxy_set_header X-Forwarded-Proto "https";
+                              proxy_set_header X-Forwarded-Host "yt.anillc.cn:443";
+                              proxy_set_header X-Forwarded-Server $host;
+                        }
+                    '';
                 };
             };
         };

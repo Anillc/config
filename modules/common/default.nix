@@ -37,6 +37,9 @@ with lib;
             dates = "Sun 6:00";
         };
     };
+    nixpkgs.config.allowUnfreePredicate = pkg: elem (getName pkg) [
+        "youtrack"
+    ];
     services.openssh = {
         enable = true;
         passwordAuthentication = false;
