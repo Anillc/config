@@ -37,12 +37,6 @@ rec {
                         proxyPass = "https://ca.a:8443";
                     };
                 };
-                # TODO: remove
-                "feishu.anillc.cn" = {
-                    locations."/" = {
-                        proxyPass = "http://10.11.2.133:8005";
-                    };
-                };
             };
         };
     };
