@@ -20,22 +20,14 @@ rec {
             };
         };
         bgp.enable = true;
-        services.nginx = {
+        services.home-assistant = {
             enable = true;
-            recommendedProxySettings = true;
-            recommendedTlsSettings = true;
-            clientMaxBodySize = "10G";
-            virtualHosts = {
-                "pve.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "https://192.168.233.97:8006";
-                        extraConfig = ''
-                            proxy_ssl_verify off;
-                        '';
-                    };
+            config = {
+                frontend = {};
+                homeassistant = {
+                    name = "school";
+                    unit_system = "metric";
+                    time_zone = "Asia/Shanghai";
                 };
             };
         };
