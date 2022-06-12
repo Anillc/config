@@ -29,6 +29,25 @@ rec {
                     unit_system = "metric";
                     time_zone = "Asia/Shanghai";
                 };
+                http = {
+                    use_x_forwarded_for = true;
+                    trusted_proxies = [ "127.0.0.1" ];
+                };
+            };
+        };
+        services.nginx = {
+            enable = true;
+            recommendedProxySettings = true;
+            recommendedTlsSettings = true;
+            virtualHosts = {
+                "ha.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:8123";
+                    };
+                };
             };
         };
     };
