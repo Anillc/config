@@ -45,7 +45,9 @@
                     peers = [{
                         publicKey = "cmcLT53EJSji4cWsvziFvSmX+elN05S0P9AQSCjpEQM=";
                         persistentKeepalive = 25;
-                        endpoint = "yangtze-v4.mycard.moe:28010";
+                        # cannot resolve before network ready
+                        # endpoint = "yangtze-v4.mycard.moe:28010";
+                        endpoint = "58.32.8.156:28010";
                         allowedIPs = [ "0.0.0.0/0" "::/0" ];
                     }];
                 };
