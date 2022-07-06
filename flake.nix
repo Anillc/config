@@ -68,7 +68,7 @@
                     inherit nixpkgs dns china-ip;
                 })]; }
                 sops-nix.nixosModules.sops
-                anillc.nixosModule.${meta.system}
+                anillc.nixosModules.${meta.system}.default
                 nixos-cn.nixosModules.nixos-cn
                 modules
                 machine.configuration

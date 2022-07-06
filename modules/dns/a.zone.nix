@@ -32,7 +32,7 @@
 
             "ca".CNAME = [ "fmt.a." ];
 
-            "ha".CNAME = [ "jx.a." ];
+            # "ha".CNAME = [ "jx.a." ];
         };
     };
 in pkgs.writeText name (dns.lib.toString name zone)
