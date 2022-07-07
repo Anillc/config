@@ -3,16 +3,14 @@
     "anillc": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1657133051,
-        "narHash": "sha256-cXS0N73oUdoZSRYSqei26eSDM6gVvFQxYgyZYHPPJ9k=",
+        "lastModified": 1657185076,
+        "narHash": "sha256-FoSdhd3mS7a+B2ZQuhXg4yRpn2QH7WlVq6jCznK85BM=",
         "owner": "Anillc",
         "repo": "flakes",
-        "rev": "51a6e20854ca0d4acdd75fee15e6f56e020a8d03",
+        "rev": "fb38974c974e9bade1e323ac3309bef5fef5576c",
         "type": "github"
       },
       "original": {
@@ -98,11 +96,11 @@
     },
     "flake-utils": {
       "locked": {
-        "lastModified": 1656065134,
-        "narHash": "sha256-oc6E6ByIw3oJaIyc67maaFcnjYOz1mMcOtHxbEf9NwQ=",
+        "lastModified": 1656928814,
+        "narHash": "sha256-RIFfgBuKz6Hp89yRr7+NR5tzIAbn52h8vT6vXkYjZoM=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "bee6a7250dd1b01844a2de7e02e4df7d8a0a206c",
+        "rev": "7e2a3b3dfd9af950a856d66b0a7d01e3c18aa249",
         "type": "github"
       },
       "original": {
@@ -179,16 +177,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1657027964,
-        "narHash": "sha256-jseM2zvERPZe5yErbc3wrd6wK8gp0f+e18KJngs5qlo=",
+        "lastModified": 1657020478,
+        "narHash": "sha256-sU5hXEGcOcvz2xoPAuNLBQJLXjwvPpTkoddyXE8gw20=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9e96b1562d67a90ca2f7cfb919f1e86b76a65a2c",
+        "rev": "71a4f0dc3d80ba76f437c888c1c3d59f1df98163",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-22.05",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -209,6 +207,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1657027964,
+        "narHash": "sha256-jseM2zvERPZe5yErbc3wrd6wK8gp0f+e18KJngs5qlo=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "9e96b1562d67a90ca2f7cfb919f1e86b76a65a2c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-22.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "anillc": "anillc",
@@ -217,7 +231,7 @@
         "dns": "dns",
         "flake-utils": "flake-utils_3",
         "nixos-cn": "nixos-cn",
-        "nixpkgs": "nixpkgs",
+        "nixpkgs": "nixpkgs_2",
         "sops-nix": "sops-nix"
       }
     },

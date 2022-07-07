@@ -16,10 +16,11 @@ rec {
             defaultSopsFile = ./secrets.yaml;
             secrets.cllina-device = {};
             secrets.cllina-environment = {};
+            secrets.zinc-environment = {};
             secrets.wg-nanahira-private-key = {};
         };
         bgp.enable = true;
-        
+
         services.go-cqhttp = {
             enable = true;
             device = config.sops.secrets.cllina-device.path;
@@ -31,6 +32,11 @@ rec {
                     password = "\${PASSWORD}";
                 };
             };
+        };
+
+        services.zinc = {
+            enable = true;
+            environmentFile = config.sops.secrets.zinc-environment.path;
         };
 
         services.cron.systemCronJobs = [ "0 0 * * * root ${pkgs.systemd}/bin/systemctl restart podman-xxqg" ];

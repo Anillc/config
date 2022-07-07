@@ -2,20 +2,14 @@
     description = "config";
 
     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
-    inputs.flake-utils = {
-        url = "github:numtide/flake-utils";
-        inputs.nixpkgs.follows = "nixpkgs";
-    };
+    inputs.flake-utils.url = "github:numtide/flake-utils";
+    inputs.anillc.url = "github:Anillc/flakes";
     inputs.sops-nix = {
         url = "github:Mic92/sops-nix";
         inputs.nixpkgs.follows = "nixpkgs";
     };
     inputs.deploy-rs = {
         url = "github:serokell/deploy-rs";
-        inputs.nixpkgs.follows = "nixpkgs";
-    };
-    inputs.anillc = {
-        url = "github:Anillc/flakes";
         inputs.nixpkgs.follows = "nixpkgs";
     };
     inputs.dns = {
