@@ -1,6 +1,7 @@
 rec {
     meta = {
         id = 5;
+        enable = false;
         name = "sh2";
         wg-public-key = "RBjfmCcZywc4KhQA1Mv/hzm6+I52R0DrHPT7DzLzWGI=";
     };

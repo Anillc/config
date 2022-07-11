@@ -16,6 +16,8 @@ rec {
             defaultSopsFile = ./secrets.yaml;
             secrets.anillc-device = {};
             secrets.anillc-environment = {};
+            secrets.cllina-device = {};
+            secrets.cllina-environment = {};
             secrets.bot-secrets = {};
             secrets.grafana-smtp = {
                 owner = "grafana";
@@ -38,8 +40,8 @@ rec {
         };
         services.go-cqhttp = {
             enable = true;
-            device = config.sops.secrets.anillc-device.path;
-            environmentFile = config.sops.secrets.anillc-environment.path;
+            device = config.sops.secrets.cllina-device.path;
+            environmentFile = config.sops.secrets.cllina-environment.path;
             config = {
                 message.remove-reply-at = true;
                 account = {
