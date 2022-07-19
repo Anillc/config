@@ -6,11 +6,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1657185076,
-        "narHash": "sha256-FoSdhd3mS7a+B2ZQuhXg4yRpn2QH7WlVq6jCznK85BM=",
+        "lastModified": 1658248983,
+        "narHash": "sha256-cxqA94ZwCB50UblheJrqpHHnsbTKBsDTJC+k9wnWdIs=",
         "owner": "Anillc",
         "repo": "flakes",
-        "rev": "fb38974c974e9bade1e323ac3309bef5fef5576c",
+        "rev": "5e97813f11d26c835520f5137f43f488dbb17a3c",
         "type": "github"
       },
       "original": {
