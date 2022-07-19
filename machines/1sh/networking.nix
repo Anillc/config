@@ -8,7 +8,6 @@ let
 in {
     wgi = with machines.set; [
         { inherit (hk.meta)  name wg-public-key; listen = 11003; peer = 11001; cost = 400; }
-        { inherit (sh2.meta) name wg-public-key; listen = 11005;               cost = 80;  }
         { inherit (wh.meta)  name wg-public-key; listen = 11007; peer = 11001; cost = 200; }
         { inherit (jx.meta)  name wg-public-key; listen = 11008;               cost = 200; }
     ];
