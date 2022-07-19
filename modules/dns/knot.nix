@@ -24,6 +24,7 @@ with lib;
         extraVeths.dns = {};
         config = { ... }: {
             imports = [ ../networking/def/firewall.nix ];
+            system.stateVersion = "22.05";
             documentation.enable = false;
             firewall.publicTCPPorts = [ 53 ];
             firewall.publicUDPPorts = [ 53 ];

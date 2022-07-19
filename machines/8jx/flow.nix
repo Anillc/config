@@ -16,6 +16,7 @@ in {
         extraVeths.flow = {};
         config = { ... }: {
             imports = [ ../../modules/networking/def/firewall.nix ];
+            system.stateVersion = "22.05";
             documentation.enable = false;
             networking.firewall.enable = false;
             networking.interfaces.flow.ipv4.addresses = [{ address = "10.11.2.254"; prefixLength = 24; }];
