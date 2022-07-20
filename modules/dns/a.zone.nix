@@ -4,7 +4,7 @@
         SOA = {
             nameServer = "ns1";
             adminEmail = "noc@anillc.cn";
-            serial = 2022042301;
+            serial = 2022072002;
         };
         NS = [ "ns1.a." ];
         subdomains = {
