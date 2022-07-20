@@ -119,10 +119,6 @@ in {
                         accept;
                     };
                 }
-                protocol bfd {
-                    accept direct;
-                    interface "i*";
-                }
                 protocol ospf v3 {
                     ipv4 {
                         table igp_v4;
@@ -135,7 +131,6 @@ in {
                     area 0 {
                         ${concatStringsSep "\n" (flip map (config.wgi) (x: ''
                             interface "i${x.name}" {
-                                bfd;
                                 cost ${toString x.cost};
                             };
                         ''))}
@@ -153,7 +148,6 @@ in {
                     area 0 {
                         ${concatStringsSep "\n" (flip map (config.wgi) (x: ''
                             interface "i${x.name}" {
-                                bfd;
                                 cost ${toString x.cost};
                             };
                         ''))}
