@@ -38,7 +38,7 @@
     in {
         devShell = pkgs.mkShell {
             nativeBuildInputs = [
-                pkgs.deploy-rs.deploy-rs pkgs.sops
+                pkgs.deploy-rs.deploy-rs pkgs.sops pkgs.step-cli
                 (pkgs.writeScriptBin "deploy-all" ''
                     deploy() {
                         log=$(${pkgs.deploy-rs.deploy-rs}/bin/deploy -s --auto-rollback false .#$1 2>&1)
