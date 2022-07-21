@@ -50,10 +50,6 @@ with lib;
     sops = {
         age.keyFile = "/var/lib/sops.key";
         secrets.endpoints.sopsFile = ./secrets.yaml;
-        secrets.sync-database = {
-            mode = "0700";
-            sopsFile = ./secrets.yaml;
-        };
         secrets.wg-private-key = {
             owner = "systemd-network";
             group = "systemd-network";
@@ -63,19 +59,6 @@ with lib;
     services.nscd.enable = false;
     system.nssModules = mkForce [];
     boot.kernelModules = [ "vrf" ];
-    services.cron = let
-        script = pkgs.writeScript "sync" ''
-            export PATH=$PATH:${with pkgs; lib.strings.makeBinPath [
-                wget
-            ]}
-            ${config.sops.secrets.sync-database.path}
-        '';
-    in {
-        enable = true;
-        systemCronJobs = [
-            "*/20 * * * * root ${script}"
-        ];
-    };
     security.pki.certificates = [
         ''
             -----BEGIN CERTIFICATE-----
