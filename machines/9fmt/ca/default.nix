@@ -45,7 +45,10 @@ with lib;
                             y = "ga7ysiBb7ulxMn7xZieSLwPODFkektNnUdzP70Ucu-4";
                         };
                         encryptedKey = "eyJhbGciOiJQQkVTMi1IUzI1NitBMTI4S1ciLCJjdHkiOiJqd2sranNvbiIsImVuYyI6IkEyNTZHQ00iLCJwMmMiOjEwMDAwMCwicDJzIjoibko0aDh5M1lTSUxfYU0tWFBxN1lZQSJ9.Fqpmph5fUXIjmpZJvwyvicMqJGli0gO285FdV6IfWyqlhZPz2OG_Pg.EN7_lzhVf2yqxqS0.kldVPqzKFT7DQuhhTrMt736EBp6fxcjrjUZJNGqKET1SS8YkZaLxsTgFWOhv5TVubt7b4p1CVM-hirz1ESp7VVeV08g2wWHeSUPvQOo1GZP9QVKrEjJmMt2BCna6mlYG2X36h5v31MPK0TuMvfJP5FWgCm17fDTpKfMZPdegWjPrqkonPciHm2VfymQelPg3O-n6_GunGsfbpmoUFSN7TL5sif20e60rDaSl_zAxrG4eDp2jK6BEyO7mVTwUPTqduvYTiByLC0OcwtDdntPM2dRPAS-PQDiUwQbMqbTmo83F5WSvwWj-CfLeH73MDhITEk1I6ShzpXqaaFUnNc0.3KjPXh5tIBuzr07W--kR7A";
-                        claims.enableSSHCA = true;
+                        claims = {
+                            enableSSHCA = true;
+                            maxUserSSHCertDuration = "0m0s";
+                        };
                     }
                     {
                         type = "ACME";
