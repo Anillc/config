@@ -3,6 +3,7 @@ rec {
         id = 8;
         name = "jx";
         wg-public-key = "2YSajirzbCUK4h3NbuBgpZPOypjrhtrLnT5pJp2K9HU=";
+        syncthingId = "KJ32DJV-6GEUEF6-AFXYFBD-MWCUJR3-HGORURZ-ZH2H556-FLM67O2-Z3RMYQJ";
     };
     configuration = { config, pkgs, lib, ... }: {
         inherit meta;

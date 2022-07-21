@@ -3,6 +3,7 @@ rec {
         id = 9;
         name = "fmt";
         wg-public-key = "3jCbL/4+/Sdk2NuDQGln09AKj8v29GnxyS/0WSzJ0Ck=";
+        syncthingId = "B7R7642-DY6LI4N-VAOIQ4P-6FDXO55-GOIGUQQ-MWQN4T5-CB4E36R-KQJROAM";
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;

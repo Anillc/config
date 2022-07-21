@@ -54,5 +54,9 @@ in {
             description = "bgp ipv6 address";
             default = "2602:feda:da0::${toHexString cfg.id}";
         };
+        syncthingId = mkOption {
+            type = types.str;
+            description = "syncthing id";
+        };
     };
 }

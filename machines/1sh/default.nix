@@ -3,6 +3,7 @@ rec {
         id = 1;
         name = "sh";
         wg-public-key = "82rDuI1+QXAXv+6HAf5aH2Ly0JXX/105Fsd61HmVnGE=";
+        syncthingId = "7HJSITB-P5CUWIN-VTLC47V-NGBDCMQ-KOJIGE6-WI7IXFF-TGOXITC-STZQHQ2";
     };
     configuration = { config, pkgs, lib, ... }: {
         inherit meta;

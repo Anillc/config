@@ -3,6 +3,7 @@ rec {
         id = 3;
         name = "hk";
         wg-public-key = "FDW5S+3nNS883Q5mKVwym0dwEYKF+nuQ1rPZ+sWVqgc=";
+        syncthingId = "2QRC73T-DM7XGW5-NLACT6B-ODINVTO-BNSHQGF-52IAOSR-OAKHZZK-EAPDIAL";
     };
     configuration = { config, pkgs, ... }: {
         inherit meta;
@@ -48,6 +49,9 @@ rec {
                 SIGNUPS_ALLOWED = false;
             };
         };
+        sync = [
+            "/var/lib/bitwarden_rs"
+        ];
         firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
