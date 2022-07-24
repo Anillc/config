@@ -57,6 +57,16 @@ rec {
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
             virtualHosts = {
+                "k8s.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyPass = "https://10.11.3.1:32727";
+                        extraConfig = ''
+                            proxy_ssl_verify off;
+                        '';
+                    };
+                };
                 "panel.a" = {
                     enableACME = true;
                     forceSSL = true;

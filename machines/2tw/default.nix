@@ -21,6 +21,7 @@ rec {
         };
         containers.dns.autoStart = lib.mkForce false;
         containers.dnsmasq.autoStart = lib.mkForce false;
+        containers.k3s.autoStart = lib.mkForce false;
         networking.nameservers = lib.mkForce [ "127.0.0.1" ];
         services.dnsmasq = {
             enable = true;
