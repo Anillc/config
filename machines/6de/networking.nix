@@ -17,6 +17,6 @@ in {
         gateway = [ "2a0f:9400:7a00::1" ];
     };
     firewall.extraForwardRules = ''
-        meta iifname != dnsmasq meta oifname "en*" drop
+        meta iifname != dnsmasq iifname != k3s meta oifname "en*" drop
     '';
 }

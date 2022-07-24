@@ -41,10 +41,7 @@ in {
             networking.interfaces.k3s.ipv4.addresses = [{ inherit address; prefixLength = 32;  }];
             networking.defaultGateway  = { address = config.meta.v4; interface = "k3s"; };
             services.k3s = mkMerge [
-                {
-                    enable = true;
-                    docker = true;
-                }
+                { enable = true; }
                 (mkIf (config.meta.name == "sh") {
                     role = "server";
                     extraFlags = "--disable traefik";
