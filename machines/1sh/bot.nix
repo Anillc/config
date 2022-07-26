@@ -15,7 +15,7 @@ with lib;
     virtualisation.oci-containers = {
         backend = "podman";
         containers.bot = {
-            image = "docker.io/anillc/cllina:81515f8";
+            image = "docker.io/anillc/cllina:435025b";
             volumes = [
                 "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
                 "${config.sops.secrets.bot-secrets.path}:/root/cllina/secrets.dhall"
