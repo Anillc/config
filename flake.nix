@@ -36,10 +36,18 @@
             ];
         };
     in {
+        packages.default = pkgs.stdenv.mkDerivation {
+            name = "machines";
+            propagatedBuildInputs = pkgs.lib.mapAttrsToList (name: value:
+                value.config.system.build.toplevel) self.nixosConfigurations;
+            unpackPhase = ":";
+            installPhase = "mkdir -p $out";
+        };
         devShell = pkgs.mkShell {
             nativeBuildInputs = [
                 pkgs.deploy-rs.deploy-rs pkgs.sops pkgs.step-cli
                 (pkgs.writeScriptBin "deploy-all" ''
+                    nix build .#
                     deploy() {
                         log=$(${pkgs.deploy-rs.deploy-rs}/bin/deploy -s --auto-rollback false .#$1 2>&1)
                         echo $log
