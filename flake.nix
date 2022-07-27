@@ -49,14 +49,25 @@
                 (pkgs.writeScriptBin "deploy-all" ''
                     nix build .#
                     deploy() {
-                        log=$(${pkgs.deploy-rs.deploy-rs}/bin/deploy -s --auto-rollback false .#$1 2>&1)
-                        echo $log
+                        # use stderr to avoid send build logs
+                        ${pkgs.deploy-rs.deploy-rs}/bin/deploy -s --auto-rollback false .#$1 >/dev/stderr 2>&1
+                        local status=$?
+                        if [ $status -eq 0 ]; then
+                            echo "deployed $1 successfully"
+                        else
+                            echo "error occured while deploying $1"
+                        fi
+                        message="$message$append"$'\n'
                     }
-                    ms="${pkgs.lib.strings.concatStringsSep " " (map (machine: machine.meta.name) machines.list)}"
-                    for m in $ms; do
-                        deploy $m &
-                    done
-                    wait
+                    start() {
+                        ms="${pkgs.lib.strings.concatStringsSep " " (map (machine: machine.meta.name) machines.list)}"
+                        for m in $ms; do
+                            deploy $m &
+                        done
+                        wait
+                    }
+                    message="message=$(start)"
+                    $SEND_COMMAND --data-urlencode "$message"
                 '')
             ];
         };
