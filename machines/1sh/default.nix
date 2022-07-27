@@ -20,6 +20,10 @@ rec {
             secrets.cllina-device = {};
             secrets.cllina-environment = {};
             secrets.bot-secrets = {};
+            secrets.bot-proxy-auth = {
+                owner = "nginx";
+                group = "nginx";
+            };
             secrets.grafana-smtp = {
                 owner = "grafana";
                 group = "grafana";
@@ -85,6 +89,12 @@ rec {
                 "bot.a" = {
                     enableACME = true;
                     forceSSL = true;
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:8056";
+                    };
+                };
+                "bot.anillc.cn" = {
+                    basicAuthFile = config.sops.secrets.bot-proxy-auth.path;
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:8056";
                     };
