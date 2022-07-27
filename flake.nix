@@ -67,7 +67,7 @@
                         wait
                     }
                     message="message=$(start)"
-                    $SEND_COMMAND --data-urlencode "$message"
+                    $1 --data-urlencode "$message"
                 '')
             ];
         };
