@@ -4,7 +4,7 @@ with builtins;
 with lib;
 
 let
-    china-ip = filter (x: x != "") (splitString "\n" (readFile "${pkgs.china-ip}/china_ip_list.txt"));
+    china-ip = filter (x: x != "") (splitString "\n" (readFile "${pkgs.china-ip}/china.txt"));
 in {
     systemd.network.networks.flow = {
         matchConfig.Name = "flow";

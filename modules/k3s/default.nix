@@ -39,7 +39,7 @@ in {
             networking.hostName = "${config.meta.name}-k3s";
             networking.firewall.enable = false;
             networking.interfaces.k3s.ipv4.addresses = [{ inherit address; prefixLength = 32;  }];
-            networking.defaultGateway  = { address = config.meta.v4; interface = "k3s"; };
+            networking.defaultGateway = { address = config.meta.v4; interface = "k3s"; };
             services.k3s = mkMerge [
                 { enable = true; }
                 (mkIf (config.meta.name == "sh") {

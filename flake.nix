@@ -21,7 +21,7 @@
         inputs.nixpkgs.follows = "nixpkgs";
     };
     inputs.china-ip = {
-        url = "github:17mon/china_ip_list";
+        url = "github:gaoyifan/china-operator-ip/ip-lists";
         flake = false;
     };
 

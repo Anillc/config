@@ -22,16 +22,17 @@
     "china-ip": {
       "flake": false,
       "locked": {
-        "lastModified": 1647825167,
-        "narHash": "sha256-5jnXMKPZNBBxVOWJrVg7SXyGCafl3HyuQgHnWLRu94U=",
-        "owner": "17mon",
-        "repo": "china_ip_list",
-        "rev": "28e7ddb10c81f6e77ea43cb280f648dac3d4a38d",
+        "lastModified": 1658978954,
+        "narHash": "sha256-r1ZNOt9PAnX1of97jQYkBTStWMLdE1FwbDHsSeRxnNU=",
+        "owner": "gaoyifan",
+        "repo": "china-operator-ip",
+        "rev": "c4923bf35cddb5c0573e9a06a8bbf6d0826d41f5",
         "type": "github"
       },
       "original": {
-        "owner": "17mon",
-        "repo": "china_ip_list",
+        "owner": "gaoyifan",
+        "ref": "ip-lists",
+        "repo": "china-operator-ip",
         "type": "github"
       }
     },
