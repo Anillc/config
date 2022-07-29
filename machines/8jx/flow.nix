@@ -47,12 +47,40 @@ in {
                 servers = [ "/a/10.11.1.1" "8.8.8.8" ];
                 resolveLocalQueries = false;
                 extraConfig = ''
+                    port=0
                     interface=flow
                     bogus-priv
-                    # enable-ra
                     dhcp-range=10.11.2.128,10.11.2.253,24h
-                    # dhcp-range=fdff:233::2,fdff:233::fff,ra-only
                 '';
+            };
+            services.smartdns = {
+                enable = true;
+                settings = {
+                    speed-check-mode = "none";
+                    conf-file = [
+                        "${pkgs.dnsmasq-china-list}/accelerated-domains.china.smartdns.conf"
+                        "${pkgs.dnsmasq-china-list}/apple.china.smartdns.conf"
+                    ];
+                    nameserver = "/a/10.11.1.1";
+                    server = [
+                        "8.8.8.8"
+                        "1.2.4.8 -group domestic -exclude-default-group"
+                        "210.2.4.8 -group domestic -exclude-default-group"
+                    ];
+                    server-tcp = [ "208.67.220.220:443" ];
+                    server-https = [
+                        "https://146.112.41.2/dns-query"
+                        "https://101.101.101.101/dns-query"
+                    ];
+                    server-tls = [
+                        "1.12.12.12:853 -group domestic -exclude-default-group"
+                        "120.53.53.53:853 -group domestic -exclude-default-group"
+                        "223.5.5.5:853 -group domestic -exclude-default-group"
+                        "223.6.6.6:853 -group domestic -exclude-default-group"
+                        "114.114.114.114 -group domestic -exclude-default-group"
+                        "114.114.115.115 -group domestic -exclude-default-group"
+                    ];
+                };
             };
         };
     };
