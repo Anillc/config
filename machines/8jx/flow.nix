@@ -51,21 +51,25 @@ in {
                     interface=flow
                     bogus-priv
                     dhcp-range=10.11.2.128,10.11.2.253,24h
+                    dhcp-option=option:dns-server,10.11.2.254
                 '';
             };
             services.smartdns = {
                 enable = true;
                 settings = {
+                    bind = ":53";
+                    bind-tcp = ":53";
                     speed-check-mode = "none";
+                    nameserver = "/a/an";
                     conf-file = [
                         "${pkgs.dnsmasq-china-list}/accelerated-domains.china.smartdns.conf"
                         "${pkgs.dnsmasq-china-list}/apple.china.smartdns.conf"
                     ];
-                    nameserver = "/a/10.11.1.1";
                     server = [
                         "8.8.8.8"
                         "1.2.4.8 -group domestic -exclude-default-group"
                         "210.2.4.8 -group domestic -exclude-default-group"
+                        "10.11.1.1 -group an -exclude-default-group"
                     ];
                     server-tcp = [ "208.67.220.220:443" ];
                     server-https = [
