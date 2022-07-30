@@ -59,6 +59,7 @@ in {
                 settings = {
                     bind = ":53";
                     bind-tcp = ":53";
+                    force-AAAA-SOA = "yes";
                     speed-check-mode = "none";
                     nameserver = "/a/an";
                     conf-file = [
