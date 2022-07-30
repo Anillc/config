@@ -12,6 +12,7 @@ rec {
             ./networking.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
+        k3s.enable = false;
         bgp = {
             enable = true;
             upstream = {
