@@ -19,9 +19,8 @@ rec {
                 address = "fe80::114:514%eth1";
             };
         };
-        containers.dns.autoStart = lib.mkForce false;
-        containers.dnsmasq.autoStart = lib.mkForce false;
-        k3s.enable = false
+        dns.enable = false;
+        k3s.enable = false;
         networking.nameservers = lib.mkForce [ "127.0.0.1" ];
         services.dnsmasq = {
             enable = true;

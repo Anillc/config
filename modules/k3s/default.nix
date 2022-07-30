@@ -8,7 +8,7 @@ let
 in {
     options.k3s.enable = mkOption {
         type = types.bool;
-        description = "";
+        description = "k3s";
         default = true;
     };
     config = mkIf config.k3s.enable {
