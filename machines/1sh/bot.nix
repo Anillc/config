@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 with builtins;
 with lib;
@@ -14,20 +14,6 @@ with lib;
     services.telegraf.extraConfig.mysql.servers = [ "$MYSQL_SERVER" ];
     virtualisation.oci-containers = {
         backend = "podman";
-        containers.bot = {
-            image = "docker.io/anillc/cllina:22a4a39";
-            volumes = [
-                "/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock"
-                "${config.sops.secrets.bot-secrets.path}:/root/cllina/secrets.dhall"
-                "/var/koishi:/root/cllina/.koishi"
-            ];
-            environment = {
-                http_proxy = "http://127.0.0.1:7890";
-                https_proxy = "http://127.0.0.1:7890";
-                no_proxy = "10.11.0.1,10.11.0.5,127.0.0.1,a";
-            };
-            extraOptions = [ "--network=host" ];
-        };
         containers.pma = {
             image = "docker.io/library/phpmyadmin";
             volumes = [
@@ -37,6 +23,33 @@ with lib;
                 PMA_HOST = "localhost";
             };
             ports = [ "8444:80" ];
+        };
+    };
+    containers.bot = {
+        autoStart = true;
+        bindMounts."/run/secrets" = {};
+        bindMounts."/run/mysqld/mysqld.sock" = {};
+        config = {
+            system.stateVersion = "22.05";
+            documentation.enable = false;
+            networking.firewall.enable = false;
+            fonts.fonts = with pkgs; [
+                jetbrains-mono
+                source-han-sans
+            ];
+            systemd.services.bot = {
+                wantedBy = [ "multi-user.target" ];
+                environment = {
+                    SECRETS = config.sops.secrets."bot-secrets.json".path;
+                    http_proxy = "http://127.0.0.1:7890";
+                    https_proxy = "http://127.0.0.1:7890";
+                    no_proxy = "10.11.0.1,127.0.0.1,a";
+                };
+                script = ''
+                    mkdir -p /var/lib/bot && cd /var/lib/bot
+                    ${inputs.cllina.packages.${pkgs.system}.default}/bin/cllina
+                '';
+            };
         };
     };
 }

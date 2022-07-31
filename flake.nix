@@ -4,6 +4,7 @@
     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
     inputs.flake-utils.url = "github:numtide/flake-utils";
     inputs.anillc.url = "github:Anillc/flakes";
+    inputs.cllina.url = "github:Anillc/cllina";
     inputs.sops-nix = {
         url = "github:Mic92/sops-nix";
         inputs.nixpkgs.follows = "nixpkgs";
@@ -25,7 +26,7 @@
         flake = false;
     };
 
-    outputs = inputs@{ self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, dns, nixos-cn, china-ip }: let
+    outputs = inputs@{ self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, cllina, dns, nixos-cn, china-ip }: let
         machines = import ./machines nixpkgs.lib;
         modules = import ./modules;
     in flake-utils.lib.eachDefaultSystem (system: let 

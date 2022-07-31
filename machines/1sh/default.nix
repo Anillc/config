@@ -19,7 +19,7 @@ rec {
             secrets.anillc-environment = {};
             secrets.cllina-device = {};
             secrets.cllina-environment = {};
-            secrets.bot-secrets = {};
+            secrets."bot-secrets.json" = {};
             secrets.bot-proxy-auth = {
                 owner = "nginx";
                 group = "nginx";
