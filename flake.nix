@@ -25,7 +25,7 @@
         flake = false;
     };
 
-    outputs = { self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, dns, nixos-cn, china-ip }: let
+    outputs = inputs@{ self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, dns, nixos-cn, china-ip }: let
         machines = import ./machines nixpkgs.lib;
         modules = import ./modules;
     in flake-utils.lib.eachDefaultSystem (system: let 
@@ -76,10 +76,8 @@
             inherit (machine) meta;
         in nameValuePair meta.name (nixpkgs.lib.nixosSystem {
             inherit (meta) system;
+            specialArgs = { inherit inputs; };
             modules = [
-                { nixpkgs.overlays = [(self: super: {
-                    inherit nixpkgs dns china-ip;
-                })]; }
                 sops-nix.nixosModules.sops
                 anillc.nixosModules.${meta.system}.default
                 nixos-cn.nixosModules.nixos-cn

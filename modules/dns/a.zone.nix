@@ -1,4 +1,5 @@
-{ pkgs, dns, ... }:  let
+{ writeText, inputs, ... }:  let
+    dns = inputs.dns;
     name = "a";
     zone = with dns.lib.combinators; {
         SOA = {
@@ -36,4 +37,4 @@
             # "ha".CNAME = [ "jx.a." ];
         };
     };
-in pkgs.writeText name (dns.lib.toString name zone)
+in writeText name (dns.lib.toString name zone)

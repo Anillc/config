@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 with builtins;
 with lib;
@@ -13,7 +13,7 @@ let
         mv /nix/var/* $out
     '');
 in {
-    system.build.tarball = pkgs.callPackage "${pkgs.nixpkgs}/nixos/lib/make-system-tarball.nix" {
+    system.build.tarball = pkgs.callPackage "${inputs.nixpkgs}/nixos/lib/make-system-tarball.nix" {
         storeContents = [{
             object = config.system.build.toplevel;
             symlink = "none";

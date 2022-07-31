@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 with builtins;
 with lib;
@@ -25,7 +25,7 @@ with lib;
     };
     nix = {
         package = pkgs.nixUnstable;
-        nixPath = [ "nixpkgs=${pkgs.nixpkgs}" ];
+        nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
         extraOptions = ''
             experimental-features = nix-command flakes
         '';

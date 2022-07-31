@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 with builtins;
 with lib;
@@ -46,7 +46,7 @@ in {
                             any: info
                         zone:
                           - domain: a
-                            file: ${pkgs.callPackage ./a.zone.nix {}}
+                            file: ${pkgs.callPackage ./a.zone.nix { inherit inputs; }}
                     '';
                 };
             };

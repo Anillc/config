@@ -1,10 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 with builtins;
 with lib;
 
 let
-    china-ip = filter (x: x != "") (splitString "\n" (readFile "${pkgs.china-ip}/china.txt"));
+    china-ip = filter (x: x != "") (splitString "\n" (readFile "${inputs.china-ip}/china.txt"));
 in {
     systemd.network.networks.flow = {
         matchConfig.Name = "flow";
