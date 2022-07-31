@@ -30,7 +30,15 @@ with lib;
             experimental-features = nix-command flakes
         '';
         optimise.automatic = true;
-        settings.auto-optimise-store = true;
+        settings = {
+            auto-optimise-store = true;
+            substituters = [
+                "https://anillc.cachix.org"
+            ];
+            trusted-public-keys = [
+                "anillc.cachix.org-1:VmWDYKHoDiT0CKs+6daDcTz3Ur+gkw4k0kcHIeF6dF8="
+            ];
+        };
         gc = {
             automatic = true;
             options = "--delete-older-than 5d";
