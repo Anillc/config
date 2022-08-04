@@ -14,6 +14,10 @@ rec {
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.vaultwarden = {};
+            secrets.bot-proxy-auth = {
+                owner = "nginx";
+                group = "nginx";
+            };
         };
         bgp = {
             enable = true;
@@ -41,11 +45,25 @@ rec {
         firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
+            recommendedProxySettings = true;
             virtualHosts = {
                 "vw.anillc.cn" = {
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8000";
+                    };
+                };
+                "bot.anillc.cn" = {
+                    basicAuthFile = config.sops.secrets.bot-proxy-auth.path;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://bot.a:8056";
+                    };
+                };
+                "yt.anillc.cn" = {
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://sh.a";
                     };
                 };
             };

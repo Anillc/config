@@ -20,10 +20,6 @@ rec {
             secrets.cllina-device = {};
             secrets.cllina-environment = {};
             secrets."bot-secrets.json" = {};
-            secrets.bot-proxy-auth = {
-                owner = "nginx";
-                group = "nginx";
-            };
             secrets.grafana-smtp = {
                 owner = "grafana";
                 group = "grafana";
@@ -93,21 +89,16 @@ rec {
                         proxyPass = "http://127.0.0.1:8056";
                     };
                 };
-                "bot.anillc.cn" = {
-                    basicAuthFile = config.sops.secrets.bot-proxy-auth.path;
-                    locations."/" = {
-                        proxyPass = "http://127.0.0.1:8056";
-                    };
-                };
+                # proxied from hk
                 "yt.anillc.cn" = {
                     extraConfig = ''
                         location / {
-                              proxy_pass http://127.0.0.1:8080;
-                              proxy_set_header Host $host;
-                              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                              proxy_set_header X-Forwarded-Proto "https";
-                              proxy_set_header X-Forwarded-Host "yt.anillc.cn:443";
-                              proxy_set_header X-Forwarded-Server $host;
+                            proxy_pass http://127.0.0.1:8080;
+                            proxy_set_header Host $host;
+                            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                            proxy_set_header X-Forwarded-Proto "https";
+                            proxy_set_header X-Forwarded-Host "yt.anillc.cn:443";
+                            proxy_set_header X-Forwarded-Server $host;
                         }
                     '';
                 };
