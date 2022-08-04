@@ -39,18 +39,6 @@ rec {
                 fromAddress = "alert@anillc.cn";
             };
         };
-        services.go-cqhttp = {
-            enable = true;
-            device = config.sops.secrets.cllina-device.path;
-            environmentFile = config.sops.secrets.cllina-environment.path;
-            config = {
-                message.remove-reply-at = true;
-                account = {
-                    uin = "\${UIN}";
-                    password = "\${PASSWORD}";
-                };
-            };
-        };
         firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;

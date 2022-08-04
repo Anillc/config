@@ -4,6 +4,21 @@ with builtins;
 with lib;
 
 {
+    services.go-cqhttp = {
+        enable = true;
+        device = config.sops.secrets.cllina-device.path;
+        environmentFile = config.sops.secrets.cllina-environment.path;
+        config = {
+            message = {
+                remove-reply-at = true;
+                skip-mime-scan = true;
+            };
+            account = {
+                uin = "\${UIN}";
+                password = "\${PASSWORD}";
+            };
+        };
+    };
     services.mysql = {
         enable = true;
         package = pkgs.mariadb;
