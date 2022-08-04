@@ -50,13 +50,5 @@ rec {
                 };
             };
         };
-        bgp.extraBirdConfig = ''
-            protocol static {
-                route 2a0e:b107:1172::/48 reject;
-                ipv6 {
-                    table bgp_v6;
-                };
-            }
-        '';
     };
 }

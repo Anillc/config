@@ -59,6 +59,12 @@ with lib;
             };
         }
         protocol static {
+            route 2a0e:b107:1172::/48 reject;
+            ipv6 {
+                table bgp_v6;
+            };
+        }
+        protocol static {
             route 2a0e:b107:df5::/48 reject;
             ipv6 {
                 table bgp_v6;
