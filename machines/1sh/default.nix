@@ -12,6 +12,7 @@ rec {
             ./hardware.nix
             ./networking.nix
             ./bot.nix
+            ./bot2.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
