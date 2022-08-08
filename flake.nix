@@ -17,16 +17,16 @@
         url = "github:kirelagin/dns.nix";
         inputs.nixpkgs.follows = "nixpkgs";
     };
-    inputs.nixos-cn = {
-        url = "github:nixos-cn/flakes";
-        inputs.nixpkgs.follows = "nixpkgs";
-    };
     inputs.china-ip = {
         url = "github:gaoyifan/china-operator-ip/ip-lists";
         flake = false;
     };
+    inputs.random-src = {
+        url  = "github:Anillc/random-src";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    outputs = inputs@{ self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, cllina, dns, nixos-cn, china-ip }: let
+    outputs = inputs@{ self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, ... }: let
         machines = import ./machines nixpkgs.lib;
         modules = import ./modules;
     in flake-utils.lib.eachDefaultSystem (system: let 
@@ -81,7 +81,6 @@
             modules = [
                 sops-nix.nixosModules.sops
                 anillc.nixosModules.${meta.system}.default
-                nixos-cn.nixosModules.nixos-cn
                 modules
                 machine.configuration
             ];

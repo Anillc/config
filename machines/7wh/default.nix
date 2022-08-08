@@ -26,5 +26,11 @@ rec {
                 };
             };
         };
+        random-src = {
+            enable = true;
+            igp = "fd11:1::5";
+            prefix = "2a0e:b107:1172::";
+            length = 56;
+        };
     };
 }
