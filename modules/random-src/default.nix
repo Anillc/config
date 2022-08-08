@@ -8,9 +8,13 @@ let
 in {
     options.random-src = {
         enable = mkEnableOption "random-src";
-        igp = mkOption {
+        v4 = mkOption {
             type = types.str;
-            description = "igp address";
+            description = "igp v4 address";
+        };
+        v6 = mkOption {
+            type = types.str;
+            description = "igp v6 address";
         };
         prefix = mkOption {
             type = types.str;
@@ -20,17 +24,27 @@ in {
             type = types.int;
             description = "prefix length";
         };
+        config = mkOption {
+            type = types.anything;
+            description = "config";
+        };
     };
     config = {
         bgp.extraBirdConfig = ''
             protocol static {
-                route ${cfg.igp}/128 via ${cfg.igp}%rsrc onlink;
+                route ${cfg.v4}/32 via "rsrc";
+                ipv4 {
+                    table igp_v4;
+                };
+            }
+            protocol static {
+                route ${cfg.v6}/128 via ${cfg.v6}%rsrc onlink;
                 ipv6 {
                     table igp_v6;
                 };
             }
             protocol static {
-                route ${cfg.prefix}/${toString cfg.length} via ${cfg.igp}%rsrc onlink;
+                route ${cfg.prefix}/${toString cfg.length} via ${cfg.v6}%rsrc onlink;
                 ipv6 {
                     table igp_v6;
                 };
@@ -45,15 +59,18 @@ in {
             privateNetwork = true;
             extraVeths.rsrc = {};
             config = {
+                imports = [ cfg.config ];
                 system.stateVersion = "22.05";
                 documentation.enable = false;
                 networking.firewall.enable = false;
-                networking.interfaces.rsrc.ipv6.addresses = [{ address = cfg.igp; prefixLength = 128; }];
+                networking.interfaces.rsrc.ipv4.addresses = [{ address = cfg.v4; prefixLength = 32; }];
+                networking.interfaces.rsrc.ipv6.addresses = [{ address = cfg.v6; prefixLength = 128;  }];
+                networking.defaultGateway  = { address = config.meta.v4; interface = "rsrc"; };
                 networking.defaultGateway6 = { address = config.meta.v6; interface = "rsrc"; };
                 networking.nftables = {
                     enable = true;
                     ruleset = ''
-                        table inet rsrc {
+                        table ip6 rsrc {
                             chain prerouting {
                                 type filter hook prerouting priority 0;
                                 queue num 114
@@ -69,7 +86,7 @@ in {
                     wantedBy = [ "multi-user.target" ];
                     after = [ "network-online.target" ];
                     path = [ inputs.random-src.packages.${pkgs.system}.random-src ];
-                    script = "random-src ${cfg.igp} ${cfg.prefix} ${toString cfg.length}";
+                    script = "random-src ${cfg.v6} ${cfg.prefix} ${toString cfg.length}";
                 };
             };
         };

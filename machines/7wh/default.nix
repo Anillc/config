@@ -28,9 +28,24 @@ rec {
         };
         random-src = {
             enable = true;
-            igp = "fd11:1::5";
+            v4 = "10.11.1.5";
+            v6 = "fd11:1::5";
             prefix = "2a0e:b107:1172::";
             length = 56;
+            config = {
+                services.nginx = {
+                    enable = true;
+                    virtualHosts.default = {
+                        locations."/" = {
+                            proxyPass = "https://[240e:978:1503::240]";
+                            extraConfig = ''
+                                proxy_ssl_verify off;
+                                proxy_set_header Host "api.vc.bilibili.com";
+                            '';
+                        };
+                    };
+                };
+            };
         };
     };
 }
