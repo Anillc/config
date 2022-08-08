@@ -29,7 +29,7 @@ in {
             description = "config";
         };
     };
-    config = {
+    config = mkIf cfg.enable {
         bgp.extraBirdConfig = ''
             protocol static {
                 route ${cfg.v4}/32 via "rsrc";

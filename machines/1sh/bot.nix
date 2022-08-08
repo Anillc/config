@@ -26,6 +26,12 @@ with lib;
             name = "bot";
         }];
     };
+    services.mysqlBackup = {
+        enable = true;
+        databases = [ "bot" ];
+        user = "syncthing";
+    };
+    sync = [ "/var/backup/mysql" ];
     services.telegraf.extraConfig.mysql.servers = [ "$MYSQL_SERVER" ];
     virtualisation.oci-containers = {
         backend = "podman";
