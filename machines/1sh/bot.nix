@@ -40,6 +40,7 @@ with lib;
             ports = [ "8444:80" ];
         };
     };
+    systemd.services."container@bot".after = [ "mysql.service" ];
     containers.bot = {
         autoStart = true;
         bindMounts."/run/secrets" = {};
