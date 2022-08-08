@@ -27,7 +27,7 @@ rec {
             };
         };
         bgp.enable = true;
-        services.youtrack.enable = true;
+        # services.youtrack.enable = true;
         services.influxdb2.enable = true;
         services.grafana = {
             enable = true;
