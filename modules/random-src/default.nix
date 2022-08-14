@@ -85,6 +85,7 @@ in {
                 systemd.services.random-src = {
                     wantedBy = [ "multi-user.target" ];
                     after = [ "network-online.target" ];
+                    serviceConfig.Restart = "always";
                     path = [ inputs.random-src.packages.${pkgs.system}.random-src ];
                     script = "random-src ${cfg.v6} ${cfg.prefix} ${toString cfg.length}";
                 };
