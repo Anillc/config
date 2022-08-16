@@ -9,7 +9,6 @@ in {
     wgi = with machines.set; [
         { inherit (tw.meta) name wg-public-key; listen = 11002;               cost = 1300; }
         { inherit (hk.meta) name wg-public-key; listen = 11003; peer = 11009; cost = 1500; }
-        { inherit (de.meta) name wg-public-key; listen = 11006;               cost = 1500; }
     ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens18";
