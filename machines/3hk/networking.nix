@@ -7,7 +7,7 @@ let
     machines = import ./.. lib;
 in {
     wgi = with machines.set; [
-        { inherit (sh.meta)  name wg-public-key; listen = 11001; peer = 11003; cost = 400;  }
+        { inherit (sh.meta)  name wg-public-key; listen = 11001; peer = 11003; cost = 100;  }
         { inherit (tw.meta)  name wg-public-key; listen = 11002;               cost = 1900; }
         { inherit (de.meta)  name wg-public-key; listen = 11006;               cost = 1900; }
         { inherit (wh.meta)  name wg-public-key; listen = 11007; peer = 21121; cost = 260;  }
