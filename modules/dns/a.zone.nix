@@ -29,10 +29,12 @@
             "db".CNAME = [ "sh.a." ];
             "bot".CNAME = [ "sh.a." ];
             "k8s".CNAME = [ "sh.a." ];
+            "biliapi".CNAME = [ "sh.a." ];
 
             "ca".CNAME = [ "fmt.a." ];
 
             # "ha".CNAME = [ "jx.a." ];
+            
         };
     };
 in writeText name (dns.lib.toString name zone)

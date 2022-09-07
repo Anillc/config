@@ -78,6 +78,11 @@ rec {
                         proxyPass = "http://127.0.0.1:8056";
                     };
                 };
+                "biliapi.a" = {
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:8080";
+                    };
+                };
                 # proxied from hk
                 "yt.anillc.cn" = {
                     extraConfig = ''
@@ -93,26 +98,11 @@ rec {
                 };
             };
         };
-        random-src = {
+        rsrc = {
             enable = true;
-            v4 = "10.11.1.5";
-            v6 = "fd11:1::5";
-            prefix = "2a0e:b107:1172::";
-            length = 56;
-            config = {
-                services.nginx = {
-                    enable = true;
-                    virtualHosts.default = {
-                        locations."/" = {
-                            proxyPass = "https://[240e:978:1503::240]";
-                            extraConfig = ''
-                                proxy_ssl_verify off;
-                                proxy_set_header Host "api.vc.bilibili.com";
-                            '';
-                        };
-                    };
-                };
-            };
+            cidr = "2a0e:b107:1172::/56";
+            proxy = "https://[240e:978:1503::240]";
+            proxyHost = "api.vc.bilibili.com";
         };
     };
 }

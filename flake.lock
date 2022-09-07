@@ -42,11 +42,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1662211943,
-        "narHash": "sha256-jokuhJHBI9WfUr0ePhNyJTRY2WreJHRXEBtsp8i92Jk=",
+        "lastModified": 1662561236,
+        "narHash": "sha256-+7SL6S58+w56Djkp5XauVf2IEfX6uNR+r3JjhFxglQA=",
         "owner": "Anillc",
         "repo": "cllina",
-        "rev": "a555398079314e41a491188143e534d42b56af88",
+        "rev": "e2cfff98b27552f42097817ddd043c7ead04b3bf",
         "type": "github"
       },
       "original": {
@@ -174,6 +174,21 @@
         "type": "github"
       }
     },
+    "flake-utils_5": {
+      "locked": {
+        "lastModified": 1659877975,
+        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1657020478,
@@ -238,23 +253,37 @@
         "type": "github"
       }
     },
-    "random-src": {
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1662172247,
+        "narHash": "sha256-EOP7zqNEITncNn8a2oAKrvQ0IrMU6vLOuA6C6pkGmkM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "86e303475ea7687abf706bdb9382056211176551",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "psocket-run": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "flake-utils": "flake-utils_5",
+        "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1646985502,
-        "narHash": "sha256-YYQu3LsIJcbANRNtneEd8riIsTknMtCl2f+Tyi83SIY=",
+        "lastModified": 1662536391,
+        "narHash": "sha256-NN1SQaN6ZB59Pd5P5kUvQH+c4HHeRWlnwhbnf1U53wQ=",
         "owner": "Anillc",
-        "repo": "random-src",
-        "rev": "5c308372ecb8e764ef3fcb17aef4a62e2cd2deab",
+        "repo": "psocket-run",
+        "rev": "2cac52ee244aec800d6bc37292ca78fdfc17c4eb",
         "type": "github"
       },
       "original": {
         "owner": "Anillc",
-        "repo": "random-src",
+        "repo": "psocket-run",
         "type": "github"
       }
     },
@@ -267,7 +296,7 @@
         "dns": "dns",
         "flake-utils": "flake-utils_4",
         "nixpkgs": "nixpkgs_3",
-        "random-src": "random-src",
+        "psocket-run": "psocket-run",
         "sops-nix": "sops-nix"
       }
     },
