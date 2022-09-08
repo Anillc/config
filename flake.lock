@@ -42,11 +42,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1662561236,
-        "narHash": "sha256-+7SL6S58+w56Djkp5XauVf2IEfX6uNR+r3JjhFxglQA=",
+        "lastModified": 1662660259,
+        "narHash": "sha256-4RvYHjBmW1jxKaPJjfN9yehIXWjNCHb6NKdkxCEpErk=",
         "owner": "Anillc",
         "repo": "cllina",
-        "rev": "e2cfff98b27552f42097817ddd043c7ead04b3bf",
+        "rev": "50c92f6c61d7dbdd98b93e6a9476f82adaccc3d6",
         "type": "github"
       },
       "original": {
