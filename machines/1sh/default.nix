@@ -85,7 +85,7 @@ rec {
             };
         };
         rsrc = {
-            enable = false;
+            enable = true;
             cidr = "2a0e:b107:1172::/56";
             proxy = "https://[240e:978:1503::240]";
             proxyHost = "api.vc.bilibili.com";
