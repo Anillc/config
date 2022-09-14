@@ -35,7 +35,7 @@ in {
 
     services.cron = {
         enable = true;
-        # systemCronJobs = [ "*/20 * * * * root ${connect}" ];
+        systemCronJobs = [ "*/20 * * * * root ${connect}" ];
     };
     systemd.services.connect-to-school = {
         enable = false;
