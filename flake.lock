@@ -6,11 +6,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1659113670,
-        "narHash": "sha256-MoBG3rEsPKUyFaiHQWRlEbvuLdjFiUa1MdA4gW4RJyQ=",
+        "lastModified": 1663517490,
+        "narHash": "sha256-LNkEI+jPMft8FInP/lx0n8etV3LbI0H4GdGxlfGkCsg=",
         "owner": "Anillc",
         "repo": "flakes",
-        "rev": "db6542625c585bf6afc9d3d3d068be419f000838",
+        "rev": "eeb78f6cb5b16116b422faf44d45c9991d2f85f9",
         "type": "github"
       },
       "original": {
@@ -174,21 +174,6 @@
         "type": "github"
       }
     },
-    "flake-utils_5": {
-      "locked": {
-        "lastModified": 1659877975,
-        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1657020478,
@@ -253,40 +238,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_4": {
-      "locked": {
-        "lastModified": 1662172247,
-        "narHash": "sha256-EOP7zqNEITncNn8a2oAKrvQ0IrMU6vLOuA6C6pkGmkM=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "86e303475ea7687abf706bdb9382056211176551",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "psocket-run": {
-      "inputs": {
-        "flake-utils": "flake-utils_5",
-        "nixpkgs": "nixpkgs_4"
-      },
-      "locked": {
-        "lastModified": 1662536391,
-        "narHash": "sha256-NN1SQaN6ZB59Pd5P5kUvQH+c4HHeRWlnwhbnf1U53wQ=",
-        "owner": "Anillc",
-        "repo": "psocket-run",
-        "rev": "2cac52ee244aec800d6bc37292ca78fdfc17c4eb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Anillc",
-        "repo": "psocket-run",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "anillc": "anillc",
@@ -296,7 +247,6 @@
         "dns": "dns",
         "flake-utils": "flake-utils_4",
         "nixpkgs": "nixpkgs_3",
-        "psocket-run": "psocket-run",
         "sops-nix": "sops-nix"
       }
     },

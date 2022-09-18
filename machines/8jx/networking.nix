@@ -38,7 +38,7 @@ in {
         systemCronJobs = [ "*/20 * * * * root ${connect}" ];
     };
     systemd.services.connect-to-school = {
-        enable = false;
+        enable = true;
         after = [ "network-online.target" "systemd-networkd.service" ];
         partOf = [ "systemd-networkd.service" ];
         wantedBy = [ "multi-user.target" ];

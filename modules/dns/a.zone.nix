@@ -25,11 +25,12 @@
             "fmt".A    = [ "10.11.0.9" ];
             "fmt".AAAA = [ "fd11::9"   ];
 
+            "rsrc".A   = [ "10.11.1.5" ];
+
             "panel".CNAME = [ "sh.a." ];
             "db".CNAME = [ "sh.a." ];
             "bot".CNAME = [ "sh.a." ];
             "k8s".CNAME = [ "sh.a." ];
-            "biliapi".CNAME = [ "sh.a." ];
 
             "ca".CNAME = [ "fmt.a." ];
 

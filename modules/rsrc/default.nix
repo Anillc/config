@@ -4,64 +4,50 @@ with builtins;
 with lib;
 
 let
+    inherit (inputs.anillc.packages.${pkgs.system}) http-proxy-ipv6-pool;
     cfg = config.rsrc;
-    psocket-run = inputs.psocket-run.packages.${pkgs.system}.default;
-    host-addr = "fe80::508e:ebd2:e461:15bf";
-    container-addr = "fe80::508e:ebd2:e461:15be";
+    cidr = "2a0e:b107:1172::/56";
 in {
-    options.rsrc = {
-        enable = mkEnableOption "rsrc";
-        cidr = mkOption {
-            type = types.str;
-            description = "cidr";
-        };
-        proxy = mkOption {
-            type = types.str;
-            description = "proxy";
-        };
-        proxyHost = mkOption {
-            type = types.str;
-            description = "proxy host";
-        };
-        port = mkOption {
-            type = types.int;
-            description = "port";
-            default = 8080;
-        };
-        webPort = mkOption {
-            type = types.int;
-            description = "web port";
-            default = 8081;
-        };
-    };
+    options.rsrc.enable = mkEnableOption "rsrc";
     config = mkIf cfg.enable {
+        systemd.network.networks.rsrc = {
+            matchConfig.Name = "rsrc";
+            address = [ "fe80::114:514/64" ];
+        };
         bgp.extraBirdConfig = ''
             protocol static {
-                route ${cfg.cidr} via "lo";
+                route 10.11.1.5/32 via "rsrc";
+                ipv4 {
+                    table igp_v4;
+                };
+            }
+            protocol static {
+                route ${cidr} via fe80::1919:810%rsrc;
                 ipv6 {
                     table igp_v6;
                 };
             }
         '';
-        boot.kernel.sysctl."net.ipv6.ip_nonlocal_bind" = 1;
-        systemd.services.rsrc = {
-            wantedBy = [ "multi-user.target" ];
-            after = [ "nginx.service" "network-online.target" ];
-            path = with pkgs; [ iproute2 psocket-run mitmproxy];
-            serviceConfig = {
-                User = "root";
-                Group = "root";
-                ExecStart = "+${pkgs.writeScript "rsrc-start" ''
-                    #!${pkgs.runtimeShell}
-                    ip route replace local ${cfg.cidr} dev lo
-                    psocket-run -c ${cfg.cidr} "mitmweb \
-                        -m reverse:${cfg.proxy} -H '/~q/Host/${cfg.proxyHost}' -k \
-                        -p ${toString cfg.port} --web-host 0.0.0.0 --web-port ${toString cfg.webPort}"
-                ''}";
-                ExecStop = pkgs.writeScript "rsrc-stop" ''
-                    #!${pkgs.runtimeShell}
-                    ip route del local ${cfg.cidr} || true
-                '';
+        containers.rsrc = {
+            autoStart = true;
+            privateNetwork = true;
+            extraVeths.rsrc = {};
+            config = {
+                system.stateVersion = "22.05";
+                boot.kernel.sysctl."net.ipv6.ip_nonlocal_bind" = 1;
+                networking.firewall.enable = false;
+                networking.interfaces.rsrc.ipv4.addresses = [{ address = "10.11.1.5"; prefixLength = 32;  }];
+                networking.interfaces.rsrc.ipv6.addresses = [{ address = "fe80::1919:810"; prefixLength = 64; }];
+                networking.defaultGateway  = { address = config.meta.v4; interface = "rsrc"; };
+                networking.defaultGateway6 = { address = "fe80::114:514"; interface = "rsrc"; };
+                systemd.services.rsrc = {
+                    wantedBy = [ "multi-user.target" "network-online.target" ];
+                    path = with pkgs; [ iproute2 http-proxy-ipv6-pool ];
+                    script = ''
+                        ip route add local ${cidr} dev rsrc
+                        http-proxy-ipv6-pool -b 0.0.0.0:1080 -i ${cidr}
+                    '';
+                };
             };
         };
     };

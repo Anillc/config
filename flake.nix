@@ -5,7 +5,6 @@
     inputs.flake-utils.url = "github:numtide/flake-utils";
     inputs.anillc.url = "github:Anillc/flakes";
     inputs.cllina.url = "github:Anillc/cllina";
-    inputs.psocket-run.url  = "github:Anillc/psocket-run";
     inputs.sops-nix = {
         url = "github:Mic92/sops-nix";
         inputs.nixpkgs.follows = "nixpkgs";

@@ -39,6 +39,7 @@ rec {
                 fromAddress = "alert@anillc.cn";
             };
         };
+        rsrc.enable = true;
         firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
@@ -83,12 +84,6 @@ rec {
                     };
                 };
             };
-        };
-        rsrc = {
-            enable = true;
-            cidr = "2a0e:b107:1172::/56";
-            proxy = "https://[240e:978:1503::240]";
-            proxyHost = "api.vc.bilibili.com";
         };
     };
 }
