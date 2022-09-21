@@ -48,7 +48,7 @@ with lib;
     };
     systemd.services."container@bot".after = [ "mysql.service" ];
     containers.bot = {
-        autoStart = false;
+        autoStart = true;
         bindMounts."/run/secrets" = {};
         bindMounts."/run/mysqld/mysqld.sock" = {};
         config = {
