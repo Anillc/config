@@ -66,6 +66,11 @@ rec {
                         proxyPass = "http://sh.a";
                     };
                 };
+                "ff.ci" = {
+                    locations."/s/" = {
+                        proxyPass = "http://sh.a:8056";
+                    };
+                };
             };
         };
     };
