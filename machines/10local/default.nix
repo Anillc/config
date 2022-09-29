@@ -3,7 +3,7 @@ rec {
         id = 10;
         name = "local";
         wg-public-key = "CgOCUZ1MqcazTdnVNu+RmFPaaBm+mV6/rzi+7ez263Q=";
-        syncthingId = "";
+        syncthingId = "6KISUZM-KKKDNF2-UN3LDOW-52676NR-EVF4P5C-CSOJ2ML-UYI3XG7-VHEQTQZ";
         enable = false;
     };
     configuration = { config, pkgs, lib, ... }: {
