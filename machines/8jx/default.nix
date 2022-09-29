@@ -10,7 +10,6 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./flow.nix
         ];
         nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
         sops = {

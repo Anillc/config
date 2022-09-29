@@ -11,8 +11,10 @@ rec {
         imports = [
             ./networking.nix
         ];
+        boot.isContainer = true;
         sops.defaultSopsFile = ./secrets.yaml;
         bgp.enable = true;
         k3s.enable = false;
+        flow.enable = true;
     };
 }

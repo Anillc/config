@@ -4,10 +4,11 @@ with builtins;
 with lib;
 
 let
+    cfg = config.flow;
     china-ip = filter (x: x != "") (splitString "\n" (readFile "${inputs.china-ip}/china.txt"));
 in {
     options.flow.enable = mkEnableOption "flow";
-    config = {
+    config = mkIf cfg.enable {
         systemd.network.networks.flow = {
             matchConfig.Name = "flow";
             bridge = [ "br11" ];

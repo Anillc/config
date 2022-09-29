@@ -14,7 +14,7 @@ let
     '';
 in {
     options.clash.enable = mkEnableOption "enable clash";
-    config = mkIf (cfg.enable) {
+    config = mkIf cfg.enable {
         sops.secrets.sync-clash = {
             sopsFile  = ./secrets.yaml;
             mode = "0700";
