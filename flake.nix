@@ -69,9 +69,9 @@
             ];
         };
     }) // (with builtins; with nixpkgs.lib; {
-        nixosConfigurations = listToAttrs (map (machine: let
+        systems = listToAttrs (map (machine: let
             inherit (machine) meta;
-        in nameValuePair meta.name (nixpkgs.lib.nixosSystem {
+        in nameValuePair meta.name {
             inherit (meta) system;
             specialArgs = { inherit inputs; };
             modules = [
@@ -80,7 +80,9 @@
                 modules
                 machine.configuration
             ];
-        })) machines.list);
+        }) machines.list);
+
+        nixosConfigurations = mapAttrs (name: value: nixpkgs.lib.nixosSystem value) self.systems;
 
         deploy.nodes = listToAttrs (map (machine: let
             inherit (machine) meta;
