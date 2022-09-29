@@ -61,19 +61,24 @@ with lib;
                 Persistent = true;
             };
         };
-        systemd.services.setup-wireguard = {
+        systemd.services.setup-wireguard = let
+            setup = pkgs.writeScript "setup.sh" ''
+                #!${pkgs.runtimeShell}
+                set -e
+                ${concatStringsSep "\n" (map (x: ''
+                    ENDPOINT=$(jq -r '.${x.name}' ${config.sops.secrets.endpoints.path})
+                    wg set i${x.name} peer "${x.wg-public-key}" endpoint "$ENDPOINT:${toString x.peer}"
+                '') (filter (x: x.peer != null) config.wgi))}
+            '';
+        in {
             wantedBy = [ "multi-user.target" ];
             after = [ "network-online.target" "systemd-networkd.service" ];
             partOf = [ "systemd-networkd.service" ];
             path = with pkgs; [ wireguard-tools jq ];
-            serviceConfig = {
-                Type = "oneshot";
-                Restart = "on-failure";
-            };
-            script = concatStringsSep "\n" (map (x: ''
-                ENDPOINT=$(jq -r '.${x.name}' ${config.sops.secrets.endpoints.path})
-                wg set i${x.name} peer "${x.wg-public-key}" endpoint "$ENDPOINT:${toString x.peer}"
-            '') (filter (x: x.peer != null) config.wgi));
+            serviceConfig.ExecStart = pkgs.writeScript "setup-wireguard" ''
+                #!${pkgs.runtimeShell}
+                until ${setup}; do :; done &
+            '';
         };
         # TODO: https://github.com/systemd/systemd/issues/23197
         systemd.services.setup-wireguard-linklocal = {
