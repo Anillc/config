@@ -23,7 +23,7 @@ in {
                 documentation.enable = false;
                 networking.firewall.enable = false;
                 networking.interfaces.flow.ipv4.addresses = [{ address = "10.11.2.254"; prefixLength = 24; }];
-                networking.defaultGateway  = { address = "10.11.2.${toString config.meta.id}"; interface = "flow"; };
+                networking.defaultGateway  = { address = "10.11.2.3"; interface = "flow"; };
                 boot.kernel.sysctl = {
                     "net.ipv4.ip_forward" = 1;
                     "net.ipv4.conf.all.rp_filter" = 0;
@@ -34,9 +34,9 @@ in {
                     after = [ "network-online.target" ];
                     path = with pkgs; [ iproute2 ];
                     script = concatStringsSep "\n" (flip map china-ip (x: ''
-                        ip route add ${x} via 10.11.2.8
+                        ip route add ${x} via 10.11.2.${toString config.meta.id}
                     '')) + ''
-                        ip route add 10.0.0.0/8 via 10.11.2.8
+                        ip route add 10.0.0.0/8 via 10.11.2.${toString config.meta.id}
                     '';
                 };
                 environment.systemPackages = [ pkgs.mtr pkgs.dig pkgs.tcpdump ];
