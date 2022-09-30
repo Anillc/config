@@ -23,7 +23,7 @@ in {
                 documentation.enable = false;
                 networking.firewall.enable = false;
                 networking.interfaces.flow.ipv4.addresses = [{ address = "10.11.2.254"; prefixLength = 24; }];
-                networking.defaultGateway  = { address = "10.11.2.3"; interface = "flow"; };
+                networking.defaultGateway  = { address = "10.11.2.${toString config.meta.id}"; interface = "flow"; };
                 boot.kernel.sysctl = {
                     "net.ipv4.ip_forward" = 1;
                     "net.ipv4.conf.all.rp_filter" = 0;

@@ -75,10 +75,13 @@ with lib;
             after = [ "network-online.target" "systemd-networkd.service" ];
             partOf = [ "systemd-networkd.service" ];
             path = with pkgs; [ wireguard-tools jq ];
-            serviceConfig.ExecStart = pkgs.writeScript "setup-wireguard" ''
-                #!${pkgs.runtimeShell}
-                until ${setup}; do :; done &
-            '';
+            serviceConfig = {
+                Type = "forking";
+                ExecStart = pkgs.writeScript "setup-wireguard" ''
+                    #!${pkgs.runtimeShell}
+                    until ${setup}; do :; done &
+                '';
+            };
         };
         # TODO: https://github.com/systemd/systemd/issues/23197
         systemd.services.setup-wireguard-linklocal = {

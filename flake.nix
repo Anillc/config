@@ -40,7 +40,7 @@
             unpackPhase = ":";
             installPhase = "mkdir -p $out";
         };
-        devShell = pkgs.mkShell {
+        devShells.default = pkgs.mkShell {
             nativeBuildInputs = [
                 pkgs.deploy-rs.deploy-rs pkgs.sops pkgs.step-cli
                 (pkgs.writeScriptBin "deploy-all" ''
