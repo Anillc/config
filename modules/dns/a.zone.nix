@@ -35,6 +35,7 @@
             "ca".CNAME = [ "fmt.a." ];
 
             # "ha".CNAME = [ "jx.a." ];
+            "qb".CNAME = [ "jx.a." ];
             
         };
     };

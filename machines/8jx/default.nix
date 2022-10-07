@@ -20,6 +20,12 @@ rec {
             };
         };
         bgp.enable = true;
+        systemd.services.qbittorrent = {
+            wantedBy = [ "multi-user.target" ];
+            after = [ "network.target" ];
+            path = with pkgs; [ qbittorrent-nox ];
+            script = "qbittorrent-nox";
+        };
         # services.home-assistant = {
         #     enable = true;
         #     config = {
@@ -35,20 +41,28 @@ rec {
         #         };
         #     };
         # };
-        # services.nginx = {
-        #     enable = true;
-        #     recommendedProxySettings = true;
-        #     recommendedTlsSettings = true;
-        #     virtualHosts = {
-        #         "ha.a" = {
-        #             enableACME = true;
-        #             forceSSL = true;
-        #             locations."/" = {
-        #                 proxyWebsockets = true;
-        #                 proxyPass = "http://127.0.0.1:8123";
-        #             };
-        #         };
-        #     };
-        # };
+        services.nginx = {
+            enable = true;
+            recommendedProxySettings = true;
+            recommendedTlsSettings = true;
+            virtualHosts = {
+                # "ha.a" = {
+                #     enableACME = true;
+                #     forceSSL = true;
+                #     locations."/" = {
+                #         proxyWebsockets = true;
+                #         proxyPass = "http://127.0.0.1:8123";
+                #     };
+                # };
+                "qb.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:8080";
+                    };
+                };
+            };
+        };
     };
 }
