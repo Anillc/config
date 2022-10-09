@@ -20,7 +20,6 @@ rec {
             };
         };
         dns.enable = false;
-        k3s.enable = false;
         networking.nameservers = lib.mkForce [ "127.0.0.1" ];
         services.dnsmasq = {
             enable = true;
