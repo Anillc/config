@@ -10,10 +10,12 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
+            ./bot.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.vaultwarden = {};
+            secrets."bot-secrets.json" = {};
             secrets.bot-proxy-auth = {
                 owner = "nginx";
                 group = "nginx";
@@ -51,6 +53,13 @@ rec {
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8000";
+                    };
+                };
+                "bot.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:8056";
                     };
                 };
                 "bot.anillc.cn" = {

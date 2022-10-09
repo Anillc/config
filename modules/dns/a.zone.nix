@@ -29,8 +29,9 @@
 
             "panel".CNAME = [ "sh.a." ];
             "db".CNAME = [ "sh.a." ];
-            "bot".CNAME = [ "sh.a." ];
             "k8s".CNAME = [ "sh.a." ];
+
+            "bot".CNAME = [ "hk.a." ];
 
             "ca".CNAME = [ "fmt.a." ];
 
