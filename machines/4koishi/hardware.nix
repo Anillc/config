@@ -9,4 +9,7 @@
         device = "/dev/vda1";
         fsType = "ext4";
     };
+    swapDevices = [{
+        device = "/var/lib/swap";
+    }];
 }

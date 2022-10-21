@@ -14,9 +14,45 @@ rec {
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
+            secrets = {
+                discourse-admin = {
+                    owner = "discourse";
+                    group = "discourse";
+                };
+                discourse-mail = {
+                    owner = "discourse";
+                    group = "discourse";
+                };
+            };
         };
         bgp.enable = true;
-        firewall.publicTCPPorts = [ 80 ];
+
+        services.postgresql.package = pkgs.postgresql_13;
+        services.discourse = {
+            enable = true;
+            hostname = "forum.koishi.xyz";
+            admin = {
+                username = "Koishi";
+                fullName = "Koishi";
+                email = "admin@forum.koishi.chat";
+                passwordFile = config.sops.secrets.discourse-admin.path;
+            };
+            mail.outgoing = {
+                serverAddress = "smtp.zeptomail.com";
+                port = 587;
+                forceTLS = true;
+                authentication = "login";
+                username = "emailapikey";
+                passwordFile = config.sops.secrets.discourse-mail.path;
+                domain = "forum.koishi.chat";
+            };
+        };
+
+        security.acme.certs."forum.koishi.xyz" = {
+            server = "https://acme-v02.api.letsencrypt.org/directory";
+            email = "admin@forum.koishi.chat";
+        };
+        firewall.publicTCPPorts = [ 80 443 ];
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;
