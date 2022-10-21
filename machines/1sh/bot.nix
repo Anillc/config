@@ -20,17 +20,18 @@ with lib;
         };
     };
     # TODO: pma and selfUrl
-    # virtualisation.oci-containers = {
-    #     backend = "podman";
-    #     containers.pma = {
-    #         image = "docker.io/library/phpmyadmin";
-    #         volumes = [
-    #             "/run/mysqld/mysqld.sock:/tmp/mysql.sock"
-    #         ];
-    #         environment = {
-    #             PMA_HOST = "localhost";
-    #         };
-    #         ports = [ "8444:80" ];
-    #     };
-    # };
+    virtualisation.oci-containers = {
+        backend = "podman";
+        containers.pma = {
+            image = "docker.io/library/phpmyadmin";
+            # volumes = [
+            #     "/run/mysqld/mysqld.sock:/tmp/mysql.sock"
+            # ];
+            environment = {
+                # PMA_HOST = "localhost";
+                PMA_ARBITRARY = "1";
+            };
+            ports = [ "8444:80" ];
+        };
+    };
 }

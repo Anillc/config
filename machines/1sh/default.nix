@@ -7,7 +7,8 @@ rec {
     };
     configuration = { config, pkgs, lib, ... }: {
         inherit meta;
-        nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
+        # nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
+        nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
             ./networking.nix
@@ -38,7 +39,6 @@ rec {
                 fromAddress = "alert@anillc.cn";
             };
         };
-        rsrc.enable = true;
         firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;

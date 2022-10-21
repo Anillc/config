@@ -63,8 +63,12 @@ rec {
                     };
                 };
                 "bot.anillc.cn" = {
-                    basicAuthFile = config.sops.secrets.bot-proxy-auth.path;
                     locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://bot.a:8056";
+                        basicAuthFile = config.sops.secrets.bot-proxy-auth.path;
+                    };
+                    locations."/github" = {
                         proxyWebsockets = true;
                         proxyPass = "http://bot.a:8056";
                     };
