@@ -9,34 +9,36 @@
         };
         NS = [ "ns1.a." ];
         subdomains = {
-            "ns1".A    = [ "10.11.1.1" ];
-            "ns1".AAAA = [ "fd11:1::1" ];
+            "ns1".A        = [ "10.11.1.1" ];
+            "ns1".AAAA     = [ "fd11:1::1" ];
             
-            "sh".A     = [ "10.11.0.1" ];
-            "sh".AAAA  = [ "fd11::1"   ];
-            "tw".A     = [ "10.11.0.2" ];
-            "tw".AAAA  = [ "fd11::2"   ];
-            "hk".A     = [ "10.11.0.3" ];
-            "hk".AAAA  = [ "fd11::3"   ];
-            "wh".A     = [ "10.11.0.7" ];
-            "wh".AAAA  = [ "fd11::7"   ];
-            "jx".A     = [ "10.11.0.8" ];
-            "jx".AAAA  = [ "fd11::8"   ];
-            "fmt".A    = [ "10.11.0.9" ];
-            "fmt".AAAA = [ "fd11::9"   ];
+            "sh".A         = [ "10.11.0.1" ];
+            "sh".AAAA      = [ "fd11::1"   ];
+            "tw".A         = [ "10.11.0.2" ];
+            "tw".AAAA      = [ "fd11::2"   ];
+            "hk".A         = [ "10.11.0.3" ];
+            "hk".AAAA      = [ "fd11::3"   ];
+            "koishi".A     = [ "10.11.0.4" ];
+            "koishi".AAAA  = [ "fd11::4"   ];
+            "wh".A         = [ "10.11.0.7" ];
+            "wh".AAAA      = [ "fd11::7"   ];
+            "jx".A         = [ "10.11.0.8" ];
+            "jx".AAAA      = [ "fd11::8"   ];
+            "fmt".A        = [ "10.11.0.9" ];
+            "fmt".AAAA     = [ "fd11::9"   ];
 
-            "rsrc".A   = [ "10.11.1.5" ];
+            "rsrc".A       = [ "10.11.1.5" ];
 
-            "panel".CNAME = [ "sh.a." ];
-            "db".CNAME = [ "sh.a." ];
-            "k8s".CNAME = [ "sh.a." ];
+            "panel".CNAME  = [ "sh.a." ];
+            "db".CNAME     = [ "sh.a." ];
+            "k8s".CNAME    = [ "sh.a." ];
 
-            "bot".CNAME = [ "hk.a." ];
+            "bot".CNAME    = [ "hk.a." ];
 
-            "ca".CNAME = [ "fmt.a." ];
+            "ca".CNAME     = [ "fmt.a." ];
 
-            # "ha".CNAME = [ "jx.a." ];
-            "qb".CNAME = [ "jx.a." ];
+            # "ha".CNAME    = [ "jx.a." ];
+            "qb".CNAME     = [ "jx.a." ];
             
         };
     };
