@@ -37,14 +37,15 @@ rec {
                 email = "admin@forum.koishi.chat";
                 passwordFile = config.sops.secrets.discourse-admin.path;
             };
-            mail.outgoing = {
-                serverAddress = "smtp.zeptomail.com";
-                port = 587;
-                forceTLS = true;
-                authentication = "login";
-                username = "emailapikey";
-                passwordFile = config.sops.secrets.discourse-mail.path;
-                domain = "forum.koishi.chat";
+            mail = {
+                notificationEmailAddress = "noreply@forum.koishi.chat";
+                outgoing = {
+                    serverAddress = "smtp.zeptomail.com";
+                    port = 587;
+                    username = "emailapikey";
+                    passwordFile = config.sops.secrets.discourse-mail.path;
+                    domain = "forum.koishi.chat";
+                };
             };
         };
 
