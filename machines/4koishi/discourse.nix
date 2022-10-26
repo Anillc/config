@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, unstable-pkgs, lib, ... }:
 
 with builtins;
 with lib;
@@ -37,6 +37,7 @@ in {
     services.discourse = {
         inherit plugins;
         enable = true;
+        package = unstable-pkgs.discourse;
         hostname = "forum.koishi.xyz";
         admin = {
             username = "Koishi";
