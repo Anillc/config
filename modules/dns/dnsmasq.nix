@@ -57,6 +57,9 @@ in {
                         "8.8.8.8"
                         "8.8.4.4"
                     ];
+                    extraConfig = ''
+                        address=/api.bilibili.com/240e:f7:e01f:f1::30
+                    '';
                 };
             };
         };
