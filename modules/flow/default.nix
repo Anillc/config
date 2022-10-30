@@ -28,7 +28,6 @@ in {
                     "net.ipv4.ip_forward" = 1;
                     "net.ipv4.conf.all.rp_filter" = 0;
                 };
-                # TODO: 172.16.2.100
                 systemd.services.flow = {
                     wantedBy = [ "multi-user.target" ];
                     after = [ "network-online.target" ];
@@ -37,6 +36,8 @@ in {
                         ip route add ${x} via 10.11.2.${toString config.meta.id}
                     '')) + ''
                         ip route add 10.0.0.0/8 via 10.11.2.${toString config.meta.id}
+                        ip route add 172.16.0.0/12 via 10.11.2.${toString config.meta.id}
+                        ip route add 192.168.0.0/16 via 10.11.2.${toString config.meta.id}
                     '';
                 };
                 environment.systemPackages = [ pkgs.mtr pkgs.dig pkgs.tcpdump ];
