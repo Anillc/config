@@ -20,6 +20,7 @@ rec {
             secrets.anillc-environment = {};
             secrets.cllina-device = {};
             secrets.cllina-environment = {};
+            secrets."bot-secrets.json" = {};
             secrets.grafana-smtp = {
                 owner = "grafana";
                 group = "grafana";
@@ -45,6 +46,13 @@ rec {
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
             virtualHosts = {
+                "bot.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:8056";
+                    };
+                };
                 "panel.a" = {
                     enableACME = true;
                     forceSSL = true;

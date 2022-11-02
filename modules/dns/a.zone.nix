@@ -32,8 +32,7 @@
             "influxdb".CNAME = [ "cola.a." ];
             "panel".CNAME    = [ "cola.a." ];
             "db".CNAME       = [ "cola.a." ];
-
-            "bot".CNAME      = [ "hk.a." ];
+            "bot".CNAME      = [ "cola.a." ];
 
             "ca".CNAME       = [ "fmt.a." ];
 
