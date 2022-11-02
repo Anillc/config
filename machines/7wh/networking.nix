@@ -7,9 +7,9 @@ let
     machines = import ./.. lib;
 in {
     wgi = with machines.set; [
-        { inherit (sh.meta)  name wg-public-key;                 peer = 11007; cost = 200; }
-        { inherit (hk.meta)  name wg-public-key; listen = 21121; peer = 11007; cost = 260; }
-        { inherit (jx.meta)  name wg-public-key; listen = 21122;               cost = 160; }
+        { inherit (cola.meta) name wg-public-key;                 peer = 16807; cost = 200; }
+        { inherit (hk.meta)   name wg-public-key; listen = 21121; peer = 11007; cost = 260; }
+        { inherit (jx.meta)   name wg-public-key; listen = 21122;               cost = 160; }
     ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens18";

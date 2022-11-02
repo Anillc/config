@@ -73,15 +73,9 @@ rec {
                         proxyPass = "http://bot.a:8056";
                     };
                 };
-                "yt.anillc.cn" = {
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://sh.a";
-                    };
-                };
                 "ff.ci" = {
                     locations."/s/" = {
-                        proxyPass = "http://sh.a:8056";
+                        proxyPass = "http://bot.a:8056";
                     };
                 };
             };

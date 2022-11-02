@@ -1,13 +1,12 @@
 rec {
     meta = {
         id = 1;
-        name = "sh";
+        name = "cola";
         wg-public-key = "82rDuI1+QXAXv+6HAf5aH2Ly0JXX/105Fsd61HmVnGE=";
-        syncthingId = "7HJSITB-P5CUWIN-VTLC47V-NGBDCMQ-KOJIGE6-WI7IXFF-TGOXITC-STZQHQ2";
+        syncthingId = "3LP4IIZ-VEMIMAP-SGB7O7Q-JXRZZBM-DOYOGOK-P3K4BMK-YVA2KNL-TDR3UAI";
     };
     configuration = { config, pkgs, lib, ... }: {
         inherit meta;
-        # nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
         nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
@@ -27,6 +26,8 @@ rec {
             };
         };
         bgp.enable = true;
+        firewall.publicTCPPorts = [ 16801 80 ];
+        services.openssh.ports = [ 16801 22 ];
         services.influxdb2.enable = true;
         services.grafana = {
             enable = true;
@@ -39,22 +40,11 @@ rec {
                 fromAddress = "alert@anillc.cn";
             };
         };
-        firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
             virtualHosts = {
-                "k8s.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyPass = "https://10.11.3.1:32727";
-                        extraConfig = ''
-                            proxy_ssl_verify off;
-                        '';
-                    };
-                };
                 "panel.a" = {
                     enableACME = true;
                     forceSSL = true;
@@ -68,6 +58,13 @@ rec {
                     forceSSL = true;
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:8444";
+                    };
+                };
+                "influxdb.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:8086";
                     };
                 };
                 "biliapi.a" = {
