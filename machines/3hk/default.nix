@@ -69,6 +69,17 @@ rec {
                         proxyPass = "http://bot.a:8056";
                     };
                 };
+                "matrix.anillc.cn" = {
+                    locations."/".extraConfig = "return 404;";
+                    locations."/_matrix".proxyPass = "http://cola.a:8008";
+                    locations."/_synapse/client".proxyPass = "http://cola.a:8008";
+                    locations."= /.well-known/matrix/server".extraConfig = ''
+                        return 200 '{ "m.server": "matrix.anillc.cn:443" }';
+                    '';
+                    locations."= /.well-known/matrix/client".extraConfig = ''
+                        return 200 '{ "m.homeserver": { "base_url": "https://matrix.anillc.cn" } }';
+                    '';
+                };
             };
         };
     };
