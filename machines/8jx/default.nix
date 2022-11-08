@@ -63,6 +63,9 @@ rec {
                         proxyPass = "http://127.0.0.1:8080";
                     };
                 };
+                "bot2.a" = {
+                    locations."/".proxyPass = "http://10.11.2.133:8005";
+                };
             };
         };
     };

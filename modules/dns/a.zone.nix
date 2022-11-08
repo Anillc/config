@@ -38,6 +38,7 @@
 
             # "ha".CNAME      = [ "jx.a." ];
             "qb".CNAME       = [ "jx.a." ];
+            "bot2".CNAME     = [ "jx.a." ];
             
         };
     };
