@@ -66,5 +66,17 @@ in {
         enable = true;
         recommendedProxySettings = true;
         recommendedTlsSettings = true;
+        virtualHosts = {
+            "koishi.xyz" = {
+                enableACME = true;
+                forceSSL = true;
+                locations."/".return = "301 https://koishi.chat";
+            };
+            "www.koishi.xyz" = {
+                enableACME = true;
+                forceSSL = true;
+                locations."/".return = "301 https://koishi.chat";
+            };
+        };
     };
 }
