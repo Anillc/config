@@ -88,6 +88,7 @@ in {
             rsn_pairwise=CCMP
         '';
     in {
+        enable = false;
         after = [ "systemd-networkd.service" ];
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
