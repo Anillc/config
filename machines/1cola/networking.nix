@@ -17,7 +17,7 @@ in {
         DHCP = "ipv4";
     };
     wg.phone = {
-        listen = 11451;
+        listen = 16810;
         publicKey = "Pm7l051569YlVKkaCItUR8TmeAp7m6od3RhSkOGPriA=";
     };
     systemd.network.networks.phone = {

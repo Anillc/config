@@ -8,7 +8,7 @@ with lib;
         ./meta.nix
     ];
     system.stateVersion = "22.05";
-    networking.hostName = config.meta.name;
+    networking.hostName = mkDefault config.meta.name;
     time.timeZone = "Asia/Shanghai";
     firewall.publicTCPPorts = [ 22 ];
     services.iperf3.enable = true;

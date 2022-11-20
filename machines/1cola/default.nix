@@ -7,6 +7,7 @@ rec {
     };
     configuration = { config, pkgs, lib, ... }: {
         inherit meta;
+        networking.hostName = "Anillc-linux";
         nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
