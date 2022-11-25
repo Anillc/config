@@ -32,8 +32,6 @@ in {
             address = [ "${config.meta.v4}/32" "${config.meta.v6}/128" "${config.meta.externalV6}/128" ];
         }) config.wgi);
     }];
-    flow.enable = true;
-
     services.cron = {
         enable = true;
         systemCronJobs = [ "*/20 * * * * root ${connect}" ];
