@@ -16,10 +16,18 @@ rec {
         # nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
-            secrets.school-network = {
-                mode = "0755";
-                sopsFile = ./secrets.yaml;
+            secrets.school-network.mode = "0755";
+            secrets.hass-secrets = {
+                owner = "hass";
+                group = "hass";
             };
+        };
+        system.activationScripts.hass-secrets = lib.mkIf config.services.home-assistant.enable {
+            deps = [ "setupSecrets" ];
+            text = ''
+                ln -sf ${config.sops.secrets.hass-secrets.path} ${config.services.home-assistant.configDir}/secrets.yaml
+                chown -R hass:hass ${config.services.home-assistant.configDir}/secrets.yaml
+            '';
         };
         bgp.enable = true;
         systemd.services.qbittorrent = {
@@ -30,7 +38,7 @@ rec {
         };
         services.home-assistant = {
             enable = true;
-            extraComponents = [ ];
+            extraComponents = [ "xiaomi" ];
             config = {
                 frontend = {};
                 homeassistant = {
@@ -43,6 +51,12 @@ rec {
                     trusted_proxies = [ "127.0.0.1" ];
                 };
                 mobile_app = {};
+                device_tracker = [{
+                    platform = "xiaomi";
+                    host = "!secret router-ip";
+                    password = "!secret router-password";
+                }];
+                automation = "!include automations.yaml";
             };
         };
         services.nginx = {

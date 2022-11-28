@@ -47,6 +47,12 @@ rec {
             enable = true;
             recommendedProxySettings = true;
             virtualHosts = {
+                "ha.anillc.cn" = {
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "https://ha.a";
+                    };
+                };
                 "vw.anillc.cn" = {
                     locations."/" = {
                         proxyWebsockets = true;
