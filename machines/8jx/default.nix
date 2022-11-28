@@ -12,8 +12,8 @@ rec {
             ./networking.nix
             ./flow.nix
         ];
-        # nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
-        nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
+        nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
+        # nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.school-network = {
@@ -28,34 +28,36 @@ rec {
             path = with pkgs; [ qbittorrent-nox ];
             script = "qbittorrent-nox";
         };
-        # services.home-assistant = {
-        #     enable = true;
-        #     config = {
-        #         frontend = {};
-        #         homeassistant = {
-        #             name = "school";
-        #             unit_system = "metric";
-        #             time_zone = "Asia/Shanghai";
-        #         };
-        #         http = {
-        #             use_x_forwarded_for = true;
-        #             trusted_proxies = [ "127.0.0.1" ];
-        #         };
-        #     };
-        # };
+        services.home-assistant = {
+            enable = true;
+            extraComponents = [ ];
+            config = {
+                frontend = {};
+                homeassistant = {
+                    name = "school";
+                    unit_system = "metric";
+                    time_zone = "Asia/Shanghai";
+                };
+                http = {
+                    use_x_forwarded_for = true;
+                    trusted_proxies = [ "127.0.0.1" ];
+                };
+                mobile_app = {};
+            };
+        };
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
             virtualHosts = {
-                # "ha.a" = {
-                #     enableACME = true;
-                #     forceSSL = true;
-                #     locations."/" = {
-                #         proxyWebsockets = true;
-                #         proxyPass = "http://127.0.0.1:8123";
-                #     };
-                # };
+                "ha.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:8123";
+                    };
+                };
                 "qb.a" = {
                     enableACME = true;
                     forceSSL = true;
