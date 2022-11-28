@@ -28,6 +28,10 @@ rec {
                 group = "grafana";
             };
         };
+        virtualisation.vmware.guest = {
+            enable = true;
+            headless = true;
+        };
         bgp.enable = true;
         firewall.publicTCPPorts = [ 16801 80 ];
         services.openssh.ports = [ 16801 22 ];
