@@ -12,7 +12,6 @@ rec {
             ./networking.nix
             ./ca
         ];
-        rsrc.enable = true;
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.ca-key = {};
