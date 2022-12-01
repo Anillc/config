@@ -19,7 +19,6 @@ rec {
                 group = "nginx";
             };
         };
-        rsrc.enable = true;
         bgp = {
             enable = true;
             upstream = {
