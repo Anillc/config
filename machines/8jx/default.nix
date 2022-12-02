@@ -17,6 +17,7 @@ rec {
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.school-network.mode = "0755";
+            secrets.dnsmasq-static-map = {};
             secrets.hass-secrets = {
                 owner = "hass";
                 group = "hass";

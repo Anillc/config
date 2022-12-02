@@ -14,6 +14,7 @@ in {
         autoStart = true;
         privateNetwork = true;
         extraVeths.flow = {};
+        bindMounts."/run/secrets" = {};
         config = { ... }: {
             imports = [ ../../modules/networking/def/firewall.nix ];
             system.stateVersion = "22.05";
@@ -53,6 +54,7 @@ in {
                     bogus-priv
                     dhcp-range=10.11.2.128,10.11.2.253,24h
                     dhcp-option=option:dns-server,10.11.2.254
+                    conf-file=${config.sops.secrets.dnsmasq-static-map.path}
                 '';
             };
             services.smartdns = {
