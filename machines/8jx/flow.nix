@@ -54,6 +54,7 @@ in {
                     bogus-priv
                     dhcp-range=10.11.2.128,10.11.2.253,24h
                     dhcp-option=option:dns-server,10.11.2.254
+                    dhcp-option=option:domain-search,a
                     conf-file=${config.sops.secrets.dnsmasq-static-map.path}
                 '';
             };

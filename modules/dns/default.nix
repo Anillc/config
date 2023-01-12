@@ -16,6 +16,11 @@ in {
         ./dnsmasq.nix
     ];
     config = mkMerge [
+        {
+            networking.resolvconf.extraConfig = ''
+                search_domains='a'
+            '';
+        }
         (mkIf cfg.enable {
             networking.nameservers = [ "10.11.1.2" ];
         })
