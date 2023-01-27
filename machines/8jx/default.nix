@@ -82,7 +82,12 @@ rec {
                     };
                 };
                 "bot2.a" = {
-                    locations."/".proxyPass = "http://10.11.2.133:8005";
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://10.11.2.133:8005";
+                    };
                 };
             };
         };
