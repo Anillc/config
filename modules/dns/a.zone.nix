@@ -38,10 +38,12 @@
 
             "ca".CNAME       = [ "fmt.a." ];
 
-            "ha".CNAME      = [ "jx.a." ];
+            "ha".CNAME       = [ "jx.a." ];
             "qb".CNAME       = [ "jx.a." ];
             "bot2".CNAME     = [ "jx.a." ];
-            
+
+            "kubo".CNAME     = [ "lux.a." ];
+
         };
     };
 in writeText name (dns.lib.toString name zone)
