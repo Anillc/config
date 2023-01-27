@@ -10,6 +10,7 @@ in {
         { inherit (cola.meta)    name wg-public-key; listen = 11001; peer = 16803; cost = 100;  }
         { inherit (tw.meta)      name wg-public-key; listen = 11002;               cost = 1900; }
         { inherit (koishi.meta)  name wg-public-key; listen = 11004; peer = 11003; cost = 21;   }
+        { inherit (lux.meta)     name wg-public-key; listen = 11005; peer = 11003; cost = 1870; }
         { inherit (wh.meta)      name wg-public-key; listen = 11007; peer = 21121; cost = 260;  }
         { inherit (jx.meta)      name wg-public-key; listen = 11008;               cost = 400;  }
         { inherit (fmt.meta)     name wg-public-key; listen = 11009; peer = 11003; cost = 1500; }

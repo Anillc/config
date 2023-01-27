@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }: 
+{ config, pkgs, lib, ... }:
 
 with builtins;
 with lib;
@@ -10,6 +10,7 @@ in {
         { inherit (tw.meta)     name wg-public-key; listen = 11002;               cost = 1300; }
         { inherit (koishi.meta) name wg-public-key; listen = 11004; peer = 11009; cost = 1500; }
         { inherit (hk.meta)     name wg-public-key; listen = 11003; peer = 11009; cost = 1500; }
+        { inherit (lux.meta)    name wg-public-key; listen = 11005; peer = 11009; cost = 1420; }
     ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens18";
