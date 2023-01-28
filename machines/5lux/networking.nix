@@ -14,7 +14,7 @@ in {
     ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens3";
-        address = [ "107.189.7.34/24" ];
-        gateway = [ "107.189.7.1" ];
+        address = [ "107.189.7.34/24" "2605:6400:30:e945::/48" ];
+        gateway = [ "107.189.7.1" "2605:6400:30::1" ];
     };
 }

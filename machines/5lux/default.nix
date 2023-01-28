@@ -12,8 +12,17 @@ rec {
             ./networking.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
-        bgp.enable = true;
-        firewall.publicTCPPorts = [ 4001 80 ];
+        bgp = {
+            enable = true;
+            upstream = {
+                enable = true;
+                multihop = true;
+                asn = "53667";
+                address = "2605:6400:ffff::2";
+                password = "lWAuRsXE";
+            };
+        };
+        firewall.publicTCPPorts = [ 4001 80 443 ];
         firewall.publicUDPPorts = [ 4001 ];
         # kubo in the future
         # services.kubo.enable = true;
@@ -22,6 +31,10 @@ rec {
             extraConfig = {
                 API.HTTPHeaders.Access-Control-Allow-Origin = [ "https://kubo.a" "https://webui.ipfs.io" ];
             };
+        };
+        security.acme.certs."i.anil.lc" = {
+            server = "https://acme-v02.api.letsencrypt.org/directory";
+            email = "i@anillc.cn";
         };
         services.nginx = {
             enable = true;
@@ -34,6 +47,14 @@ rec {
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:5001";
+                    };
+                };
+                "i.anil.lc" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:8080";
                     };
                 };
             };
