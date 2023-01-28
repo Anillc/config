@@ -38,8 +38,7 @@ rec {
         services.influxdb2.enable = true;
         services.grafana = {
             enable = true;
-            addr = "0.0.0.0";
-            smtp = {
+            settings.smtp = {
                 enable = true;
                 user = "alert@anillc.cn";
                 host = "smtp.ym.163.com:25";

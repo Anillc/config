@@ -19,7 +19,6 @@ with lib;
             };
         };
     };
-    # TODO: pma and selfUrl
     virtualisation.oci-containers = {
         backend = "podman";
         containers.pma = {

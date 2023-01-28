@@ -1,7 +1,7 @@
 {
     description = "config";
 
-    inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
     inputs.unstable-nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     inputs.flake-utils.url = "github:numtide/flake-utils";
     inputs.anillc.url = "github:Anillc/flakes";

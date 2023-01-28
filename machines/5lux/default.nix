@@ -24,11 +24,9 @@ rec {
         };
         firewall.publicTCPPorts = [ 4001 80 443 ];
         firewall.publicUDPPorts = [ 4001 ];
-        # kubo in the future
-        # services.kubo.enable = true;
-        services.ipfs = {
+        services.kubo = {
             enable = true;
-            extraConfig = {
+            settings = {
                 API.HTTPHeaders.Access-Control-Allow-Origin = [ "https://kubo.a" "https://webui.ipfs.io" ];
             };
         };
