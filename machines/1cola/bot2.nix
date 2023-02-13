@@ -11,6 +11,7 @@ with lib;
             imports = [ inputs.anillc.nixosModules.${pkgs.system}.default ];
             system.stateVersion = "22.05";
             documentation.enable = false;
+            security.pki.certificates = mkForce config.security.pki.certificates;
             networking.firewall.enable = false;
             services.go-cqhttp = {
                 enable = true;
