@@ -76,12 +76,6 @@ with lib;
                 table bgp_v6;
             };
         }
-        protocol static {
-            route 2a0d:2587:8100::/41 reject;
-            ipv6 {
-                table bgp_v6;
-            };
-        }
 
         protocol static {
             route ${config.meta.v4}/32 via "dmy11";
