@@ -15,8 +15,8 @@ rec {
         bgp = {
             enable = true;
             peers.kskbix = {
-                asn = "114514";
-                address = "fe80::114:514%eth1";
+                asn = "199594";
+                address = "fe80::1980:1:1%eth1";
             };
         };
         dns.enable = false;
