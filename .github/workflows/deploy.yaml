@@ -20,9 +20,9 @@ jobs:
         nameserver 10.11.1.2
         EOF
         sudo ip route add 10.11.0.0/16 dev deploy
-    - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v15
-    - uses: cachix/cachix-action@v10
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v20
+    - uses: cachix/cachix-action@v12
       with:
         name: anillc
         authToken: '${{ secrets.CACHIX_TOKEN }}'
