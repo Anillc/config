@@ -7,28 +7,37 @@ let
     plugins = with config.services.discourse.package.plugins; [
         discourse-solved discourse-spoiler-alert discourse-math discourse-checklist
         discourse-canned-replies discourse-github discourse-saved-searches
-        discourse-yearly-review
+        discourse-yearly-review discourse-docs
         # discourse-feature-voting discourse-cakeday discourse-follow discourse-footnote
         # discourse-signatures discourse-reactions discourse-push-notifications
         # discourse-tooltips discourse-graphviz discourse-automation discourse-bcc
-        # discourse-upvotes discourse-category-experts discourse-characters-required
+        # discourse-category-experts discourse-characters-required
         # discourse-restricted-replies discourse-templates
         (config.services.discourse.package.mkDiscoursePlugin {
             name = "discourse-reactions";
             src = pkgs.fetchFromGitHub {
                 owner = "discourse";
                 repo = "discourse-reactions";
-                rev = "8bdbc4af68ddaced74b66aaf4046236ce3ff713c";
-                sha256 = "sha256-L9R+YD6BiZeZ53hxJGo3LBKjPajM7CmGbFrnRzIFUCA=";
+                rev = "5484d64d880ce4ba6fba22446d54195a447cd091";
+                sha256 = "sha256-kYqV4ggW6iTWUzHKSYnahKw9VEL9BHZhQ7M+WU3nsyo=";
             };
         })
         (config.services.discourse.package.mkDiscoursePlugin {
-            name = "discourse-upvotes";
+            name = "discourse-post-voting";
             src = pkgs.fetchFromGitHub {
                 owner = "discourse";
-                repo = "discourse-upvotes";
-                rev = "c3527defe2abb18907b58eec110b42b0bc911447";
-                sha256 = "sha256-n6xBMzYq4BVFxnYtIaN0jBwf6MUl31NaZR8N220gQYw=";
+                repo = "discourse-post-voting";
+                rev = "e0fa41dc692b551d562146e4f93120e1e4bdbc5b";
+                sha256 = "sha256-BrxFuwk1TFAIXhNOA/tDB8unHXrm+8ATYEL5AIOQ9NI=";
+            };
+        })
+        (config.services.discourse.package.mkDiscoursePlugin {
+            name = "discourse-bbcode";
+            src = pkgs.fetchFromGitHub {
+                owner = "discourse";
+                repo = "discourse-bbcode";
+                rev = "eccc17f2763ce2f96c244ed5a96c6118b79c873b";
+                sha256 = "sha256-AdKAWIvxDOVN+v4GMFbBBy2uJI5JtuXO9m9z415GBG4=";
             };
         })
     ];
