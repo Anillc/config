@@ -22,8 +22,12 @@
         url = "github:gaoyifan/china-operator-ip/ip-lists";
         flake = false;
     };
+    inputs.nixos-mailserver = {
+        url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-22.05";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    outputs = inputs@{ self, nixpkgs, unstable-nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, ... }: let
+    outputs = inputs@{ self, nixpkgs, unstable-nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, nixos-mailserver, ... }: let
         machines = import ./machines nixpkgs.lib;
         modules = import ./modules;
     in flake-utils.lib.eachDefaultSystem (system: let 
@@ -82,6 +86,7 @@
             };
             modules = [
                 sops-nix.nixosModules.sops
+                nixos-mailserver.nixosModules.mailserver
                 anillc.nixosModules.${meta.system}.default
                 modules
                 machine.configuration
