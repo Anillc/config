@@ -60,6 +60,14 @@ rec {
                 automation = "!include automations.yaml";
             };
         };
+        services.mosquitto = {
+            enable = true;
+            listeners = [{
+                acl = [ "pattern readwrite #" ];
+                omitPasswordAuth = true;
+                settings.allow_anonymous = true;
+            }];
+        };
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;
