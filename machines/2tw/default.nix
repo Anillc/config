@@ -17,6 +17,9 @@ rec {
             peers.kskbix = {
                 asn = "199594";
                 address = "fe80::1980:1:1%eth1";
+                extraConfig = ''
+                    source address fe80::142:55;
+                '';
             };
         };
         dns.enable = false;

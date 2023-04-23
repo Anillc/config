@@ -41,6 +41,10 @@ in {
                         type = types.str;
                         description = "address";
                     };
+                    extraConfig = mkOption {
+                        type = types.lines;
+                        description = "extra configuration";
+                    };
                 };
             });
             description = "peers";
@@ -200,6 +204,7 @@ in {
                         graceful restart on;
                         local as ASN;
                         neighbor ${value.address} as ${value.asn};
+                        ${value.extraConfig}
                         ipv4 {
                             import none;
                             export none;
