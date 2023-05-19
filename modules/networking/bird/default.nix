@@ -44,6 +44,7 @@ in {
                     extraConfig = mkOption {
                         type = types.lines;
                         description = "extra configuration";
+                        default = "";
                     };
                 };
             });
