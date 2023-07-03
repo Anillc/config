@@ -22,8 +22,8 @@
             "koishi".AAAA    = [ "fd11::4"   ];
             "lux".A          = [ "10.11.0.5" ];
             "lux".AAAA       = [ "fd11::5"   ];
-            "jx".A           = [ "10.11.0.8" ];
-            "jx".AAAA        = [ "fd11::8"   ];
+            "r".A           = [ "10.11.0.8" ];
+            "r".AAAA        = [ "fd11::8"   ];
             "fmt".A          = [ "10.11.0.9" ];
             "fmt".AAAA       = [ "fd11::9"   ];
 
@@ -36,9 +36,9 @@
 
             "ca".CNAME       = [ "fmt.a." ];
 
-            "ha".CNAME       = [ "jx.a." ];
-            "qb".CNAME       = [ "jx.a." ];
-            "bot2".CNAME     = [ "jx.a." ];
+            "ha".CNAME       = [ "r.a." ];
+            "qb".CNAME       = [ "r.a." ];
+            "bot2".CNAME     = [ "r.a." ];
 
             "kubo".CNAME     = [ "lux.a." ];
 

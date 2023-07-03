@@ -1,9 +1,9 @@
 rec {
     meta = {
         id = 8;
-        name = "jx";
+        name = "r";
         wg-public-key = "2YSajirzbCUK4h3NbuBgpZPOypjrhtrLnT5pJp2K9HU=";
-        syncthingId = "BIQRF4W-RX7JJV7-KZEBM5N-J6FYGLA-OGF62YU-3DF23PB-OVODEFI-S2CNQQ4";
+        syncthingId = "HOQH4WA-6GIJL5H-YGGXMCL-YRFHFAP-TTMJN5R-5MEV2PH-Q3GWS6G-MGRGXA3";
     };
     configuration = { config, pkgs, lib, ... }: {
         inherit meta;

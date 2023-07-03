@@ -18,7 +18,7 @@ in {
     ];
     systemd.network = mkMerge [{
         networks.enp2s0 = {
-            matchConfig.Name = "enp2s0";
+            matchConfig.Name = "enp3s0";
             bridge = [ "br11" ];
         };
         networks.default-network = {
@@ -31,20 +31,28 @@ in {
             address = [ "${config.meta.v4}/32" "${config.meta.v6}/128" "${config.meta.externalV6}/128" ];
         }) config.wgi);
     }];
-    services.cron = {
+    services.hostapd = {
         enable = true;
-        systemCronJobs = [ "*/20 * * * * root ${connect}" ];
+        interface = "wlp2s0";
+        ssid = "Anillc's AP";
+        wpaPassphrase = "AnillcDayo";
+        channel = 8;
+        extraConfig = "bridge=br11";
     };
-    systemd.services.connect-to-school = {
-        enable = true;
-        after = [ "network-online.target" "systemd-networkd.service" ];
-        partOf = [ "systemd-networkd.service" ];
-        wantedBy = [ "multi-user.target" ];
-        serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-            Restart = "on-failure";
-        };
-        script = "${connect}";
-    };
+    # services.cron = {
+    #     enable = true;
+    #     systemCronJobs = [ "*/20 * * * * root ${connect}" ];
+    # };
+    # systemd.services.connect-to-school = {
+    #     enable = true;
+    #     after = [ "network-online.target" "systemd-networkd.service" ];
+    #     partOf = [ "systemd-networkd.service" ];
+    #     wantedBy = [ "multi-user.target" ];
+    #     serviceConfig = {
+    #         Type = "oneshot";
+    #         RemainAfterExit = true;
+    #         Restart = "on-failure";
+    #     };
+    #     script = "${connect}";
+    # };
 }
