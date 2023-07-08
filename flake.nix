@@ -6,6 +6,7 @@
     inputs.flake-utils.url = "github:numtide/flake-utils";
     inputs.anillc.url = "github:Anillc/flakes";
     inputs.cllina.url = "github:Anillc/cllina";
+    inputs.chronocat.url = "github:Anillc/chronocat.nix";
     inputs.sops-nix = {
         url = "github:Mic92/sops-nix";
         inputs.nixpkgs.follows = "nixpkgs";

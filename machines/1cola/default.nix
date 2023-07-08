@@ -12,16 +12,12 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
+            ./chronocat.nix
             ./bot.nix
-            ./bot2.nix
             ./synapse.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
-            secrets.anillc-device = {};
-            secrets.anillc-environment = {};
-            secrets.cllina-device = {};
-            secrets.cllina-environment = {};
             secrets."bot-secrets.json" = {};
             secrets.grafana-smtp = {
                 owner = "grafana";
