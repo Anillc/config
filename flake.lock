@@ -57,11 +57,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1688654959,
-        "narHash": "sha256-fcXYsoLWtYajK7w3UYP7Mmgr9FwnShUIcquYK+hMOa4=",
+        "lastModified": 1690192613,
+        "narHash": "sha256-ywdAeIJTqDlVeudjWrnvqdAJDz2YA86fDFJ4cJNKofs=",
         "owner": "Anillc",
         "repo": "chronocat.nix",
-        "rev": "8a50c4916dada8428973c33142673486a9753297",
+        "rev": "8bf3d03596a0f25d26c7dd5eece28b505489151a",
         "type": "github"
       },
       "original": {
@@ -76,11 +76,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1688730256,
-        "narHash": "sha256-Oj9aApFiuTtS1rLAWh4+OHUE+t3gK7r97xRnOdUmg8o=",
+        "lastModified": 1688983059,
+        "narHash": "sha256-OKY9eboiS8Xc0hUtnKQ6FHVTL91tuJy2gZ/KJeKlRJo=",
         "owner": "Anillc",
         "repo": "cllina",
-        "rev": "51eedc7b891bfb6665a30ebd59b8020db6d1f4fa",
+        "rev": "7a0f5f5c3a0df252f9133d7ce63e23aa1077596d",
         "type": "github"
       },
       "original": {

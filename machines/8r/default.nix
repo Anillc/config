@@ -91,10 +91,10 @@ rec {
                 };
                 "bot2.a" = {
                     enableACME = true;
-                    # forceSSL = true;
+                    forceSSL = true;
                     locations."/" = {
                         proxyWebsockets = true;
-                        proxyPass = "http://10.11.1.6:16530";
+                        proxyPass = "http://10.11.2.140:8005";
                     };
                 };
             };

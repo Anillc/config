@@ -40,16 +40,13 @@ with builtins;
                 after = [ "xvfb.service" "vnc.service" ];
                 path = with pkgs; [ util-linux inputs.chronocat.packages.${pkgs.system}.default ];
                 script = ''
+                    #!${pkgs.runtimeShell}
                     mkdir -p /var/lib/chronocat /build/home
                     cd /var/lib/chronocat
                     export DISPLAY=:11
                     sleep 3
-                    script -q <<EOF
-                        chronocat
-                        while :; do
-                            sleep 114514
-                        done
-                    EOF
+                    export USER=root
+                    script -q -c chronocat
                 '';
             };
         };
