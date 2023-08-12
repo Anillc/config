@@ -20,7 +20,7 @@ with lib;
         settings = {
             server_name = "matrix.anillc.cn";
             public_baseurl = "https://matrix.anillc.cn";
-            # app_service_config_files = [ "/var/lib/matrix-synapse/cllina.yaml" ];
+            app_service_config_files = [ "/var/lib/matrix-synapse/cllina.yaml" ];
             listeners = [{
                 port = 8008;
                 bind_addresses = [ "0.0.0.0" ];
