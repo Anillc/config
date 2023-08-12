@@ -40,7 +40,7 @@
             "qb".CNAME       = [ "r.a." ];
             "bot2".CNAME     = [ "r.a." ];
 
-            "kubo".CNAME     = [ "lux.a." ];
+            "calibre".CNAME  = [ "lux.a." ];
 
         };
     };

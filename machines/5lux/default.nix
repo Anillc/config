@@ -22,15 +22,16 @@ rec {
                 password = "lWAuRsXE";
             };
         };
-        firewall.publicTCPPorts = [ 4001 80 443 ];
-        firewall.publicUDPPorts = [ 4001 ];
-        services.kubo = {
+        services.calibre-web = {
             enable = true;
-            settings = {
-                API.HTTPHeaders.Access-Control-Allow-Origin = [ "https://kubo.a" "https://webui.ipfs.io" ];
+            listen.ip = "127.0.0.1";
+            options = {
+                enableBookUploading = true;
+                enableBookConversion = true;
             };
         };
-        security.acme.certs."i.anil.lc" = {
+        firewall.publicTCPPorts = [ 80 443 ];
+        security.acme.certs."c.ff.ci" = {
             server = "https://acme-v02.api.letsencrypt.org/directory";
             email = "i@anillc.cn";
         };
@@ -39,20 +40,12 @@ rec {
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
             virtualHosts = {
-                "kubo.a" = {
+                "c.ff.ci" = {
                     enableACME = true;
                     forceSSL = true;
                     locations."/" = {
                         proxyWebsockets = true;
-                        proxyPass = "http://127.0.0.1:5001";
-                    };
-                };
-                "i.anil.lc" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://127.0.0.1:8080";
+                        proxyPass = "http://127.0.0.1:8083";
                     };
                 };
             };
