@@ -35,6 +35,7 @@
             "panel".CNAME    = [ "cola.a." ];
             "db".CNAME       = [ "cola.a." ];
             "bot".CNAME      = [ "cola.a." ];
+            "restic".CNAME   = [ "cola.a." ];
 
             "ca".CNAME       = [ "fmt.a." ];
 

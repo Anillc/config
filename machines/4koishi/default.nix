@@ -24,6 +24,7 @@ rec {
                     owner = "discourse";
                     group = "discourse";
                 };
+                discourse-restic = {};
             };
         };
         bgp.enable = true;

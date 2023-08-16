@@ -67,6 +67,22 @@ in {
         };
     };
 
+    services.restic.backups.discourse = {
+        initialize = true;
+        repository = "rest:https://restic.a/koishi-discourse";
+        passwordFile = config.sops.secrets.discourse-restic.path;
+        paths = [ "/var/lib/discourse/uploads" "/var/lib/discourse/discourse.psql" ];
+        backupPrepareCommand = ''
+            export PATH=/run/current-system/sw/bin:$PATH
+            PSQL=$(mktemp)
+            sudo -u postgres pg_dump discourse > $PSQL
+            mv $PSQL /var/lib/discourse/discourse.psql
+        '';
+        timerConfig = {
+            OnCalendar = "daily";
+        };
+    };
+
     security.acme.certs = mapList [ "forum.koishi.xyz" "www.koishi.xyz" "koishi.xyz" ] {
         server = "https://acme-v02.api.letsencrypt.org/directory";
         email = "admin@forum.koishi.chat";

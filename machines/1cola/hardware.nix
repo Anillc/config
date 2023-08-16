@@ -21,4 +21,11 @@
         device = "/dev/disk/by-uuid/55B0-21D2";
         fsType = "vfat";
     };
+    fileSystems."/backup" = {
+        device = "/dev/disk/by-uuid/c1543fa7-4769-46be-ab17-7adaf8c858f0";
+        fsType = "ext4";
+    };
+    swapDevices = [{
+        device = "/var/lib/swap";
+    }];
 }

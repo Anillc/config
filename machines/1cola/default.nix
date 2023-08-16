@@ -42,10 +42,17 @@ rec {
                 fromAddress = "alert@anillc.cn";
             };
         };
+        services.restic.server = {
+            enable = true;
+            listenAddress = "127.0.0.1:8081";
+            extraFlags = [ "--no-auth" ];
+            dataDir = "/backup/restic";
+        };
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
+            clientMaxBodySize = "1024m";
             virtualHosts = {
                 "bot.a" = {
                     enableACME = true;
@@ -79,6 +86,13 @@ rec {
                 "biliapi.a" = {
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:8080";
+                    };
+                };
+                "restic.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyPass = "http://127.0.0.1:8081";
                     };
                 };
             };
