@@ -19,22 +19,6 @@
         "type": "github"
       }
     },
-    "blobs": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1604995301,
-        "narHash": "sha256-wcLzgLec6SGJA8fx1OEN1yV/Py5b+U5iyYpksUY/yLw=",
-        "owner": "simple-nixos-mailserver",
-        "repo": "blobs",
-        "rev": "2cccdf1ca48316f2cfd1c9a0017e8de5a7156265",
-        "type": "gitlab"
-      },
-      "original": {
-        "owner": "simple-nixos-mailserver",
-        "repo": "blobs",
-        "type": "gitlab"
-      }
-    },
     "china-ip": {
       "flake": false,
       "locked": {
@@ -211,30 +195,6 @@
         "type": "github"
       }
     },
-    "nixos-mailserver": {
-      "inputs": {
-        "blobs": "blobs",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "nixpkgs-22_05": "nixpkgs-22_05",
-        "utils": "utils_2"
-      },
-      "locked": {
-        "lastModified": 1655930346,
-        "narHash": "sha256-ht56HHOzEhjeIgAv5ZNFjSVX/in1YlUs0HG9c1EUXTM=",
-        "owner": "simple-nixos-mailserver",
-        "repo": "nixos-mailserver",
-        "rev": "f535d8123c4761b2ed8138f3d202ea710a334a1d",
-        "type": "gitlab"
-      },
-      "original": {
-        "owner": "simple-nixos-mailserver",
-        "ref": "nixos-22.05",
-        "repo": "nixos-mailserver",
-        "type": "gitlab"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1684844536,
@@ -249,21 +209,6 @@
         "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
-      }
-    },
-    "nixpkgs-22_05": {
-      "locked": {
-        "lastModified": 1654936503,
-        "narHash": "sha256-soKzdhI4jTHv/rSbh89RdlcJmrPgH8oMb/PLqiqIYVQ=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "dab6df51387c3878cdea09f43589a15729cae9f4",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "ref": "nixos-22.05",
-        "type": "indirect"
       }
     },
     "nixpkgs-stable": {
@@ -338,7 +283,6 @@
         "deploy-rs": "deploy-rs",
         "dns": "dns",
         "flake-utils": "flake-utils_4",
-        "nixos-mailserver": "nixos-mailserver",
         "nixpkgs": "nixpkgs_4",
         "sops-nix": "sops-nix",
         "unstable-nixpkgs": "unstable-nixpkgs"
@@ -403,21 +347,6 @@
         "owner": "numtide",
         "repo": "flake-utils",
         "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "utils_2": {
-      "locked": {
-        "lastModified": 1605370193,
-        "narHash": "sha256-YyMTf3URDL/otKdKgtoMChu4vfVL3vCMkRqpGifhUn0=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "5021eac20303a61fafe17224c087f5519baed54d",
         "type": "github"
       },
       "original": {

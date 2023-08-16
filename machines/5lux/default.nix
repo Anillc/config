@@ -30,19 +30,13 @@ rec {
                 enableBookConversion = true;
             };
         };
-        firewall.publicTCPPorts = [ 80 443 ];
-        security.acme.certs."c.ff.ci" = {
-            server = "https://acme-v02.api.letsencrypt.org/directory";
-            email = "i@anillc.cn";
-        };
+        firewall.publicTCPPorts = [ 80 ];
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
             virtualHosts = {
                 "c.ff.ci" = {
-                    enableACME = true;
-                    forceSSL = true;
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8083";

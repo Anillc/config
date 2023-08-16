@@ -10,7 +10,6 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./mail.nix
             ./ca
         ];
         rsrc.enable = true;
