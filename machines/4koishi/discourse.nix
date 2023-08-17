@@ -49,12 +49,7 @@ in {
         enable = true;
         package = unstable-pkgs.discourse;
         hostname = "forum.koishi.xyz";
-        admin = {
-            username = "Koishi";
-            fullName = "Koishi";
-            email = "admin@forum.koishi.chat";
-            passwordFile = config.sops.secrets.discourse-admin.path;
-        };
+        admin.skipCreate = true;
         mail = {
             notificationEmailAddress = "noreply@forum.koishi.chat";
             outgoing = {

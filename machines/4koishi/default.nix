@@ -16,10 +16,6 @@ rec {
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets = {
-                discourse-admin = {
-                    owner = "discourse";
-                    group = "discourse";
-                };
                 discourse-mail = {
                     owner = "discourse";
                     group = "discourse";
