@@ -1,8 +1,7 @@
 {
     description = "config";
 
-    inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
-    inputs.unstable-nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     inputs.flake-utils.url = "github:numtide/flake-utils";
     inputs.anillc.url = "github:Anillc/flakes";
     inputs.cllina.url = "github:Anillc/cllina";
@@ -24,7 +23,7 @@
         flake = false;
     };
 
-    outputs = inputs@{ self, nixpkgs, unstable-nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, ... }: let
+    outputs = inputs@{ self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, ... }: let
         machines = import ./machines nixpkgs.lib;
         modules = import ./modules;
     in flake-utils.lib.eachDefaultSystem (system: let 
@@ -75,12 +74,7 @@
             inherit (machine) meta;
         in nameValuePair meta.name {
             inherit (meta) system;
-            specialArgs = {
-                inherit inputs;
-                unstable-pkgs = import unstable-nixpkgs {
-                    inherit (meta) system;
-                };
-            };
+            specialArgs = { inherit inputs; };
             modules = [
                 sops-nix.nixosModules.sops
                 anillc.nixosModules.${meta.system}.default

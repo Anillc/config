@@ -72,7 +72,8 @@ with lib;
             '';
         in {
             wantedBy = [ "multi-user.target" ];
-            after = [ "network-online.target" "systemd-networkd.service" ];
+            after = [ "systemd-networkd.service" ];
+            before = [ "network-online.target" ];
             partOf = [ "systemd-networkd.service" ];
             path = with pkgs; [ wireguard-tools jq ];
             serviceConfig = {
@@ -86,7 +87,8 @@ with lib;
         # TODO: https://github.com/systemd/systemd/issues/23197
         systemd.services.setup-wireguard-linklocal = {
             wantedBy = [ "multi-user.target" ];
-            after = [ "network-online.target" "systemd-networkd.service" ];
+            after = [ "systemd-networkd.service" ];
+            before = [ "network-online.target" ];
             partOf = [ "systemd-networkd.service" ];
             path = with pkgs; [ iproute2 ];
             serviceConfig = {

@@ -29,16 +29,8 @@ in {
             services.dnsmasq = {
                 enable = true;
                 resolveLocalQueries = false;
-                servers = [
+                settings.server = [
                     "/a/10.11.1.2"
-
-                    "/mycard.moe/10.11.1.2"
-                    "/momobako.com/10.11.1.2"
-                    "/yuzurisa.com/10.11.1.2"
-                    "/moecube.com/10.11.1.2"
-                    "/ygobbs.com/10.11.1.2"
-                    "/newwise.com/10.11.1.2"
-                    "/my-card.in/10.11.1.2"
 
                     "114.114.114.114"
                     "223.5.5.5"

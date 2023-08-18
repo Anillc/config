@@ -41,25 +41,17 @@ in {
                 services.dnsmasq = {
                     enable = true;
                     resolveLocalQueries = false;
-                    servers = [
-                        "/a/10.11.1.1"
+                    settings = {
+                        server = [
+                            "/a/10.11.1.1"
 
-                        "/mycard.moe/10.198.1.1"
-                        "/momobako.com/10.198.1.1"
-                        "/yuzurisa.com/10.198.1.1"
-                        "/moecube.com/10.198.1.1"
-                        "/ygobbs.com/10.198.1.1"
-                        "/newwise.com/10.198.1.1"
-                        "/my-card.in/10.198.1.1"
-
-                        "114.114.114.114"
-                        "223.5.5.5"
-                        "8.8.8.8"
-                        "8.8.4.4"
-                    ];
-                    extraConfig = ''
-                        address=/api.bilibili.com/240e:f7:e01f:f1::30
-                    '';
+                            "114.114.114.114"
+                            "223.5.5.5"
+                            "8.8.8.8"
+                            "8.8.4.4"
+                        ];
+                        address = "/api.bilibili.com/240e:f7:e01f:f1::30";
+                    };
                 };
             };
         };

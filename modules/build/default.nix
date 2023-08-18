@@ -1,4 +1,4 @@
-{ config, pkgs, lib, unstable-pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 with builtins;
 with lib;
@@ -35,7 +35,7 @@ in {
             diskImage=$out/nixos.img
             ${pkgs.vmTools.qemu}/bin/qemu-img create -f raw $diskImage $(( $(cat ${db}/total-nar-size) + 500000000 ))
         '';
-        nativeBuildInputs = with unstable-pkgs; [
+        nativeBuildInputs = with pkgs; [
             e2fsprogs mount util-linux nixUnstable nixos-install-tools
         ];
     } ''

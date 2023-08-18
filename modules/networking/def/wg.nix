@@ -77,7 +77,6 @@ in {
         };
         systemd.services.wireguard-refresh = {
             wantedBy = [ "multi-user.target" ];
-            after = [ "network-online.target" ];
             restartIfChanged = true;
             path = with pkgs; [ wireguard-tools ];
             serviceConfig.Type = "oneshot";

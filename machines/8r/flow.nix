@@ -46,17 +46,19 @@ in {
             networking.resolvconf.useLocalResolver = false;
             services.dnsmasq = {
                 enable = true;
-                servers = [ "/a/10.11.1.1" "8.8.8.8" ];
                 resolveLocalQueries = false;
-                extraConfig = ''
-                    port=0
-                    interface=flow
-                    bogus-priv
-                    dhcp-range=10.11.2.128,10.11.2.253,24h
-                    dhcp-option=option:dns-server,10.11.2.254
-                    dhcp-option=option:domain-search,a
-                    conf-file=${config.sops.secrets.dnsmasq-static-map.path}
-                '';
+                settings = {
+                    server = [ "/a/10.11.1.1" "8.8.8.8" ];
+                    conf-file = config.sops.secrets.dnsmasq-static-map.path;
+                    port = 0;
+                    interface = "flow";
+                    bogus-priv = true;
+                    dhcp-range = "10.11.2.128,10.11.2.253,24h";
+                    dhcp-option = [
+                        "option:dns-server,10.11.2.254"
+                        "option:domain-search,a"
+                    ];
+                };
             };
             services.smartdns = {
                 enable = true;

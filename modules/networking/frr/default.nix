@@ -5,16 +5,6 @@ with lib;
 let
     machines = import ../../../machines lib;
 in {
-    nixpkgs.overlays = [(self: super: {
-        frr = super.frr.overrideAttrs (old: {
-            src = pkgs.fetchFromGitHub {
-                owner = "FRRouting";
-                repo = "frr";
-                rev = "8eeadd88e9825396fe0e542431befec9829b76f1";
-                sha256 = "sha256-j6puKho0qHsxIeYBXVfqfqsRtA6+VmHAqAbpxQNLAf8=";
-            };
-        });
-    })];
     systemd.network = {
         # TODO: https://github.com/NixOS/nixpkgs/pull/170632
         units."evpn.netdev".text = ''

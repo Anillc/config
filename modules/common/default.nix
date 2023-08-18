@@ -47,12 +47,12 @@ with lib;
             dates = "Sun 6:00";
         };
     };
-    nixpkgs.config.allowUnfreePredicate = pkg: elem (getName pkg) [
-        "youtrack"
+    nixpkgs.config.permittedInsecurePackages = [
+        "nodejs-16.20.2"
     ];
     services.openssh = {
         enable = true;
-        passwordAuthentication = false;
+        settings.PasswordAuthentication = false;
     };
     environment.systemPackages = with pkgs; [
         vim traceroute mtr socat tcpdump dig wireguard-tools
@@ -66,8 +66,6 @@ with lib;
         };
     };
     documentation.enable = false;
-    services.nscd.enable = false;
-    system.nssModules = mkForce [];
     boot.kernelModules = [ "vrf" ];
     security.pki.certificates = [
         ''

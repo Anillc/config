@@ -19,6 +19,9 @@ with lib;
         "net.ipv6.conf.all.seg6_enabled" = 1;
         "net.vrf.strict_mode" = 1;
     };
+    systemd.services.systemd-networkd-wait-online = {
+        serviceConfig.ExecStart = mkForce [ "" "${pkgs.coreutils}/bin/true" ];
+    };
     systemd.network = {
         enable = true;
         netdevs.dmy11.netdevConfig = {

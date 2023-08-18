@@ -1,4 +1,4 @@
-{ config, pkgs, unstable-pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 with builtins;
 with lib;
@@ -7,28 +7,19 @@ let
     plugins = with config.services.discourse.package.plugins; [
         discourse-solved discourse-spoiler-alert discourse-math discourse-checklist
         discourse-canned-replies discourse-github discourse-saved-searches
-        discourse-yearly-review discourse-docs
+        discourse-yearly-review discourse-docs discourse-reactions
         # discourse-feature-voting discourse-cakeday discourse-follow discourse-footnote
-        # discourse-signatures discourse-reactions discourse-push-notifications
+        # discourse-signatures discourse-push-notifications
         # discourse-tooltips discourse-graphviz discourse-automation discourse-bcc
         # discourse-category-experts discourse-characters-required
         # discourse-restricted-replies discourse-templates
-        (config.services.discourse.package.mkDiscoursePlugin {
-            name = "discourse-reactions";
-            src = pkgs.fetchFromGitHub {
-                owner = "discourse";
-                repo = "discourse-reactions";
-                rev = "5484d64d880ce4ba6fba22446d54195a447cd091";
-                sha256 = "sha256-kYqV4ggW6iTWUzHKSYnahKw9VEL9BHZhQ7M+WU3nsyo=";
-            };
-        })
         (config.services.discourse.package.mkDiscoursePlugin {
             name = "discourse-post-voting";
             src = pkgs.fetchFromGitHub {
                 owner = "discourse";
                 repo = "discourse-post-voting";
-                rev = "e0fa41dc692b551d562146e4f93120e1e4bdbc5b";
-                sha256 = "sha256-BrxFuwk1TFAIXhNOA/tDB8unHXrm+8ATYEL5AIOQ9NI=";
+                rev = "97d468c46905ee8c715710ffa224e5c6eb763770";
+                sha256 = "sha256-7nV8xYPh5op4QiLT6GWLsTshAEmV3uZGVsksDfO2was=";
             };
         })
         (config.services.discourse.package.mkDiscoursePlugin {
@@ -36,8 +27,8 @@ let
             src = pkgs.fetchFromGitHub {
                 owner = "discourse";
                 repo = "discourse-bbcode";
-                rev = "eccc17f2763ce2f96c244ed5a96c6118b79c873b";
-                sha256 = "sha256-AdKAWIvxDOVN+v4GMFbBBy2uJI5JtuXO9m9z415GBG4=";
+                rev = "a3641edffafbb232ead9711cc84c6dc7bee052f4";
+                sha256 = "sha256-2arfeL6osnG+wSB+vCqQmOIx6+MbcUhWBiSbDZ1MveM=";
             };
         })
     ];
@@ -47,7 +38,6 @@ in {
     services.discourse = {
         inherit plugins;
         enable = true;
-        package = unstable-pkgs.discourse;
         hostname = "forum.koishi.xyz";
         admin.skipCreate = true;
         mail = {
