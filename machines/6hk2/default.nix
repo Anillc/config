@@ -10,10 +10,14 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
+            ./firefish.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
-            secrets.meilisearch = {};
+            secrets = {
+                meilisearch = {};
+                firefish = {};
+            };
         };
         bgp.enable = true;
         services.meilisearch = {
@@ -25,6 +29,10 @@ rec {
             server = "https://acme-v02.api.letsencrypt.org/directory";
             email = "admin@forum.koishi.chat";
         };
+        security.acme.certs."ff.ci" = {
+            server = "https://acme-v02.api.letsencrypt.org/directory";
+            email = "void@anil.lc";
+        };
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;
@@ -34,6 +42,14 @@ rec {
                     forceSSL = true;
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:7700";
+                    };
+                };
+                "ff.ci" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:3000";
                     };
                 };
             };
