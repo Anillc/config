@@ -27,7 +27,7 @@ in {
         }) config.wgi);
     }];
     services.hostapd = {
-        enable = true;
+        enable = false;
         interface = "wlp2s0";
         ssid = "Anillc's AP";
         wpaPassphrase = "AnillcDayo";
