@@ -4,12 +4,6 @@ with builtins;
 with lib;
 
 let
-    connect = pkgs.writeScript "connect" ''
-        export PATH=$PATH:${with pkgs; makeBinPath [
-            curl
-        ]}
-        ${config.sops.secrets.school-network.path}
-    '';
     machines = import ./.. lib;
 in {
     wgi = with machines.set; [
@@ -48,20 +42,24 @@ in {
             rsn_pairwise=CCMP
         '';
     };
-    services.cron = {
-        enable = true;
-        systemCronJobs = [ "*/20 * * * * root ${connect}" ];
+    systemd.timers.connect = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "connect.service" ];
+        timerConfig = {
+            OnCalendar = "*:0/20";
+            Unit = "connect.service";
+            Persistent = true;
+        };
     };
-    systemd.services.connect-to-school = {
-        enable = true;
-        after = [ "network-online.target" "systemd-networkd.service" ];
-        partOf = [ "systemd-networkd.service" ];
+    systemd.services.connect = {
         wantedBy = [ "multi-user.target" ];
+        restartIfChanged = true;
+        path = with pkgs; [ curl ];
+        script = config.sops.secrets.school-network.path;
         serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
             Restart = "on-failure";
         };
-        script = "${connect}";
     };
 }

@@ -39,14 +39,6 @@ rec {
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
             virtualHosts = {
-                "ha.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://127.0.0.1:8123";
-                    };
-                };
                 "qb.a" = {
                     enableACME = true;
                     forceSSL = true;
