@@ -45,12 +45,11 @@ with lib;
             }) config.wgi);
         systemd.network.networks = listToAttrs (map (x: nameValuePair "i${x.name}" {
             matchConfig.Name = "i${x.name}";
-            # TODO: https://github.com/systemd/systemd/issues/23197
-            # addresses = [
-            #     { addressConfig = { Address = "fe80::11${toHexString config.meta.id}/64"; }; } # TODO: to 0x1100 + id
-            #     # TODO: sid on link for srv6-te
-            #     { addressConfig = { Address = "169.254.11.${toString config.meta.id}/24"; Scope = "link"; }; }
-            # ];
+            addresses = [
+                { addressConfig = { Address = "fe80::11${toHexString config.meta.id}/64"; }; } # TODO: to 0x1100 + id
+                { addressConfig = { Address = "169.254.11.${toString config.meta.id}/24"; Scope = "link"; }; }
+                # TODO: sid on link for srv6-te
+            ];
         }) config.wgi);
         systemd.timers.setup-wireguard = {
             wantedBy = [ "timers.target" ];
@@ -83,27 +82,6 @@ with lib;
                     until ${setup}; do :; done &
                 '';
             };
-        };
-        # TODO: https://github.com/systemd/systemd/issues/23197
-        systemd.services.setup-wireguard-linklocal = {
-            wantedBy = [ "multi-user.target" ];
-            after = [ "systemd-networkd.service" ];
-            before = [ "network-online.target" ];
-            partOf = [ "systemd-networkd.service" ];
-            path = with pkgs; [ iproute2 ];
-            serviceConfig = {
-                Type = "oneshot";
-                RemainAfterExit = true;
-                Restart = "on-failure";
-            };
-            script = concatStringsSep "\n" (map (x: ''
-                ip address replace fe80::11${toHexString config.meta.id}/64            dev i${x.name}
-                ip address replace 169.254.11.${toString config.meta.id}/24 scope link dev i${x.name}
-            '') config.wgi);
-            postStop = concatStringsSep "\n" (map (x: ''
-                ip address del fe80::11${toHexString config.meta.id}/64 dev i${x.name}
-                ip address del 169.254.11.${toString config.meta.id}/24 dev i${x.name}
-            '') config.wgi);
         };
     };
 }

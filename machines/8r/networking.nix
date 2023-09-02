@@ -48,20 +48,20 @@ in {
             rsn_pairwise=CCMP
         '';
     };
-    # services.cron = {
-    #     enable = true;
-    #     systemCronJobs = [ "*/20 * * * * root ${connect}" ];
-    # };
-    # systemd.services.connect-to-school = {
-    #     enable = true;
-    #     after = [ "network-online.target" "systemd-networkd.service" ];
-    #     partOf = [ "systemd-networkd.service" ];
-    #     wantedBy = [ "multi-user.target" ];
-    #     serviceConfig = {
-    #         Type = "oneshot";
-    #         RemainAfterExit = true;
-    #         Restart = "on-failure";
-    #     };
-    #     script = "${connect}";
-    # };
+    services.cron = {
+        enable = true;
+        systemCronJobs = [ "*/20 * * * * root ${connect}" ];
+    };
+    systemd.services.connect-to-school = {
+        enable = true;
+        after = [ "network-online.target" "systemd-networkd.service" ];
+        partOf = [ "systemd-networkd.service" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            Restart = "on-failure";
+        };
+        script = "${connect}";
+    };
 }
