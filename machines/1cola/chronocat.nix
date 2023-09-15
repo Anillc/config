@@ -15,39 +15,34 @@ with builtins;
             };
         }
     '';
+    systemd.services."container@chronocat".environment = {
+        SYSTEMD_NSPAWN_UNIFIED_HIERARCHY = "1";
+    };
     containers.chronocat = {
         autoStart = true;
         privateNetwork = true;
         extraVeths.chronocat = {};
+        extraFlags = [
+            "--system-call-filter=add_key"
+            "--system-call-filter=keyctl"
+            "--system-call-filter=bpf"
+        ];
         config = {
             system.stateVersion = "22.05";
             networking.firewall.enable = false;
             networking.interfaces.chronocat.ipv4.addresses = [{ address = "10.11.1.6"; prefixLength = 32;  }];
             networking.defaultGateway  = { address = config.meta.v4; interface = "chronocat"; };
-            systemd.services.xvfb = {
-                wantedBy = [ "multi-user.target" ];
-                path = with pkgs; [ xorg.xorgserver ];
-                script = "Xvfb :11";
-            };
-            systemd.services.vnc = {
-                wantedBy = [ "multi-user.target" ];
-                after = [ "xvfb.service" ];
-                path = with pkgs; [ x11vnc ];
-                script = "x11vnc -forever -display :11";
-            };
-            systemd.services.chronocat = {
-                wantedBy = [ "multi-user.target" ];
-                after = [ "xvfb.service" "vnc.service" ];
-                path = with pkgs; [ util-linux inputs.chronocat.packages.${pkgs.system}.default ];
-                script = ''
-                    #!${pkgs.runtimeShell}
-                    mkdir -p /var/lib/chronocat /build/home
-                    cd /var/lib/chronocat
-                    export DISPLAY=:11
-                    sleep 3
-                    export USER=root
-                    script -q -c chronocat
-                '';
+            virtualisation.oci-containers = {
+                backend = "podman";
+                containers.chronocat = {
+                    image = "he0119/chronocat-docker";
+                    extraOptions = [ "--network=host" "--tty" ];
+                    environment.VNC_PASSWD = "qwq";
+                    volumes = [
+                        "tencent-files:/root/Tencent Files"
+                        "token:/wine/drive_c/users/root/AppData/Roaming/BetterUniverse"
+                    ];
+                };
             };
         };
     };
