@@ -24,7 +24,8 @@
     virtualisation.oci-containers = {
         backend = "podman";
         containers.firefish = {
-            image = "registry.joinfirefish.org/firefish/firefish";
+            # TODO: remove tag
+            image = "registry.joinfirefish.org/firefish/firefish:v1.0.4-beta2";
             extraOptions = [ "--network=host" ];
             volumes = [
                 "/var/lib/firefish/files:/firefish/files"
