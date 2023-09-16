@@ -4,8 +4,8 @@
     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     inputs.flake-utils.url = "github:numtide/flake-utils";
     inputs.anillc.url = "github:Anillc/flakes";
-    inputs.cllina.url = "github:Anillc/cllina";
     inputs.chronocat.url = "github:Anillc/chronocat.nix";
+    inputs.koinix.url = "github:Anillc/koinix";
     inputs.sops-nix = {
         url = "github:Mic92/sops-nix";
         inputs.nixpkgs.follows = "nixpkgs";
@@ -57,15 +57,11 @@
                         fi
                         message="$message$append"$'\n'
                     }
-                    start() {
-                        ms="${pkgs.lib.strings.concatStringsSep " " (map (machine: machine.meta.name) machines.list)}"
-                        for m in $ms; do
-                            deploy $m &
-                        done
-                        wait
-                    }
-                    message="message=$(start)"
-                    $1 --data-urlencode "$message"
+                    ms="${pkgs.lib.strings.concatStringsSep " " (map (machine: machine.meta.name) machines.list)}"
+                    for m in $ms; do
+                        deploy $m &
+                    done
+                    wait
                 '')
             ];
         };

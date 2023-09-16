@@ -33,4 +33,4 @@ jobs:
           @cert-authority *.a ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOiNWW0uoDrXANlbj8lVyGfUMOL9y8uBrbAfdqi9obntEZfwiDp02Pq3rl74W4kDF4TzL6qroXeNeg0hkHBqH/Q=
     - name: deploy
       run: |
-        nix develop -c deploy-all '${{ secrets.SEND_COMMAND }}'
+        nix develop -c deploy-all

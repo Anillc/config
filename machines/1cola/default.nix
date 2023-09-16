@@ -18,7 +18,7 @@ rec {
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
-            secrets."bot-secrets.json" = {};
+            secrets.bot-secrets = {};
             secrets.grafana-smtp = {
                 owner = "grafana";
                 group = "grafana";
@@ -58,6 +58,7 @@ rec {
                     enableACME = true;
                     forceSSL = true;
                     locations."/" = {
+                        proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8056";
                     };
                 };
