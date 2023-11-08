@@ -70,6 +70,8 @@ let
                 appId = "\${{ env.GITHUB_APPID }}";
                 appSecret = "\${{ env.GITHUB_APPSECRET }}";
             };
+            "@ifrank/koishi-plugin-xibao" = {};
+            "5k" = {};
         };
     };
 in {
