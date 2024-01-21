@@ -27,7 +27,7 @@ in {
         }) config.wgi);
     }];
     services.hostapd = {
-        enable = false;
+        enable = true;
         interface = "wlp2s0";
         ssid = "Anillc's AP";
         wpaPassphrase = "AnillcDayo";
@@ -42,24 +42,24 @@ in {
             rsn_pairwise=CCMP
         '';
     };
-    systemd.timers.connect = {
-        wantedBy = [ "timers.target" ];
-        partOf = [ "connect.service" ];
-        timerConfig = {
-            OnCalendar = "*:0/20";
-            Unit = "connect.service";
-            Persistent = true;
-        };
-    };
-    systemd.services.connect = {
-        wantedBy = [ "multi-user.target" ];
-        restartIfChanged = true;
-        path = with pkgs; [ curl ];
-        script = config.sops.secrets.school-network.path;
-        serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-            Restart = "on-failure";
-        };
-    };
+    # systemd.timers.connect = {
+    #     wantedBy = [ "timers.target" ];
+    #     partOf = [ "connect.service" ];
+    #     timerConfig = {
+    #         OnCalendar = "*:0/20";
+    #         Unit = "connect.service";
+    #         Persistent = true;
+    #     };
+    # };
+    # systemd.services.connect = {
+    #     wantedBy = [ "multi-user.target" ];
+    #     restartIfChanged = true;
+    #     path = with pkgs; [ curl ];
+    #     script = config.sops.secrets.school-network.path;
+    #     serviceConfig = {
+    #         Type = "oneshot";
+    #         RemainAfterExit = true;
+    #         Restart = "on-failure";
+    #     };
+    # };
 }
