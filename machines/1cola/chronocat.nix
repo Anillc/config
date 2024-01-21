@@ -40,7 +40,8 @@ with builtins;
                     environment.VNC_PASSWD = "qwq";
                     volumes = [
                         "tencent-files:/root/Tencent Files"
-                        "token:/wine/drive_c/users/root/AppData/Roaming/BetterUniverse"
+                        "chronocat-config:/wine/drive_c/users/root/.chronocat/config"
+                        "ll:/root/LiteLoaderQQNT/plugins"
                     ];
                 };
             };

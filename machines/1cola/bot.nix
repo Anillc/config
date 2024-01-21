@@ -103,29 +103,29 @@ in {
     };
     sync = [ "/var/backup/mysql" ];
     services.telegraf.extraConfig.mysql.servers = [ "$MYSQL_SERVER" ];
-    systemd.services."container@bot".after = [ "mysql.service" ];
-    containers.bot = {
-        autoStart = true;
-        bindMounts."/run/secrets" = {};
-        bindMounts."/run/mysqld/mysqld.sock" = {};
-        config = {
-            system.stateVersion = "22.05";
-            security.pki.certificates = mkForce config.security.pki.certificates;
-            documentation.enable = false;
-            networking.firewall.enable = false;
-            i18n.defaultLocale = "zh_CN.UTF-8";
-            fonts.fonts = with pkgs; [
-                jetbrains-mono
-                source-han-sans
-            ];
-            systemd.services.bot = {
-                wantedBy = [ "multi-user.target" ];
-                serviceConfig.EnvironmentFile = config.sops.secrets.bot-secrets.path;
-                script = ''
-                    mkdir -p /var/lib/bot && cd /var/lib/bot
-                    ${bot}/bin/koishi
-                '';
-            };
-        };
-    };
+    # systemd.services."container@bot".after = [ "mysql.service" ];
+    # containers.bot = {
+    #     autoStart = true;
+    #     bindMounts."/run/secrets" = {};
+    #     bindMounts."/run/mysqld/mysqld.sock" = {};
+    #     config = {
+    #         system.stateVersion = "22.05";
+    #         security.pki.certificates = mkForce config.security.pki.certificates;
+    #         documentation.enable = false;
+    #         networking.firewall.enable = false;
+    #         i18n.defaultLocale = "zh_CN.UTF-8";
+    #         fonts.fonts = with pkgs; [
+    #             jetbrains-mono
+    #             source-han-sans
+    #         ];
+    #         systemd.services.bot = {
+    #             wantedBy = [ "multi-user.target" ];
+    #             serviceConfig.EnvironmentFile = config.sops.secrets.bot-secrets.path;
+    #             script = ''
+    #                 mkdir -p /var/lib/bot && cd /var/lib/bot
+    #                 ${bot}/bin/koishi
+    #             '';
+    #         };
+    #     };
+    # };
 }
