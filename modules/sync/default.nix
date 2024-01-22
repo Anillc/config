@@ -33,20 +33,22 @@ in {
         services.syncthing = {
             enable = true;
             guiAddress = "0.0.0.0:8384";
-            devices = mapAttrs (name: value: {
-                name = value.meta.name;
-                id = value.meta.syncthingId;
-                addresses = [ "tcp://${value.meta.v4}:22000" ];
-            }) otherDevices;
-            folders = {
-                "${selfName}" = {
-                    path = repo selfName;
-                    devices = attrNames otherDevices;
-                };
-            } // mapAttrs (name: value: {
-                path = repo name;
-                devices = [ name ];
-            }) otherDevices;
+            settings = {
+                devices = mapAttrs (name: value: {
+                    name = value.meta.name;
+                    id = value.meta.syncthingId;
+                    addresses = [ "tcp://${value.meta.v4}:22000" ];
+                }) otherDevices;
+                folders = {
+                    "${selfName}" = {
+                        path = repo selfName;
+                        devices = attrNames otherDevices;
+                    };
+                } // mapAttrs (name: value: {
+                    path = repo name;
+                    devices = [ name ];
+                }) otherDevices;
+            };
         };
     };
 }

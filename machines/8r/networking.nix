@@ -28,19 +28,15 @@ in {
     }];
     services.hostapd = {
         enable = true;
-        interface = "wlp2s0";
-        ssid = "Anillc's AP";
-        wpaPassphrase = "AnillcDayo";
-        channel = 8;
-        extraConfig = ''
-            bridge=br11
-            wpa=2
-            ieee80211n=1
-            wmm_enabled=1
-            auth_algs=1
-            wpa_key_mgmt=WPA-PSK
-            rsn_pairwise=CCMP
-        '';
+        radios.wlp2s0 = {
+            channel = 8;
+            countryCode = "CN";
+            settings.bridge = "br11";
+            networks.wlp2s0 = {
+                ssid = "Anillc's AP";
+                authentication.saePasswords = [{ password = "AnillcDayo"; }];
+            };
+        };
     };
     # systemd.timers.connect = {
     #     wantedBy = [ "timers.target" ];

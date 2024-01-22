@@ -43,7 +43,8 @@ with lib;
             };
         };
     } // mapAttrs' (name: value: nameValuePair "acme-${name}" {
-        serviceConfig.Restart = "on-failure";
+        # FIXME
+        # serviceConfig.Restart = "on-failure";
     }) config.security.acme.certs;
     services.openssh.extraConfig = ''
         TrustedUserCAKeys ${./ssh_user_ca.pub}

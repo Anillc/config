@@ -7,9 +7,7 @@
         ensureDatabases = [ "firefish" ];
         ensureUsers = [{
             name = "firefish";
-            ensurePermissions = {
-                "DATABASE firefish" = "ALL PRIVILEGES";
-            };
+            ensureDBOwnership = true;
         }];
         authentication = ''
             host   all      firefish 127.0.0.1/32   trust

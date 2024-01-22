@@ -37,17 +37,17 @@ in {
                 networking.defaultGateway6 = { address = config.meta.v6; interface = "dns"; };
                 services.knot = {
                     enable = true;
-                    extraConfig = ''
-                        server:
-                            listen: 0.0.0.0@53
-                            listen: ::@53
-                        log:
-                          - target: syslog
-                            any: info
-                        zone:
-                          - domain: a
-                            file: ${pkgs.callPackage ./a.zone.nix { inherit inputs; }}
-                    '';
+                    settings = {
+                        server.listen = [ "0.0.0.0@53" "::@53" ];
+                        log = [{
+                            target = "syslog";
+                            any = "info";
+                        }];
+                        zone = [{
+                            domain = "a";
+                            file = pkgs.callPackage ./a.zone.nix { inherit inputs; };
+                        }];
+                    };
                 };
             };
         };

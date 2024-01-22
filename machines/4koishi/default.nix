@@ -11,7 +11,6 @@ rec {
             ./hardware.nix
             ./networking.nix
             ./discourse.nix
-            ./go-cqhttp.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
@@ -24,9 +23,5 @@ rec {
             };
         };
         bgp.enable = true;
-        security.acme.certs."captcha.koishi.xyz" = {
-            server = "https://acme-v02.api.letsencrypt.org/directory";
-            email = "admin@forum.koishi.chat";
-        };
     };
 }

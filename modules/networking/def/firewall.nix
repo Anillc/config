@@ -57,7 +57,7 @@ in {
         boot.blacklistedKernelModules = [ "ip_tables" ];
         environment.systemPackages = [ pkgs.nftables ];
         networking.firewall.enable = false;
-        systemd.services.firewall = let
+        networking.nftables = let
             publicTCP = optionalString (length cfg.publicTCPPorts != 0) ''
                 tcp dport { ${
                     concatStringsSep ", " (map toString cfg.publicTCPPorts)
@@ -68,9 +68,13 @@ in {
                     concatStringsSep ", " (map toString cfg.publicUDPPorts)
                 } } accept
             '';
-            script = pkgs.writeScript "nftables-rule" ''
-                #!${pkgs.nftables}/bin/nft -f
-                table inet firewall {
+        in {
+            enable = true;
+            flushRuleset = false;
+            tables.firewall = {
+                name = "firewall";
+                family = "inet";
+                content = ''
                     chain input {
                         type filter hook input priority filter; policy drop;
                         ct state { established, related } accept
@@ -109,18 +113,7 @@ in {
                         meta mark 0x114 masquerade
                         ${cfg.extraPostroutingRules}
                     }
-                }
-            '';
-        in {
-            before = [ "network-pre.target" ];
-            wants = [ "network-pre.target" ];
-            wantedBy = [ "multi-user.target" ];
-            restartIfChanged = true;
-            postStop = "${pkgs.nftables}/bin/nft delete table inet firewall || true";
-            serviceConfig = {
-                Type = "oneshot";
-                RemainAfterExit = true;
-                ExecStart = script;
+                '';
             };
         };
     };
