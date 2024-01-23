@@ -34,7 +34,10 @@ in {
             settings.bridge = "br11";
             networks.wlp2s0 = {
                 ssid = "Anillc's AP";
-                authentication.saePasswords = [{ password = "AnillcDayo"; }];
+                authentication = {
+                    mode = "wpa2-sha256";
+                    wpaPassword = "AnillcDayo";
+                };
             };
         };
     };
