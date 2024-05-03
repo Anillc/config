@@ -12,7 +12,7 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./chronocat.nix
+            ./lgr.nix
             ./bot.nix
             ./synapse.nix
         ];

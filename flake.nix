@@ -4,7 +4,6 @@
     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     inputs.flake-utils.url = "github:numtide/flake-utils";
     inputs.anillc.url = "github:Anillc/flakes";
-    inputs.chronocat.url = "github:Anillc/chronocat.nix";
     inputs.koinix.url = "github:Anillc/koinix";
     inputs.sops-nix = {
         url = "github:Mic92/sops-nix";
