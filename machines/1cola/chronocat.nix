@@ -34,16 +34,16 @@ with builtins;
             networking.defaultGateway  = { address = config.meta.v4; interface = "chronocat"; };
             virtualisation.oci-containers = {
                 backend = "podman";
-                containers.chronocat = {
-                    image = "he0119/chronocat-docker";
-                    extraOptions = [ "--network=host" "--tty" ];
-                    environment.VNC_PASSWD = "qwq";
-                    volumes = [
-                        "tencent-files:/root/Tencent Files"
-                        "chronocat-config:/wine/drive_c/users/root/.chronocat/config"
-                        "ll:/root/LiteLoaderQQNT/plugins"
-                    ];
-                };
+                # containers.chronocat = {
+                #     image = "he0119/chronocat-docker";
+                #     extraOptions = [ "--network=host" "--tty" ];
+                #     environment.VNC_PASSWD = "qwq";
+                #     volumes = [
+                #         "tencent-files:/root/Tencent Files"
+                #         "chronocat-config:/wine/drive_c/users/root/.chronocat/config"
+                #         "ll:/root/LiteLoaderQQNT/plugins"
+                #     ];
+                # };
             };
         };
     };

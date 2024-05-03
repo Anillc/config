@@ -27,7 +27,7 @@ in {
         }) config.wgi);
     }];
     services.hostapd = {
-        enable = true;
+        enable = false;
         radios.wlp2s0 = {
             channel = 8;
             countryCode = "CN";
