@@ -28,6 +28,7 @@ in {
             };
             systemd.services.flow = {
                 wantedBy = [ "multi-user.target" ];
+                wants = [ "network-online.target" ];
                 after = [ "network-online.target" ];
                 path = with pkgs; [ iproute2 ];
                 script = concatStringsSep "\n" (flip map china-ip (x: ''

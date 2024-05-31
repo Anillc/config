@@ -24,13 +24,10 @@ with lib;
         };
     };
     nix = {
-        package = pkgs.nixUnstable;
         extraOptions = ''
             experimental-features = nix-command flakes
         '';
         optimise.automatic = true;
-        nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-        registry.p.flake = inputs.self;
         settings = {
             auto-optimise-store = true;
             substituters = [

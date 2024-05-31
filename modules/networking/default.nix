@@ -98,13 +98,5 @@ with lib;
                 table igp_v6;
             };
         }
-        # srv6
-        protocol static {
-            # 0x5200 -> 20992
-            route fd11:${toHexString (20992 + config.meta.id)}::/32 reject;
-            ipv6 {
-                table igp_v6;
-            };
-        }
     '';
 }

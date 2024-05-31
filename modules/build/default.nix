@@ -36,7 +36,7 @@ in {
             ${pkgs.vmTools.qemu}/bin/qemu-img create -f raw $diskImage $(( $(cat ${db}/total-nar-size) + 500000000 ))
         '';
         nativeBuildInputs = with pkgs; [
-            e2fsprogs mount util-linux nixUnstable nixos-install-tools
+            e2fsprogs mount util-linux nix nixos-install-tools
         ];
     } ''
         sfdisk /dev/vda <<EOF

@@ -26,6 +26,7 @@ with lib;
     systemd.services = {
         ssh-cert = {
             wantedBy = [ "multi-user.target" ];
+            wants = [ "network-online.target" ];
             after = [ "network-online.target" ];
             path = with pkgs; [ step-cli ];
             serviceConfig = {

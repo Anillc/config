@@ -5,7 +5,9 @@ rec {
         wg-public-key = "vj9hsGL/32BbhNuBreUHomdWSUjkuHeuqiCPPYQ+JBk=";
         syncthingId = "RDBLFVV-TR3RNNG-UZ3J3N6-HBDCYV4-EAHYKOC-6ITDHJW-X4UXGJK-7SGK6QX";
     };
-    configuration = { config, pkgs, ... }: {
+    configuration = { config, pkgs, inputs, ... }: let
+        pkgs-meilisearch = import inputs.nixpkgs-meilisearch { inherit (pkgs) system; };
+    in {
         inherit meta;
         imports = [
             ./hardware.nix
@@ -22,6 +24,7 @@ rec {
         bgp.enable = true;
         services.meilisearch = {
             enable = true;
+            package = pkgs-meilisearch.meilisearch;
             masterKeyEnvironmentFile = config.sops.secrets.meilisearch.path;
         };
         firewall.publicTCPPorts = [ 80 443 ];

@@ -48,7 +48,6 @@ with lib;
             addresses = [
                 { addressConfig = { Address = "fe80::11${toHexString config.meta.id}/64"; }; } # TODO: to 0x1100 + id
                 { addressConfig = { Address = "169.254.11.${toString config.meta.id}/24"; Scope = "link"; }; }
-                # TODO: sid on link for srv6-te
             ];
         }) config.wgi);
         systemd.timers.setup-wireguard = {

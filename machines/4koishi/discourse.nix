@@ -18,8 +18,8 @@ let
             src = pkgs.fetchFromGitHub {
                 owner = "discourse";
                 repo = "discourse-post-voting";
-                rev = "97d468c46905ee8c715710ffa224e5c6eb763770";
-                sha256 = "sha256-7nV8xYPh5op4QiLT6GWLsTshAEmV3uZGVsksDfO2was=";
+                rev = "ff65c9229303b394d89c313be3b00a8cf1b31808";
+                sha256 = "sha256-unpJbBNi8KgkpAyyIio9GYe6jgkVyuNIbvOztAkuPZE=";
             };
         })
         (config.services.discourse.package.mkDiscoursePlugin {
@@ -27,8 +27,8 @@ let
             src = pkgs.fetchFromGitHub {
                 owner = "discourse";
                 repo = "discourse-bbcode";
-                rev = "a3641edffafbb232ead9711cc84c6dc7bee052f4";
-                sha256 = "sha256-2arfeL6osnG+wSB+vCqQmOIx6+MbcUhWBiSbDZ1MveM=";
+                rev = "013bf339a2c68e943dcf6db433074eb128019a09";
+                sha256 = "sha256-IlXBZPhya0GGMz0ts9SZ+aaYnTNw21Pu54mJS5zsTB0=";
             };
         })
     ];

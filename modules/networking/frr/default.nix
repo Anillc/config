@@ -30,19 +30,7 @@ in {
         };
     };
     services.frr = {
-        zebra = {
-            enable = true;
-            config = ''
-                ip   nht resolve-via-default
-                ipv6 nht resolve-via-default
-                segment-routing
-                 srv6
-                  locators
-                   locator ${config.meta.name}
-                   ! 20992 -> 5200
-                   prefix fd11:${toHexString (20992 + config.meta.id)}::/32
-            '';
-        };
+        zebra.enable = true;
         bgp = {
             enable = true;
             extraOptions = [ "-M rpki" ];
@@ -53,9 +41,6 @@ in {
                  no bgp default ipv6-unicast
                  neighbor ipeers peer-group
                  neighbor ipeers remote-as 142055
-                 segment-routing srv6
-                  locator ${config.meta.name}
-                 exit
                  ${concatStringsSep "\n" (map
                      (x: " neighbor ${x.meta.v4} peer-group ipeers")
                  (filter (x: x.meta.id != config.meta.id) machines.list))}
