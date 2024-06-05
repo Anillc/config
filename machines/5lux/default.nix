@@ -42,6 +42,12 @@ rec {
                         proxyPass = "http://127.0.0.1:8083";
                     };
                 };
+                "sso.anil.lc" = {
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://10.11.1.8:8080";
+                    };
+                };
             };
         };
     };

@@ -15,6 +15,7 @@ rec {
             ./lgr.nix
             ./bot.nix
             ./synapse.nix
+            ./sso.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
@@ -22,6 +23,10 @@ rec {
             secrets.grafana-smtp = {
                 owner = "grafana";
                 group = "grafana";
+            };
+            secrets.zitadel = {
+                owner = "zitadel";
+                group = "zitadel";
             };
         };
         virtualisation.vmware.guest = {
