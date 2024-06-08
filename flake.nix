@@ -11,7 +11,7 @@
         inputs.nixpkgs.follows = "nixpkgs";
     };
     inputs.deploy-rs = {
-        url = "github:serokell/deploy-rs";
+        url = "github:Anillc/deploy-rs/patch-1";
         inputs.nixpkgs.follows = "nixpkgs";
     };
     inputs.dns = {
@@ -43,7 +43,8 @@
         };
         devShells.default = pkgs.mkShell {
             nativeBuildInputs = [
-                pkgs.deploy-rs.deploy-rs pkgs.sops pkgs.step-cli
+                pkgs.deploy-rs.deploy-rs pkgs.sops
+                pkgs.step-cli pkgs.wireguard-tools
             ];
         };
     }) // (with builtins; with nixpkgs.lib; {
