@@ -17,15 +17,6 @@ rec {
             defaultSopsFile = ./secrets.yaml;
             secrets.ca-key = {};
         };
-        bgp = {
-            enable = true;
-            upstream = {
-                enable = true;
-                asn = "7720";
-                address = "2602:fc1d:0:2::1";
-                multihop = true;
-            };
-        };
         firewall.publicTCPPorts = [ 80 443 ];
         services.nginx = {
             enable = true;

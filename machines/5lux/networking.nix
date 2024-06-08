@@ -18,4 +18,14 @@ in {
         address = [ "107.189.7.34/24" "2605:6400:30:e945::/48" ];
         gateway = [ "107.189.7.1" "2605:6400:30::1" ];
     };
+    bgp = {
+        enable = true;
+        upstream = {
+            enable = true;
+            multihop = true;
+            asn = "53667";
+            address = "2605:6400:ffff::2";
+            password = "lWAuRsXE";
+        };
+    };
 }

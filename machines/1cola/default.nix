@@ -33,7 +33,6 @@ rec {
             enable = true;
             headless = true;
         };
-        bgp.enable = true;
         firewall.publicTCPPorts = [ 16801 80 ];
         services.openssh.ports = [ 16801 22 ];
         services.influxdb2.enable = true;

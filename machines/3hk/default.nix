@@ -19,18 +19,6 @@ rec {
                 group = "nginx";
             };
         };
-        bgp = {
-            enable = true;
-            upstream = {
-                enable = true;
-                asn = "38008";
-                address = "2406:4440::1";
-            };
-            peers.aperix = { # APERIX
-                asn = "38008";
-                address = "2406:4440::100";
-            };
-        };
         services.vaultwarden = {
             enable = true;
             environmentFile = config.sops.secrets.vaultwarden.path;

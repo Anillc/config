@@ -22,6 +22,5 @@ rec {
                 discourse-restic = {};
             };
         };
-        bgp.enable = true;
     };
 }

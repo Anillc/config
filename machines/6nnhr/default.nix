@@ -14,6 +14,5 @@ rec {
             ./networking.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
-        bgp.enable = true;
     };
 }

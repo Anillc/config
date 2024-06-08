@@ -17,4 +17,5 @@ in {
         matchConfig.Name = "ens192";
         DHCP = "ipv4";
     };
+    bgp.enable = true;
 }

@@ -25,6 +25,7 @@ in {
             address = [ "${config.meta.v4}/32" "${config.meta.v6}/128" "${config.meta.externalV6}/128" ];
         }) config.wgi);
     }];
+    bgp.enable = true;
     services.hostapd = {
         enable = false;
         radios.wlp2s0 = {

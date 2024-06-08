@@ -19,7 +19,6 @@ rec {
             secrets.school-network.mode = "0755";
             secrets.dnsmasq-static-map = {};
         };
-        bgp.enable = true;
         systemd.services.qbittorrent = {
             wantedBy = [ "multi-user.target" ];
             after = [ "network.target" ];

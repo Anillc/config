@@ -19,12 +19,21 @@ in {
         gateway = [ "208.99.48.1" "2602:fc1d:0:2::1" ];
     };
     systemd.network.networks.deploy.matchConfig.Name = "deploy";
-    bgp.extraBirdConfig = ''
-        protocol static {
-            route 10.11.1.3/32 via "deploy";
-            ipv4 {
-                table igp_v4;
-            };
-        }
-    '';
+    bgp = {
+        enable = true;
+        upstream = {
+            enable = true;
+            asn = "7720";
+            address = "2602:fc1d:0:2::1";
+            multihop = true;
+        };
+        extraBirdConfig = ''
+            protocol static {
+                route 10.11.1.3/32 via "deploy";
+                ipv4 {
+                    table igp_v4;
+                };
+            }
+        '';
+    };
 }

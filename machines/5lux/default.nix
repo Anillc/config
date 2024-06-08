@@ -20,16 +20,6 @@ rec {
                 meilisearch = {};
             };
         };
-        bgp = {
-            enable = true;
-            upstream = {
-                enable = true;
-                multihop = true;
-                asn = "53667";
-                address = "2605:6400:ffff::2";
-                password = "lWAuRsXE";
-            };
-        };
         services.calibre-web = {
             enable = true;
             listen.ip = "127.0.0.1";

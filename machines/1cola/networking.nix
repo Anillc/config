@@ -24,18 +24,21 @@ in {
     systemd.network.networks.phone = {
         matchConfig.Name = "phone";
     };
-    bgp.extraBirdConfig = ''
-        protocol static {
-            route 10.11.1.4/32 via "phone";
-            ipv4 {
-                table igp_v4;
-            };
-        }
-        protocol static {
-            route fd11:1::4/128 via "phone";
-            ipv6 {
-                table igp_v6;
-            };
-        }
-    '';
+    bgp = {
+        enable = true;
+        extraBirdConfig = ''
+            protocol static {
+                route 10.11.1.4/32 via "phone";
+                ipv4 {
+                    table igp_v4;
+                };
+            }
+            protocol static {
+                route fd11:1::4/128 via "phone";
+                ipv6 {
+                    table igp_v6;
+                };
+            }
+        '';
+    };
 }
