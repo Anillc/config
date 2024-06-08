@@ -10,7 +10,6 @@ in {
         { inherit (cola.meta)   name wg-public-key; listen = 11001; peer = 16805; cost = 2320; }
         { inherit (hk.meta)     name wg-public-key; listen = 11003; peer = 11005; cost = 1870; }
         { inherit (koishi.meta) name wg-public-key; listen = 11004; peer = 11005; cost = 1910; }
-        { inherit (hk2.meta)    name wg-public-key; listen = 11006; peer = 11005; cost = 1920; }
         { inherit (fmt.meta)    name wg-public-key; listen = 11009; peer = 11005; cost = 1420; }
     ];
     systemd.network.networks.default-network = {

@@ -9,7 +9,6 @@ in {
     wgi = with machines.set; [
         { inherit (cola.meta) name wg-public-key; peer = 16808; cost = 200;  }
         { inherit (hk.meta)   name wg-public-key; peer = 11008; cost = 400;  }
-        { inherit (hk2.meta)  name wg-public-key; peer = 11008; cost = 3640; }
     ];
     systemd.network = mkMerge [{
         networks.enp2s0 = {

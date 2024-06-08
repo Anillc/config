@@ -9,6 +9,5 @@ in {
     wgi = with machines.set; [
         { inherit (hk.meta)  name wg-public-key; peer = 11002; cost = 1900; }
         { inherit (fmt.meta) name wg-public-key; peer = 11002; cost = 1300; }
-        { inherit (hk2.meta) name wg-public-key; peer = 11002; cost = 300;  }
     ];
 }
