@@ -11,7 +11,7 @@
         inputs.nixpkgs.follows = "nixpkgs";
     };
     inputs.deploy-rs = {
-        url = "github:Anillc/deploy-rs/patch-1";
+        url = "github:serokell/deploy-rs";
         inputs.nixpkgs.follows = "nixpkgs";
     };
     inputs.dns = {

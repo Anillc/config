@@ -45,16 +45,15 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1717874581,
-        "narHash": "sha256-TNz7ac1hDteIFA06XGfASuYGWz29XOVWuVXqIl/wcSE=",
-        "owner": "Anillc",
+        "lastModified": 1715699772,
+        "narHash": "sha256-sKhqIgucN5sI/7UQgBwsonzR4fONjfMr9OcHK/vPits=",
+        "owner": "serokell",
         "repo": "deploy-rs",
-        "rev": "e374991704c00882569e2c3944637e5e4225f5dd",
+        "rev": "b3ea6f333f9057b77efd9091119ba67089399ced",
         "type": "github"
       },
       "original": {
-        "owner": "Anillc",
-        "ref": "patch-1",
+        "owner": "serokell",
         "repo": "deploy-rs",
         "type": "github"
       }

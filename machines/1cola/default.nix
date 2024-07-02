@@ -12,8 +12,6 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./lgr.nix
-            ./bot.nix
             ./synapse.nix
             ./sso.nix
         ];
