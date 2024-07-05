@@ -14,5 +14,6 @@ rec {
             ./networking.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
+        nix.settings.substituters = lib.mkBefore [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
     };
 }
