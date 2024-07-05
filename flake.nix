@@ -45,6 +45,17 @@
             nativeBuildInputs = [
                 pkgs.deploy-rs.deploy-rs pkgs.sops
                 pkgs.step-cli pkgs.wireguard-tools
+                (pkgs.writeScriptBin "run" (let
+                    ms = pkgs.lib.filter (machine: machine.meta.enable) machines.list;
+                    addresses = map (machine: "root@${machine.meta.address}") ms;
+                    hosts = pkgs.lib.concatStringsSep " " addresses;
+                in ''
+                    #!${pkgs.runtimeShell}
+                    export PATH=$PATH:${pkgs.lib.makeBinPath (with pkgs; [
+                        pssh
+                    ])}
+                    pssh -H "${hosts}" --inline-stdout -p 100 "$@"
+                ''))
             ];
         };
     }) // (with builtins; with nixpkgs.lib; {
