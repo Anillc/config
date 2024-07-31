@@ -54,7 +54,7 @@ rec {
             enable = true;
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
-            clientMaxBodySize = "1024m";
+            clientMaxBodySize = "0";
             virtualHosts = {
                 "bot.a" = {
                     enableACME = true;

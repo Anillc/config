@@ -18,6 +18,10 @@ rec {
             defaultSopsFile = ./secrets.yaml;
             secrets = {
                 meilisearch = {};
+                minio = {
+                    owner = "minio";
+                    group = "minio";
+                };
             };
         };
         services.calibre-web = {
@@ -33,6 +37,18 @@ rec {
             package = pkgs-meilisearch.meilisearch;
             masterKeyEnvironmentFile = config.sops.secrets.meilisearch.path;
         };
+        services.minio = {
+            enable = true;
+            dataDir = [ "/data/minio" ];
+            listenAddress = ":9000";
+            consoleAddress = ":9001";
+            rootCredentialsFile = config.sops.secrets.minio.path;
+            region = "lu-1";
+        };
+        systemd.services.minio.environment = {
+            MINIO_SERVER_URL = "https://s3.anil.lc";
+            MINIO_BROWSER_REDIRECT_URL = "https://minio.anil.lc";
+        };
         security.acme.certs = lib.mkMerge [ (lib.genAttrs [
             "search.koishi.chat" "search.cordis.moe"
         ] (_: {
@@ -40,6 +56,7 @@ rec {
             email = "admin@forum.koishi.chat";
         })) (lib.genAttrs [
             "c.ff.ci" "sso.anil.lc" "ff.ci"
+            "s3.anil.lc" "minio.anil.lc"
         ] (_: {
             server = "https://acme-v02.api.letsencrypt.org/directory";
             email = "void@anil.lc";
@@ -49,13 +66,41 @@ rec {
             enable = true;
             recommendedProxySettings = true;
             recommendedTlsSettings = true;
+            clientMaxBodySize = "0";
             virtualHosts = {
+                "ff.ci" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://10.11.1.9:3000";
+                    };
+                };
                 "c.ff.ci" = {
                     enableACME = true;
                     forceSSL = true;
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8083";
+                    };
+                };
+                "s3.anil.lc" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:9000";
+                    };
+                };
+                "minio.anil.lc" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:9001";
+                        extraConfig = ''
+                            proxy_set_header X-NginX-Proxy true;
+                        '';
                     };
                 };
                 "sso.anil.lc" = {
@@ -78,14 +123,6 @@ rec {
                     forceSSL = true;
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:7700";
-                    };
-                };
-                "ff.ci" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://10.11.1.9:3000";
                     };
                 };
             };
