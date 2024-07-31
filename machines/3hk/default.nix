@@ -5,7 +5,7 @@ rec {
         wg-public-key = "FDW5S+3nNS883Q5mKVwym0dwEYKF+nuQ1rPZ+sWVqgc=";
         syncthingId = "2QRC73T-DM7XGW5-NLACT6B-ODINVTO-BNSHQGF-52IAOSR-OAKHZZK-EAPDIAL";
     };
-    configuration = { config, pkgs, ... }: {
+    configuration = { config, pkgs, lib, ... }: {
         inherit meta;
         imports = [
             ./hardware.nix
@@ -27,13 +27,24 @@ rec {
                 SIGNUPS_ALLOWED = false;
             };
         };
+        services.ntfy-sh = {
+            enable = true;
+            settings = {
+                behind-proxy = true;
+                listen-http = ":8080";
+                base-url = "https://ntfy.anil.lc";
+                auth-default-access = "deny-all";
+            };
+        };
         sync = [
             "/var/lib/bitwarden_rs"
         ];
-        security.acme.certs."m.anil.lc" = {
+        security.acme.certs = lib.genAttrs [
+            "m.anil.lc" "ntfy.anil.lc"
+        ] (_: {
             server = "https://acme-v02.api.letsencrypt.org/directory";
             email = "void@anil.lc";
-        };
+        });
         firewall.publicTCPPorts = [ 80 443 ];
         services.nginx = {
             enable = true;
@@ -43,6 +54,14 @@ rec {
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8000";
+                    };
+                };
+                "ntfy.anil.lc" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:8080";
                     };
                 };
                 "bot.anillc.cn" = {
