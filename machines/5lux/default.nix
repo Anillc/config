@@ -33,26 +33,17 @@ rec {
             package = pkgs-meilisearch.meilisearch;
             masterKeyEnvironmentFile = config.sops.secrets.meilisearch.path;
         };
-        security.acme.certs."search.koishi.chat" = {
+        security.acme.certs = lib.mkMerge [ (lib.genAttrs [
+            "search.koishi.chat" "search.cordis.moe"
+        ] (_: {
             server = "https://acme-v02.api.letsencrypt.org/directory";
             email = "admin@forum.koishi.chat";
-        };
-        security.acme.certs."search.cordis.moe" = {
-            server = "https://acme-v02.api.letsencrypt.org/directory";
-            email = "admin@forum.koishi.chat";
-        };
-        security.acme.certs."c.ff.ci" = {
+        })) (lib.genAttrs [
+            "c.ff.ci" "sso.anil.lc" "ff.ci"
+        ] (_: {
             server = "https://acme-v02.api.letsencrypt.org/directory";
             email = "void@anil.lc";
-        };
-        security.acme.certs."sso.anil.lc" = {
-            server = "https://acme-v02.api.letsencrypt.org/directory";
-            email = "void@anil.lc";
-        };
-        security.acme.certs."ff.ci" = {
-            server = "https://acme-v02.api.letsencrypt.org/directory";
-            email = "void@anil.lc";
-        };
+        })) ];
         firewall.publicTCPPorts = [ 80 443 ];
         services.nginx = {
             enable = true;
