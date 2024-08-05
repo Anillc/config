@@ -18,6 +18,7 @@ rec {
             defaultSopsFile = ./secrets.yaml;
             secrets = {
                 meilisearch = {};
+                miniflux = {};
                 minio = {
                     owner = "minio";
                     group = "minio";
@@ -45,6 +46,11 @@ rec {
             rootCredentialsFile = config.sops.secrets.minio.path;
             region = "lu-1";
         };
+        services.miniflux = {
+            enable = true;
+            adminCredentialsFile = config.sops.secrets.miniflux.path;
+            config.LISTEN_ADDR = "127.0.0.1:8081";
+        };
         systemd.services.minio.environment = {
             MINIO_SERVER_URL = "https://s3.anil.lc";
             MINIO_BROWSER_REDIRECT_URL = "https://minio.anil.lc";
@@ -56,7 +62,7 @@ rec {
             email = "admin@forum.koishi.chat";
         })) (lib.genAttrs [
             "c.ff.ci" "sso.anil.lc" "ff.ci"
-            "s3.anil.lc" "minio.anil.lc"
+            "s3.anil.lc" "minio.anil.lc" "rss.anil.lc"
         ] (_: {
             server = "https://acme-v02.api.letsencrypt.org/directory";
             email = "void@anil.lc";
@@ -109,6 +115,14 @@ rec {
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://10.11.1.8:8080";
+                    };
+                };
+                "rss.anil.lc" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:8081";
                     };
                 };
                 "search.koishi.chat" = {
