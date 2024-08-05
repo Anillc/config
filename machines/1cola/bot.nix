@@ -75,34 +75,37 @@ let
         };
     };
 in {
-    virtualisation.oci-containers = {
-        backend = "podman";
-        containers.pma = {
-            image = "docker.io/library/phpmyadmin";
-            volumes = [
-                "/run/mysqld/mysqld.sock:/tmp/mysql.sock"
-            ];
-            environment = {
-                PMA_HOST = "localhost";
-                # PMA_ARBITRARY = "1";
-            };
-            ports = [ "8444:80" ];
+    systemd.tmpfiles.rules = [ "d /var/lib/chronocat 0700 root root" ];
+    systemd.services.chronocat = {
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+            WorkingDirectory = "/var/lib/chronocat";
+            ExecStart = "${inputs.chronocat-nix.packages.x86_64-linux.default}/bin/chronocat";
         };
     };
-    services.mysql = {
-        enable = true;
-        package = pkgs.mariadb;
-        initialDatabases = [{
-            name = "bot";
-        }];
-    };
-    services.mysqlBackup = {
-        enable = true;
-        databases = [ "bot" ];
-        user = "syncthing";
-    };
-    sync = [ "/var/backup/mysql" ];
-    services.telegraf.extraConfig.mysql.servers = [ "$MYSQL_SERVER" ];
+
+    # virtualisation.oci-containers = {
+    #     backend = "podman";
+    #     containers.pma = {
+    #         image = "docker.io/library/phpmyadmin";
+    #         volumes = [
+    #             "/run/mysqld/mysqld.sock:/tmp/mysql.sock"
+    #         ];
+    #         environment = {
+    #             PMA_HOST = "localhost";
+    #             # PMA_ARBITRARY = "1";
+    #         };
+    #         ports = [ "8444:80" ];
+    #     };
+    # };
+    # services.mysql = {
+    #     enable = true;
+    #     package = pkgs.mariadb;
+    #     initialDatabases = [{
+    #         name = "bot";
+    #     }];
+    # };
+    # services.telegraf.extraConfig.mysql.servers = [ "$MYSQL_SERVER" ];
     # systemd.services."container@bot".after = [ "mysql.service" ];
     # containers.bot = {
     #     autoStart = true;
@@ -114,7 +117,7 @@ in {
     #         documentation.enable = false;
     #         networking.firewall.enable = false;
     #         i18n.defaultLocale = "zh_CN.UTF-8";
-    #         fonts.fonts = with pkgs; [
+    #         fonts.packages = with pkgs; [
     #             jetbrains-mono
     #             source-han-sans
     #         ];

@@ -14,6 +14,7 @@ rec {
             ./networking.nix
             ./synapse.nix
             ./sso.nix
+            ./bot.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
