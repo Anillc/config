@@ -65,10 +65,10 @@ let
                 appKey = "\${{ env.YOUDAO_KEY }}";
                 secret = "\${{ env.YOUDAO_SECRET }}";
             };
-            github = {
-                appId = "\${{ env.GITHUB_APPID }}";
-                appSecret = "\${{ env.GITHUB_APPSECRET }}";
-            };
+            # github = {
+            #     appId = "\${{ env.GITHUB_APPID }}";
+            #     appSecret = "\${{ env.GITHUB_APPSECRET }}";
+            # };
             "@ifrank/koishi-plugin-xibao" = {};
             "5k" = {};
         };
