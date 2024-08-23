@@ -12,13 +12,13 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./firefish.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets = {
                 meilisearch = {};
                 miniflux = {};
+                rsshub = {};
                 minio = {
                     owner = "minio";
                     group = "minio";
@@ -38,6 +38,10 @@ rec {
             package = pkgs-meilisearch.meilisearch;
             masterKeyEnvironmentFile = config.sops.secrets.meilisearch.path;
         };
+        systemd.services.minio.environment = {
+            MINIO_SERVER_URL = "https://s3.anil.lc";
+            MINIO_BROWSER_REDIRECT_URL = "https://minio.anil.lc";
+        };
         services.minio = {
             enable = true;
             dataDir = [ "/data/minio" ];
@@ -51,9 +55,13 @@ rec {
             adminCredentialsFile = config.sops.secrets.miniflux.path;
             config.LISTEN_ADDR = "127.0.0.1:8081";
         };
-        systemd.services.minio.environment = {
-            MINIO_SERVER_URL = "https://s3.anil.lc";
-            MINIO_BROWSER_REDIRECT_URL = "https://minio.anil.lc";
+        virtualisation.oci-containers = {
+            backend = "podman";
+            containers.rsshub = {
+                image = "docker.io/diygod/rsshub:chromium-bundled";
+                ports = [ "8082:1200" ];
+                environmentFiles = [ config.sops.secrets.rsshub.path ];
+            };
         };
         security.acme.certs = lib.mkMerge [ (lib.genAttrs [
             "search.koishi.chat" "search.cordis.moe"
@@ -61,7 +69,7 @@ rec {
             server = "https://acme-v02.api.letsencrypt.org/directory";
             email = "admin@forum.koishi.chat";
         })) (lib.genAttrs [
-            "c.ff.ci" "sso.anil.lc" "ff.ci"
+            "c.ff.ci" "sso.anil.lc" "rsshub.anil.lc"
             "s3.anil.lc" "minio.anil.lc" "rss.anil.lc"
         ] (_: {
             server = "https://acme-v02.api.letsencrypt.org/directory";
@@ -74,14 +82,6 @@ rec {
             recommendedTlsSettings = true;
             clientMaxBodySize = "0";
             virtualHosts = {
-                "ff.ci" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://10.11.1.9:3000";
-                    };
-                };
                 "c.ff.ci" = {
                     enableACME = true;
                     forceSSL = true;
@@ -123,6 +123,14 @@ rec {
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8081";
+                    };
+                };
+                "rsshub.anil.lc" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:8082";
                     };
                 };
                 "search.koishi.chat" = {
