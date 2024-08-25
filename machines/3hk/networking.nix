@@ -13,7 +13,6 @@ in {
         { inherit (lux.meta)     name wg-public-key; listen = 11005; peer = 11003; cost = 1870; }
         { inherit (nnhr.meta)    name wg-public-key; listen = 11006;               cost = 110;   }
         { inherit (r.meta)       name wg-public-key; listen = 11008;               cost = 400;  }
-        { inherit (fmt.meta)     name wg-public-key; listen = 11009; peer = 11003; cost = 1500; }
     ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens192";

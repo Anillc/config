@@ -11,7 +11,6 @@ in {
         { inherit (hk.meta)   name wg-public-key; listen = 11003; peer = 11004; cost = 21;   }
         { inherit (lux.meta)  name wg-public-key; listen = 11005; peer = 11004; cost = 1910; }
         { inherit (nnhr.meta) name wg-public-key; listen = 11006;               cost = 100;  }
-        { inherit (fmt.meta)  name wg-public-key; listen = 11009; peer = 11004; cost = 1500; }
     ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens5";

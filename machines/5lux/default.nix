@@ -63,6 +63,10 @@ rec {
                 environmentFiles = [ config.sops.secrets.rsshub.path ];
             };
         };
+        services.jellyfin = {
+            enable = true;
+            dataDir = "/data/jellyfin";
+        };
         security.acme.certs = lib.mkMerge [ (lib.genAttrs [
             "search.koishi.chat" "search.cordis.moe"
         ] (_: {
@@ -71,6 +75,7 @@ rec {
         })) (lib.genAttrs [
             "c.ff.ci" "sso.anil.lc" "rsshub.anil.lc"
             "s3.anil.lc" "minio.anil.lc" "rss.anil.lc"
+            "jellyfin.anil.lc"
         ] (_: {
             server = "https://acme-v02.api.letsencrypt.org/directory";
             email = "void@anil.lc";
@@ -131,6 +136,14 @@ rec {
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8082";
+                    };
+                };
+                "jellyfin.anil.lc" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:8096";
                     };
                 };
                 "search.koishi.chat" = {

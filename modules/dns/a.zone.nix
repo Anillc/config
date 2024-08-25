@@ -26,8 +26,6 @@
             "nnhr".AAAA      = [ "fd11::6"   ];
             "r".A            = [ "10.11.0.8" ];
             "r".AAAA         = [ "fd11::8"   ];
-            "fmt".A          = [ "10.11.0.9" ];
-            "fmt".AAAA       = [ "fd11::9"   ];
 
             "rsrc".A         = [ "10.11.1.5" ];
 
@@ -37,7 +35,7 @@
             "bot".CNAME      = [ "cola.a." ];
             "restic".CNAME   = [ "cola.a." ];
 
-            "ca".CNAME       = [ "fmt.a." ];
+            "ca".CNAME       = [ "hk.a." ];
 
             "ha".CNAME       = [ "r.a." ];
             "qb".CNAME       = [ "r.a." ];

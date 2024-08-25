@@ -10,10 +10,12 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
+            ./ca
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.vaultwarden = {};
+            secrets.ca-key = {};
             secrets.bot-proxy-auth = {
                 owner = "nginx";
                 group = "nginx";
@@ -50,6 +52,13 @@ rec {
             enable = true;
             recommendedProxySettings = true;
             virtualHosts = {
+                "ca.a" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyPass = "https://ca.a:8443";
+                    };
+                };
                 "vw.anillc.cn" = {
                     locations."/" = {
                         proxyWebsockets = true;

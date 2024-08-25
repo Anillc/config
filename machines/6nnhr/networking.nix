@@ -11,7 +11,6 @@ in {
         { inherit (hk.meta)     name wg-public-key; peer = 11006; cost = 110;  }
         { inherit (koishi.meta) name wg-public-key; peer = 11006; cost = 100;  }
         { inherit (lux.meta)    name wg-public-key; peer = 11006; cost = 2550; }
-        { inherit (fmt.meta)    name wg-public-key; peer = 11006; cost = 1600; }
     ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens192";

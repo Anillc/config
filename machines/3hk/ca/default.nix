@@ -17,8 +17,8 @@ with lib;
             insecureAddress = "";
             dnsNames = [
                 "ca.a"
-                "10.11.0.9"
-                "fd11::9"
+                "10.11.0.3"
+                "fd11::3"
             ];
             ssh = {
                 hostKey = "${./ssh_host_ca_key}";
