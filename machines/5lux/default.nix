@@ -67,6 +67,36 @@ rec {
             enable = true;
             dataDir = "/data/jellyfin";
         };
+        systemd.services.dex.serviceConfig.StateDirectory = "dex";
+        services.dex = {
+            enable = true;
+            settings = {
+                issuer = "https://sso.anil.lc/dex";
+                storage = {
+                    type = "sqlite3";
+                    config.file = "/var/lib/dex/dex.db";
+                };
+                web = {
+                    http = "127.0.0.1:8084";
+                    clientRemoteIP.header = "X-Forwarded-For";
+                };
+                enablePasswordDB = true;
+                staticClients = [
+                    # {
+                    #     id = "id";
+                    #     name = "name";
+                    #     redirectURIs = [ "https://example.com/callback" ];
+                    #     secretFile = config.sops.secrets.secret.path;
+                    # }
+                ];
+                staticPasswords = [ {
+                    email = "void@anil.lc";
+                    hash = "$2y$10$9fDdkCnnmcV5BOvNqNebGeyn/ltn5lr2ZaT0yWFOg.ZT3d7oAe2we";
+                    username = "Anillc";
+                    userID = "474a8901-d4de-45ea-ab6c-5a8c307e8dd8";
+                } ];
+            };
+        };
         security.acme.certs = lib.mkMerge [ (lib.genAttrs [
             "search.koishi.chat" "search.cordis.moe"
         ] (_: {
@@ -119,7 +149,7 @@ rec {
                     forceSSL = true;
                     locations."/" = {
                         proxyWebsockets = true;
-                        proxyPass = "http://10.11.1.8:8080";
+                        proxyPass = "http://127.0.0.1:8084";
                     };
                 };
                 "rss.anil.lc" = {

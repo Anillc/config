@@ -13,7 +13,6 @@ rec {
             ./hardware.nix
             ./networking.nix
             ./synapse.nix
-            ./sso.nix
             ./bot.nix
         ];
         sops = {
@@ -22,10 +21,6 @@ rec {
             secrets.grafana-smtp = {
                 owner = "grafana";
                 group = "grafana";
-            };
-            secrets.zitadel = {
-                owner = "zitadel";
-                group = "zitadel";
             };
         };
         virtualisation.vmware.guest = {
