@@ -7,6 +7,7 @@
     inputs.anillc.url = "github:Anillc/flakes";
     inputs.koinix.url = "github:Anillc/koinix";
     inputs.chronocat-nix.url = "github:Anillc/chronocat.nix";
+    inputs.wxhelper-nix.url = "github:Anillc/wxhelper-nix";
     inputs.sops-nix = {
         url = "github:Mic92/sops-nix";
         inputs.nixpkgs.follows = "nixpkgs";
@@ -24,7 +25,10 @@
         flake = false;
     };
 
-    outputs = inputs@{ self, nixpkgs, flake-utils, sops-nix, deploy-rs, anillc, ... }: let
+    outputs = inputs@{
+        self, nixpkgs, flake-utils, flake-parts,
+        sops-nix, deploy-rs, anillc, wxhelper-nix, ...
+    }: let
         machines = import ./machines nixpkgs.lib;
         modules = import ./modules;
     in flake-utils.lib.eachDefaultSystem (system: let 

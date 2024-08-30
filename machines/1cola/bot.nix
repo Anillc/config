@@ -16,7 +16,7 @@ let
                 endpoint = "http://127.0.0.1:5500";
                 token = "\${{ env.CHRONOCAT_TOKEN }}";
             };
-            adapter-discord.token = "\${{ env.DISCORD_TOKEN }}";
+            # adapter-discord.token = "\${{ env.DISCORD_TOKEN }}";
             adapter-telegram = {
                 protocol = "polling";
                 token = "\${{ env.TELEGRAM_TOKEN }}";
@@ -65,21 +65,41 @@ let
                 appKey = "\${{ env.YOUDAO_KEY }}";
                 secret = "\${{ env.YOUDAO_SECRET }}";
             };
-            # github = {
-            #     appId = "\${{ env.GITHUB_APPID }}";
-            #     appSecret = "\${{ env.GITHUB_APPSECRET }}";
-            # };
+            github = {
+                appId = "\${{ env.GITHUB_APPID }}";
+                appSecret = "\${{ env.GITHUB_APPSECRET }}";
+            };
             "@ifrank/koishi-plugin-xibao" = {};
             "5k" = {};
         };
     };
+    wxhelper = (inputs.flake-parts.lib.evalFlakeModule {
+        inherit inputs;
+        specialArgs = { inherit pkgs; };
+    } {
+        imports = [ inputs.wxhelper-nix.flakeModules.default ];
+        wxhelper = {
+            port = 5901;
+            display = 115;
+        };
+    }).config.wxhelper.wxhelper;
 in {
-    systemd.tmpfiles.rules = [ "d /var/lib/chronocat 0700 root root" ];
+    systemd.tmpfiles.rules = [
+        "d /var/lib/chronocat 0700 root root"
+        "d /var/lib/wxhelper  0700 root root"
+    ];
     systemd.services.chronocat = {
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
             WorkingDirectory = "/var/lib/chronocat";
             ExecStart = "${inputs.chronocat-nix.packages.x86_64-linux.default}/bin/chronocat";
+        };
+    };
+    systemd.services.wxhelper = {
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+            WorkingDirectory = "/var/lib/wxhelper";
+            ExecStart = "${wxhelper}/bin/wxhelper";
         };
     };
 
