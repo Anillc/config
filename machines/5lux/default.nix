@@ -55,14 +55,6 @@ rec {
             adminCredentialsFile = config.sops.secrets.miniflux.path;
             config.LISTEN_ADDR = "127.0.0.1:8081";
         };
-        virtualisation.oci-containers = {
-            backend = "podman";
-            containers.rsshub = {
-                image = "docker.io/diygod/rsshub:chromium-bundled";
-                ports = [ "8082:1200" ];
-                environmentFiles = [ config.sops.secrets.rsshub.path ];
-            };
-        };
         services.jellyfin = {
             enable = true;
             dataDir = "/data/jellyfin";
@@ -165,7 +157,7 @@ rec {
                     forceSSL = true;
                     locations."/" = {
                         proxyWebsockets = true;
-                        proxyPass = "http://127.0.0.1:8082";
+                        proxyPass = "http://cola:8082";
                     };
                 };
                 "jellyfin.anil.lc" = {

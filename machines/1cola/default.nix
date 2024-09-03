@@ -18,6 +18,7 @@ rec {
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.bot-secrets = {};
+            secrets.rsshub = {};
             secrets.grafana-smtp = {
                 owner = "grafana";
                 group = "grafana";
@@ -45,6 +46,14 @@ rec {
             listenAddress = "127.0.0.1:8081";
             extraFlags = [ "--no-auth" ];
             dataDir = "/backup/restic";
+        };
+        virtualisation.oci-containers = {
+            backend = "podman";
+            containers.rsshub = {
+                image = "docker.io/diygod/rsshub:chromium-bundled";
+                ports = [ "8082:1200" ];
+                environmentFiles = [ config.sops.secrets.rsshub.path ];
+            };
         };
         services.nginx = {
             enable = true;
