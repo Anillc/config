@@ -7,10 +7,10 @@ let
     machines = import ./.. lib;
 in {
     wgi = with machines.set; [
-        { inherit (cola.meta)   name wg-public-key; listen = 11001; peer = 16805; cost = 2320; }
-        { inherit (hk.meta)     name wg-public-key; listen = 11003; peer = 11005; cost = 1870; }
-        { inherit (koishi.meta) name wg-public-key; listen = 11004; peer = 11005; cost = 1910; }
-        { inherit (nnhr.meta)   name wg-public-key; listen = 11006;               cost = 2550; }
+        { inherit (cola.meta)   id name wg-public-key; listen = 11001; peer = 16805; cost = 2320; }
+        { inherit (hk.meta)     id name wg-public-key; listen = 11003; peer = 11005; cost = 1870; }
+        { inherit (koishi.meta) id name wg-public-key; listen = 11004; peer = 11005; cost = 1910; }
+        { inherit (nnhr.meta)   id name wg-public-key; listen = 11006;               cost = 2550; }
     ];
     systemd.network.networks.default-network = {
         matchConfig.Name = "ens3";

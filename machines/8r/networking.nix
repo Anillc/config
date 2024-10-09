@@ -7,8 +7,8 @@ let
     machines = import ./.. lib;
 in {
     wgi = with machines.set; [
-        { inherit (cola.meta) name wg-public-key; peer = 16808; cost = 200;  }
-        { inherit (hk.meta)   name wg-public-key; peer = 11008; cost = 400;  }
+        { inherit (cola.meta) id name wg-public-key; peer = 16808; cost = 200;  }
+        { inherit (hk.meta)   id name wg-public-key; peer = 11008; cost = 400;  }
     ];
     systemd.network = mkMerge [{
         networks.enp2s0 = {

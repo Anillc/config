@@ -7,7 +7,7 @@ let
     machines = import ./.. lib;
 in {
     wgi = with machines.set; [
-        { inherit (hk.meta)  name wg-public-key; peer = 11002; cost = 1900; }
+        { inherit (hk.meta) id name wg-public-key; peer = 11002; cost = 1900; }
     ];
     bgp = {
         enable = true;
