@@ -5,9 +5,7 @@ rec {
         wg-public-key = "IY76y7a8L+58gFUWmhuAcedUvzSxmG7cshRRwzNHmXM=";
         syncthingId = "TNLEMYT-MGBHESP-FEPBNG6-QYEZTIC-QKFIUQN-MXDUIYU-PXCPHV6-KDV5FQZ";
     };
-    configuration = { config, pkgs, lib, inputs, ... }: let
-        pkgs-meilisearch = import inputs.nixpkgs-meilisearch { inherit (pkgs) system; };
-    in {
+    configuration = { config, pkgs, lib, ... }: {
         inherit meta;
         imports = [
             ./hardware.nix
