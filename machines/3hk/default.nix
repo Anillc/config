@@ -25,7 +25,7 @@ rec {
             enable = true;
             environmentFile = config.sops.secrets.vaultwarden.path;
             config = {
-                DOMAIN = "https://vw.anillc.cn";
+                DOMAIN = "https://vw.anil.lc";
                 SIGNUPS_ALLOWED = false;
             };
         };
@@ -41,25 +41,14 @@ rec {
         sync = [
             "/var/lib/bitwarden_rs"
         ];
-        security.acme.certs = lib.genAttrs [
-            "m.anil.lc" "ntfy.anil.lc"
-        ] (_: {
-            server = "https://acme-v02.api.letsencrypt.org/directory";
-            email = "void@anil.lc";
-        });
         firewall.publicTCPPorts = [ 80 443 ];
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;
             virtualHosts = {
-                "ca.a" = {
+                "vw.anil.lc" = {
                     enableACME = true;
                     forceSSL = true;
-                    locations."/" = {
-                        proxyPass = "https://ca.a:8443";
-                    };
-                };
-                "vw.anillc.cn" = {
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8000";
@@ -72,35 +61,6 @@ rec {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8080";
                     };
-                };
-                "bot.anillc.cn" = {
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://bot.a:8056";
-                        basicAuthFile = config.sops.secrets.bot-proxy-auth.path;
-                    };
-                    locations."/github" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://bot.a:8056";
-                    };
-                };
-                "ff.ci" = {
-                    locations."/s/" = {
-                        proxyPass = "http://bot.a:8056";
-                    };
-                };
-                "m.anil.lc" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/".extraConfig = "return 404;";
-                    locations."/_matrix".proxyPass = "http://cola.a:8008";
-                    locations."/_synapse/client".proxyPass = "http://cola.a:8008";
-                    locations."= /.well-known/matrix/server".extraConfig = ''
-                        return 200 '{ "m.server": "m.anil.lc:443" }';
-                    '';
-                    locations."= /.well-known/matrix/client".extraConfig = ''
-                        return 200 '{ "m.homeserver": { "base_url": "https://m.anil.lc" } }';
-                    '';
                 };
             };
         };

@@ -32,7 +32,6 @@ let
             };
         })
     ];
-    mapList = list: value: listToAttrs (map (flip nameValuePair value) list);
 in {
     services.postgresql.package = pkgs.postgresql_13;
     services.discourse = {
@@ -54,7 +53,7 @@ in {
 
     services.restic.backups.discourse = {
         initialize = true;
-        repository = "rest:https://restic.a/koishi-discourse";
+        repository = "rest:http://cola.a:8081/koishi-discourse";
         passwordFile = config.sops.secrets.discourse-restic.path;
         paths = [ "/var/lib/discourse/uploads" "/var/lib/discourse/discourse.psql" ];
         backupPrepareCommand = ''
@@ -68,10 +67,9 @@ in {
         };
     };
 
-    security.acme.certs = mapList [ "forum.koishi.xyz" "www.koishi.xyz" "koishi.xyz" ] {
-        server = "https://acme-v02.api.letsencrypt.org/directory";
-        email = "admin@forum.koishi.chat";
-    };
+    security.acme.certs = lib.genAttrs [
+        "forum.koishi.xyz" "www.koishi.xyz" "koishi.xyz"
+    ] (_: { email = "admin@forum.koishi.chat"; });
     firewall.publicTCPPorts = [ 80 443 ];
     services.nginx = {
         enable = true;

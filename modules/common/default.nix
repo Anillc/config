@@ -29,9 +29,7 @@ with lib;
         optimise.automatic = true;
         settings = {
             auto-optimise-store = true;
-            substituters = [
-                "https://anillc.cachix.org"
-            ];
+            substituters = [ "https://anillc.cachix.org" ];
             trusted-public-keys = [
                 "anillc.cachix.org-1:VmWDYKHoDiT0CKs+6daDcTz3Ur+gkw4k0kcHIeF6dF8="
             ];
@@ -42,6 +40,7 @@ with lib;
             dates = "Sun 6:00";
         };
     };
+    # TODO: remove?
     nixpkgs.config.permittedInsecurePackages = [
         "nodejs-16.20.2"
     ];
@@ -61,7 +60,6 @@ with lib;
         };
     };
     documentation.enable = false;
-    boot.kernelModules = [ "vrf" ];
     security.pki.certificates = [
         ''
             -----BEGIN CERTIFICATE-----
@@ -78,4 +76,8 @@ with lib;
             -----END CERTIFICATE-----
         ''
     ];
+    security.acme = {
+        acceptTerms = true;
+        defaults.email = "void@anil.lc";
+    };
 }

@@ -16,8 +16,6 @@ with lib;
         "net.ipv4.ip_forward" = 1;
         "net.ipv6.conf.all.forwarding" = 1;
         "net.ipv4.conf.all.rp_filter" = 0;
-        "net.ipv6.conf.all.seg6_enabled" = 1;
-        "net.vrf.strict_mode" = 1;
     };
     systemd.services.systemd-networkd-wait-online = {
         serviceConfig.ExecStart = mkForce [ "" "${pkgs.coreutils}/bin/true" ];
@@ -36,14 +34,6 @@ with lib;
                 "${config.meta.externalV6}/128"
             ];
         };
-        netdevs.seg = {
-            netdevConfig = {
-                Name = "seg";
-                Kind = "vrf";
-            };
-            vrfConfig.Table = 114;
-        };
-        networks.seg.matchConfig.Name = "seg";
     };
     firewall.extraPostroutingFilterRules = ''
         meta iifname br11 meta mark set 0x114

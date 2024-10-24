@@ -41,17 +41,14 @@ in {
                 services.dnsmasq = {
                     enable = true;
                     resolveLocalQueries = false;
-                    settings = {
-                        server = [
+                    settings.server = [
                             "/a/10.11.1.1"
 
                             "114.114.114.114"
                             "223.5.5.5"
                             "8.8.8.8"
                             "8.8.4.4"
-                        ];
-                        address = "/api.bilibili.com/240e:f7:e01f:f1::30";
-                    };
+                    ];
                 };
             };
         };

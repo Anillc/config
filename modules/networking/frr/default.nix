@@ -55,27 +55,6 @@ in {
                   neighbor ipeers activate
                  exit-address-family
                 exit
-                router bgp 142055 vrf seg
-                 bgp router-id ${config.meta.v4}
-                 no bgp ebgp-requires-policy
-                 no bgp default ipv4-unicast
-                 address-family ipv4 unicast
-                  redistribute connected
-                  rd vpn export ${config.meta.v4}:114
-                  rt vpn both 142055:114
-                  sid vpn export auto
-                  export vpn
-                  import vpn
-                 exit-address-family
-                 address-family ipv6 unicast
-                  redistribute connected
-                  rd vpn export ${config.meta.v4}:114
-                  rt vpn both 142055:114
-                  sid vpn export auto
-                  export vpn
-                  import vpn
-                 exit-address-family
-                exit
             '';
         };
     };

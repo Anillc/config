@@ -16,7 +16,7 @@ with lib;
             key = "${./intermediate_ca_key}";
             insecureAddress = "";
             dnsNames = [
-                "ca.a"
+                "hk.a"
                 "10.11.0.3"
                 "fd11::3"
             ];

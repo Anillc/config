@@ -8,42 +8,28 @@ rec {
     configuration = { config, pkgs, lib, ... }: {
         inherit meta;
         networking.hostName = "Anillc-linux";
-        nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./synapse.nix
             ./bot.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.bot-secrets = {};
             secrets.rsshub = {};
-            secrets.grafana-smtp = {
-                owner = "grafana";
-                group = "grafana";
-            };
         };
+        nix.settings.substituters = lib.mkBefore [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
         virtualisation.vmware.guest = {
             enable = true;
             headless = true;
         };
         firewall.publicTCPPorts = [ 16801 80 ];
         services.openssh.ports = [ 16801 22 ];
+        # port: 8086
         services.influxdb2.enable = true;
-        services.grafana = {
-            enable = true;
-            settings.smtp = {
-                enable = true;
-                user = "alert@anillc.cn";
-                host = "smtp.ym.163.com:25";
-                passwordFile = config.sops.secrets.grafana-smtp.path;
-                fromAddress = "alert@anillc.cn";
-            };
-        };
         services.restic.server = {
             enable = true;
-            listenAddress = "127.0.0.1:8081";
+            listenAddress = "0.0.0.0:8081";
             extraFlags = [ "--no-auth" ];
             dataDir = "/backup/restic";
         };
@@ -53,56 +39,6 @@ rec {
                 image = "docker.io/diygod/rsshub:chromium-bundled";
                 ports = [ "8082:1200" ];
                 environmentFiles = [ config.sops.secrets.rsshub.path ];
-            };
-        };
-        services.nginx = {
-            enable = true;
-            recommendedProxySettings = true;
-            recommendedTlsSettings = true;
-            clientMaxBodySize = "0";
-            virtualHosts = {
-                "bot.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://127.0.0.1:8056";
-                    };
-                };
-                "panel.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://127.0.0.1:3000";
-                    };
-                };
-                "db.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyPass = "http://127.0.0.1:8444";
-                    };
-                };
-                "influxdb.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyPass = "http://127.0.0.1:8086";
-                    };
-                };
-                "biliapi.a" = {
-                    locations."/" = {
-                        proxyPass = "http://127.0.0.1:8080";
-                    };
-                };
-                "restic.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyPass = "http://127.0.0.1:8081";
-                    };
-                };
             };
         };
     };

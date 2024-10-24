@@ -4,8 +4,8 @@
     zone = with dns.lib.combinators; {
         SOA = {
             nameServer = "ns1";
-            adminEmail = "noc@anillc.cn";
-            serial = 2022072002;
+            adminEmail = "void@anil.lc";
+            serial = 2024102401;
         };
         NS = [ "ns1.a." ];
         subdomains = {
@@ -26,23 +26,6 @@
             "nnhr".AAAA      = [ "fd11::6"   ];
             "r".A            = [ "10.11.0.8" ];
             "r".AAAA         = [ "fd11::8"   ];
-
-            "rsrc".A         = [ "10.11.1.5" ];
-
-            "influxdb".CNAME = [ "cola.a." ];
-            "panel".CNAME    = [ "cola.a." ];
-            "db".CNAME       = [ "cola.a." ];
-            "bot".CNAME      = [ "cola.a." ];
-            "restic".CNAME   = [ "cola.a." ];
-
-            "ca".CNAME       = [ "hk.a." ];
-
-            "ha".CNAME       = [ "r.a." ];
-            "qb".CNAME       = [ "r.a." ];
-            "bot2".CNAME     = [ "r.a." ];
-
-            "calibre".CNAME  = [ "lux.a." ];
-
         };
     };
 in writeText name (dns.lib.toString name zone)

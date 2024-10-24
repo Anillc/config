@@ -23,7 +23,7 @@
                 systemd_units = {};
             };
             outputs.influxdb_v2 = {
-                urls = ["https://influxdb.a"];
+                urls = ["http://cola.a:8086"];
                 token = "$TOKEN";
                 organization = "AnillcNetwork";
                 bucket = "servers";

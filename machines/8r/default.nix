@@ -12,49 +12,11 @@ rec {
             ./networking.nix
             ./flow.nix
         ];
-        nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
-        # nix.settings.substituters = [ "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store" ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets.school-network.mode = "0755";
             secrets.dnsmasq-static-map = {};
         };
-        systemd.services.qbittorrent = {
-            wantedBy = [ "multi-user.target" ];
-            after = [ "network.target" ];
-            path = with pkgs; [ qbittorrent-nox ];
-            script = "qbittorrent-nox";
-        };
-        services.mosquitto = {
-            enable = true;
-            listeners = [{
-                acl = [ "pattern readwrite #" ];
-                omitPasswordAuth = true;
-                settings.allow_anonymous = true;
-            }];
-        };
-        services.nginx = {
-            enable = true;
-            recommendedProxySettings = true;
-            recommendedTlsSettings = true;
-            virtualHosts = {
-                "qb.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://127.0.0.1:8080";
-                    };
-                };
-                "bot2.a" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://10.11.2.140:8005";
-                    };
-                };
-            };
-        };
+        nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
     };
 }
