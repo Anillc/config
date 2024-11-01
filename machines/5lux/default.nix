@@ -8,7 +8,7 @@ rec {
     configuration = { config, pkgs, lib, inputs, ... }: let
         pkgs-meilisearch = import inputs.nixpkgs-meilisearch { inherit (pkgs) system; };
     in {
-        inherit meta;
+        cfg.meta = meta;
         imports = [
             ./hardware.nix
             ./networking.nix
@@ -34,7 +34,7 @@ rec {
         security.acme.certs = lib.mkMerge [ (lib.genAttrs [
             "search.koishi.chat" "search.cordis.moe"
         ] (_: { email = "admin@forum.koishi.chat"; })) ];
-        firewall.publicTCPPorts = [ 80 443 ];
+        cfg.firewall.publicTCPPorts = [ 80 443 ];
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;

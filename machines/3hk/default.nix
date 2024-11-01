@@ -6,7 +6,7 @@ rec {
         syncthingId = "2QRC73T-DM7XGW5-NLACT6B-ODINVTO-BNSHQGF-52IAOSR-OAKHZZK-EAPDIAL";
     };
     configuration = { config, pkgs, lib, ... }: {
-        inherit meta;
+        cfg.meta = meta;
         imports = [
             ./hardware.nix
             ./networking.nix
@@ -38,10 +38,10 @@ rec {
                 auth-default-access = "deny-all";
             };
         };
-        sync = [
+        cfg.sync = [
             "/var/lib/bitwarden_rs"
         ];
-        firewall.publicTCPPorts = [ 80 443 ];
+        cfg.firewall.publicTCPPorts = [ 80 443 ];
         services.nginx = {
             enable = true;
             recommendedProxySettings = true;

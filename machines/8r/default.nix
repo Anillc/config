@@ -6,7 +6,7 @@ rec {
         syncthingId = "HOQH4WA-6GIJL5H-YGGXMCL-YRFHFAP-TTMJN5R-5MEV2PH-Q3GWS6G-MGRGXA3";
     };
     configuration = { config, pkgs, lib, ... }: {
-        inherit meta;
+        cfg.meta = meta;
         imports = [
             ./hardware.nix
             ./networking.nix

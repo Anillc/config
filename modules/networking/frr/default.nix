@@ -13,7 +13,7 @@ in {
             Name=evpn
             [VXLAN]
             VNI=11
-            Local=${config.meta.v4}
+            Local=${config.cfg.meta.v4}
             Independent=yes
         '';
         netdevs.br11.netdevConfig = {
@@ -26,7 +26,7 @@ in {
         };
         networks.br11 = {
             matchConfig.Name = "br11";
-            address = [ "10.11.2.${toString config.meta.id}/24" ];
+            address = [ "10.11.2.${toString config.cfg.meta.id}/24" ];
         };
     };
     services.frr = {
@@ -36,14 +36,14 @@ in {
             extraOptions = [ "-M rpki" ];
             config = ''
                 router bgp 142055
-                 bgp router-id ${config.meta.v4}
+                 bgp router-id ${config.cfg.meta.v4}
                  no bgp default ipv4-unicast
                  no bgp default ipv6-unicast
                  neighbor ipeers peer-group
                  neighbor ipeers remote-as 142055
                  ${concatStringsSep "\n" (map
                      (x: " neighbor ${x.meta.v4} peer-group ipeers")
-                 (filter (x: x.meta.id != config.meta.id) machines.list))}
+                 (filter (x: x.meta.id != config.cfg.meta.id) machines.list))}
                  address-family l2vpn evpn
                   neighbor ipeers activate
                   advertise-all-vni

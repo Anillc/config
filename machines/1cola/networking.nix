@@ -6,7 +6,7 @@ with lib;
 let
     machines = import ./.. lib;
 in {
-    wgi = with machines.set; [
+    cfg.wgi = with machines.set; [
         { inherit (hk.meta)     id name wg-public-key; listen = 16803; peer = 11001; cost = 400;  }
         { inherit (koishi.meta) id name wg-public-key; listen = 16804; peer = 11001; cost = 587;  }
         { inherit (lux.meta)    id name wg-public-key; listen = 16805; peer = 11001; cost = 2320; }
@@ -17,7 +17,6 @@ in {
         matchConfig.Name = "ens192";
         DHCP = "ipv4";
     };
-    bgp.enable = true;
     # TODO: fix this (optional endpoint)
     # wg.phone = {
     #     listen = 16810;

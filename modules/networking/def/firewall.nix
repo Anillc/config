@@ -4,9 +4,9 @@ with builtins;
 with lib;
 
 let
-    cfg = config.firewall;
+    cfg = config.cfg.firewall;
 in {
-    options.firewall = {
+    options.cfg.firewall = {
         enableSourceFilter = mkOption {
             type = types.bool;
             description = "enable source filter";

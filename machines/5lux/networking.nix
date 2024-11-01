@@ -6,7 +6,7 @@ with lib;
 let
     machines = import ./.. lib;
 in {
-    wgi = with machines.set; [
+    cfg.wgi = with machines.set; [
         { inherit (cola.meta)   id name wg-public-key; listen = 11001; peer = 16805; cost = 2320; }
         { inherit (hk.meta)     id name wg-public-key; listen = 11003; peer = 11005; cost = 1870; }
         { inherit (koishi.meta) id name wg-public-key; listen = 11004; peer = 11005; cost = 1910; }
@@ -16,15 +16,5 @@ in {
         matchConfig.Name = "ens3";
         address = [ "107.189.7.34/24" "2605:6400:30:e945::/48" ];
         gateway = [ "107.189.7.1" "2605:6400:30::1" ];
-    };
-    bgp = {
-        enable = true;
-        upstream = {
-            enable = true;
-            multihop = true;
-            asn = "53667";
-            address = "2605:6400:ffff::2";
-            password = "lWAuRsXE";
-        };
     };
 }

@@ -8,9 +8,9 @@ with lib;
         ./meta.nix
     ];
     system.stateVersion = "22.05";
-    networking.hostName = mkDefault config.meta.name;
+    networking.hostName = mkDefault config.cfg.meta.name;
     time.timeZone = "Asia/Shanghai";
-    firewall.publicTCPPorts = [ 22 ];
+    cfg.firewall.publicTCPPorts = [ 22 ];
     services.iperf3.enable = true;
     users = {
         mutableUsers = false;

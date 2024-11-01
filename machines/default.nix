@@ -7,9 +7,9 @@ let
     validate = machine: (evalModules {
         modules = [
             ../modules/common/meta.nix
-            { inherit (machine) meta; }
+            { cfg.meta = machine.meta; }
         ];
-    }).config.meta;
+    }).config.cfg.meta;
 
     folders = attrNames (removeAttrs (readDir ./.) [ "default.nix" ]);
     machines = listToAttrs (map (folder: let

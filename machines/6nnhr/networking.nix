@@ -6,7 +6,7 @@ with lib;
 let
     machines = import ./.. lib;
 in {
-    wgi = with machines.set; [
+    cfg.wgi = with machines.set; [
         { inherit (cola.meta)   id name wg-public-key; peer = 16806; cost = 380;  }
         { inherit (hk.meta)     id name wg-public-key; peer = 11006; cost = 110;  }
         { inherit (koishi.meta) id name wg-public-key; peer = 11006; cost = 100;  }
@@ -16,5 +16,4 @@ in {
         matchConfig.Name = "ens192";
         DHCP = "ipv4";
     };
-    bgp.enable = true;
 }

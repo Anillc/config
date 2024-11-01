@@ -32,17 +32,17 @@ in {
                 after = [ "network-online.target" ];
                 path = with pkgs; [ iproute2 ];
                 script = concatStringsSep "\n" (flip map china-ip (x: ''
-                    ip route add ${x} via 10.11.2.${toString config.meta.id}
+                    ip route add ${x} via 10.11.2.${toString config.cfg.meta.id}
                 '')) + ''
-                    ip route add 10.0.0.0/8 via 10.11.2.${toString config.meta.id}
-                    ip route add 172.16.0.0/12 via 10.11.2.${toString config.meta.id}
-                    ip route add 192.168.0.0/16 via 10.11.2.${toString config.meta.id}
+                    ip route add 10.0.0.0/8 via 10.11.2.${toString config.cfg.meta.id}
+                    ip route add 172.16.0.0/12 via 10.11.2.${toString config.cfg.meta.id}
+                    ip route add 192.168.0.0/16 via 10.11.2.${toString config.cfg.meta.id}
                 '';
             };
             environment.systemPackages = [ pkgs.mtr pkgs.dig pkgs.tcpdump ];
-            firewall.extraInputRules = "ip saddr 0.0.0.0/32 accept";
-            firewall.publicTCPPorts = [ 53 ];
-            firewall.publicUDPPorts = [ 53 ];
+            cfg.firewall.extraInputRules = "ip saddr 0.0.0.0/32 accept";
+            cfg.firewall.publicTCPPorts = [ 53 ];
+            cfg.firewall.publicUDPPorts = [ 53 ];
             networking.nameservers = mkForce [ "127.0.0.1" ];
             networking.resolvconf.useLocalResolver = false;
             services.dnsmasq = {

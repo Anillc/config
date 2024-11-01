@@ -4,9 +4,9 @@ with builtins;
 with lib;
 
 let
-    cfg = config.dns;
+    cfg = config.cfg.dns;
 in {
-    options.dns.enable = mkOption {
+    options.cfg.dns.enable = mkOption {
         type = types.bool;
         description = "dns";
         default = true;

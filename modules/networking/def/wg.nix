@@ -4,9 +4,9 @@ with builtins;
 with lib;
 
 let
-    cfg = config.wg;
+    cfg = config.cfg.wg;
 in {
-    options.wg = let
+    options.cfg.wg = let
         interfaceOptions = types.submodule {
             options = {
                 privateKeyFile = mkOption {

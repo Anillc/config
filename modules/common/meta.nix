@@ -4,9 +4,9 @@ with builtins;
 with lib;
 
 let
-    cfg = config.meta;
+    cfg = config.cfg.meta;
 in {
-    options.meta = {
+    options.cfg.meta = {
         enable = mkOption {
             type = types.bool;
             description = "enable deploy";
@@ -48,11 +48,6 @@ in {
             type = types.str;
             description = "ipv6 address (internel)";
             default = "fd11::${toHexString cfg.id}";
-        };
-        externalV6 = mkOption {
-            type = types.str;
-            description = "bgp ipv6 address";
-            default = "2602:feda:da0::${toHexString cfg.id}";
         };
         syncthingId = mkOption {
             type = types.str;

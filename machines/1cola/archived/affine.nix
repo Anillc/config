@@ -4,10 +4,10 @@ with lib;
 with builtins;
 
 {
-    firewall.extraPostroutingFilterRules = ''
+    cfg.firewall.extraPostroutingFilterRules = ''
         meta iifname affine meta oifname "en*" meta mark set 0x114
     '';
-    bgp.extraBirdConfig = ''
+    services.bird2.config = ''
         protocol static {
             route 10.11.1.7/32 via "affine";
             ipv4 {
@@ -31,7 +31,7 @@ with builtins;
             system.stateVersion = "22.05";
             networking.firewall.enable = false;
             networking.interfaces.affine.ipv4.addresses = [{ address = "10.11.1.7"; prefixLength = 32;  }];
-            networking.defaultGateway  = { address = config.meta.v4; interface = "affine"; };
+            networking.defaultGateway  = { address = config.cfg.meta.v4; interface = "affine"; };
             services.redis.servers.affine.enable = true;
             services.postgresql = {
                 enable = true;

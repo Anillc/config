@@ -4,10 +4,10 @@ with builtins;
 with lib;
 
 let
-    cfg = config.dns;
+    cfg = config.cfg.dns;
 in {
     config = mkIf cfg.enable {
-        bgp.extraBirdConfig = ''
+        services.bird2.config = ''
             protocol static {
                 route 10.11.1.2/32 via "dnsmasq";
                 ipv4 {
@@ -21,7 +21,7 @@ in {
                 };
             }
         '';
-        firewall.extraPostroutingFilterRules = ''
+        cfg.firewall.extraPostroutingFilterRules = ''
             meta iifname dnsmasq meta oifname "en*" meta mark set 0x114
         '';
         containers.dnsmasq = {
@@ -32,12 +32,12 @@ in {
                 imports = [ ../networking/def/firewall.nix ];
                 system.stateVersion = "22.05";
                 documentation.enable = false;
-                firewall.publicTCPPorts = [ 53 ];
-                firewall.publicUDPPorts = [ 53 ];
+                cfg.firewall.publicTCPPorts = [ 53 ];
+                cfg.firewall.publicUDPPorts = [ 53 ];
                 networking.interfaces.dnsmasq.ipv4.addresses = [{ address = "10.11.1.2"; prefixLength = 32;  }];
                 networking.interfaces.dnsmasq.ipv6.addresses = [{ address = "fd11:1::2"; prefixLength = 128; }];
-                networking.defaultGateway  = { address = config.meta.v4; interface = "dnsmasq"; };
-                networking.defaultGateway6 = { address = config.meta.v6; interface = "dnsmasq"; };
+                networking.defaultGateway  = { address = config.cfg.meta.v4; interface = "dnsmasq"; };
+                networking.defaultGateway6 = { address = config.cfg.meta.v6; interface = "dnsmasq"; };
                 services.dnsmasq = {
                     enable = true;
                     resolveLocalQueries = false;

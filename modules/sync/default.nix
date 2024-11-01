@@ -4,12 +4,12 @@ with builtins;
 with lib;
 
 let
-    selfName = config.meta.name;
+    selfName = config.cfg.meta.name;
     repo = name: "/var/lib/syncthing/${name}";
     machines = import ../../machines lib;
-    otherDevices = filterAttrs (name: value: name != config.meta.name) machines.set;
+    otherDevices = filterAttrs (name: value: name != config.cfg.meta.name) machines.set;
 in {
-    options.sync = mkOption {
+    options.cfg.sync = mkOption {
         type = types.listOf types.str;
         description = "sync folders";
         default = [];
@@ -25,7 +25,7 @@ in {
             user = "syncthing";
             repository = repo selfName;
             passwordFile = config.sops.secrets.syncthing-restic.path;
-            paths = config.sync;
+            paths = config.cfg.sync;
             timerConfig = {
                 OnCalendar = "daily";
             };

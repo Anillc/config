@@ -6,7 +6,7 @@ with lib;
 
 {
     options = {
-        wgi = mkOption {
+        cfg.wgi = mkOption {
             type = types.listOf (types.submodule ({
                 options.id = mkOption {
                     type = types.int;
@@ -48,7 +48,7 @@ with lib;
             # real ports start from 11000
             uClient = 11100 + x.id;
             uServer = 11200 + x.id;
-        }) config.wgi;
+        }) config.cfg.wgi;
     in {
         systemd.services.wg-udp2raw = {
             wantedBy = [ "multi-user.target" ];
@@ -73,12 +73,12 @@ with lib;
             "${interface}" = {
                 matchConfig.Name = interface;
                 addresses = [
-                    { addressConfig = { Address = "fe80::11${toHexString config.meta.id}/64"; }; } # TODO: to 0x1100 + id
-                    { addressConfig = { Address = "169.254.11.${toString config.meta.id}/24"; Scope = "link"; }; }
+                    { addressConfig = { Address = "fe80::11${toHexString config.cfg.meta.id}/64"; }; } # TODO: to 0x1100 + id
+                    { addressConfig = { Address = "169.254.11.${toString config.cfg.meta.id}/24"; Scope = "link"; }; }
                 ];
             };
         }));
-        wg = mkMerge (mapWgi ({ x, interface, uClient, uServer, ... }: {
+        cfg.wg = mkMerge (mapWgi ({ x, interface, uClient, uServer, ... }: {
             "${interface}" = {
                 publicKey = x.wg-public-key;
                 endpoint = "127.0.0.1:${toString uClient}";
@@ -86,7 +86,7 @@ with lib;
                 mtu = 1280;
             };
         }));
-        firewall.extraOutRules = mkMerge (mapWgi ({ x, ... }: ''
+        cfg.firewall.extraOutRules = mkMerge (mapWgi ({ x, ... }: ''
             ${optionalString (x.listen != null) "tcp sport ${toString x.listen} tcp flags rst drop"}
             ${optionalString (x.peer != null)   "tcp dport ${toString x.peer}   tcp flags rst drop"}
         ''));

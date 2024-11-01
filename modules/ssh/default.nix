@@ -25,12 +25,12 @@ with lib;
                 Type = "oneshot";
                 ExecStart = "-${pkgs.writeScript "ssh-cert" (flip concatMapStrings config.services.openssh.hostKeys (x: ''
                     #!${pkgs.runtimeShell}
-                    step ssh certificate ${config.meta.name} ${x.path}.pub \
+                    step ssh certificate ${config.cfg.meta.name} ${x.path}.pub \
                         --host --sign --ca-url https://hk.a:8443 \
                         --root ${./root_ca.crt} \
                         --provisioner jwk --provisioner-password-file ${config.sops.secrets.jwk-key.path} \
-                        --principal ${config.meta.domain} \
-                        --principal ${config.meta.name} \
+                        --principal ${config.cfg.meta.domain} \
+                        --principal ${config.cfg.meta.name} \
                         --force
                 ''))}";
             };

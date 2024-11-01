@@ -6,7 +6,7 @@ rec {
         syncthingId = "3LP4IIZ-VEMIMAP-SGB7O7Q-JXRZZBM-DOYOGOK-P3K4BMK-YVA2KNL-TDR3UAI";
     };
     configuration = { config, pkgs, lib, ... }: {
-        inherit meta;
+        cfg.meta = meta;
         networking.hostName = "Anillc-linux";
         imports = [
             ./hardware.nix
@@ -23,7 +23,7 @@ rec {
             enable = true;
             headless = true;
         };
-        firewall.publicTCPPorts = [ 16801 80 ];
+        cfg.firewall.publicTCPPorts = [ 16801 80 ];
         services.openssh.ports = [ 16801 22 ];
         # port: 8086
         services.influxdb2.enable = true;

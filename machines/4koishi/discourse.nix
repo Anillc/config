@@ -70,7 +70,7 @@ in {
     security.acme.certs = lib.genAttrs [
         "forum.koishi.xyz" "www.koishi.xyz" "koishi.xyz"
     ] (_: { email = "admin@forum.koishi.chat"; });
-    firewall.publicTCPPorts = [ 80 443 ];
+    cfg.firewall.publicTCPPorts = [ 80 443 ];
     services.nginx = {
         enable = true;
         recommendedProxySettings = true;

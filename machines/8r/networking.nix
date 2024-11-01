@@ -6,7 +6,7 @@ with lib;
 let
     machines = import ./.. lib;
 in {
-    wgi = with machines.set; [
+    cfg.wgi = with machines.set; [
         { inherit (cola.meta) id name wg-public-key; peer = 16808; cost = 200;  }
         { inherit (hk.meta)   id name wg-public-key; peer = 11008; cost = 400;  }
     ];
@@ -22,10 +22,9 @@ in {
     } {
         # for masquerade
         networks = listToAttrs (map (x: nameValuePair "i${x.name}" {
-            address = [ "${config.meta.v4}/32" "${config.meta.v6}/128" "${config.meta.externalV6}/128" ];
-        }) config.wgi);
+            address = [ "${config.cfg.meta.v4}/32" "${config.cfg.meta.v6}/128" ];
+        }) config.cfg.wgi);
     }];
-    bgp.enable = true;
     services.hostapd = {
         enable = false;
         radios.wlp2s0 = {
