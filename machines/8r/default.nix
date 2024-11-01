@@ -14,7 +14,7 @@ rec {
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
-            secrets.school-network.mode = "0755";
+            secrets.school-network.mode = "0511";
             secrets.dnsmasq-static-map = {};
         };
         nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];

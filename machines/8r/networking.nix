@@ -40,24 +40,25 @@ in {
             };
         };
     };
-    # systemd.timers.connect = {
-    #     wantedBy = [ "timers.target" ];
-    #     partOf = [ "connect.service" ];
-    #     timerConfig = {
-    #         OnCalendar = "*:0/20";
-    #         Unit = "connect.service";
-    #         Persistent = true;
-    #     };
-    # };
-    # systemd.services.connect = {
-    #     wantedBy = [ "multi-user.target" ];
-    #     restartIfChanged = true;
-    #     path = with pkgs; [ curl ];
-    #     script = config.sops.secrets.school-network.path;
-    #     serviceConfig = {
-    #         Type = "oneshot";
-    #         RemainAfterExit = true;
-    #         Restart = "on-failure";
-    #     };
-    # };
+    systemd.timers.connect = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "connect.service" ];
+        timerConfig = {
+            OnCalendar = "5:00";
+            Unit = "connect.service";
+            Persistent = true;
+        };
+    };
+    systemd.services.connect = {
+        wantedBy = [ "multi-user.target" ];
+        restartIfChanged = true;
+        path = with pkgs; [ curl ];
+        script = config.sops.secrets.school-network.path;
+        serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            Restart = "on-failure";
+            RestartSec = "5m";
+        };
+    };
 }

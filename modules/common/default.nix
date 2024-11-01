@@ -40,10 +40,6 @@ with lib;
             dates = "Sun 6:00";
         };
     };
-    # TODO: remove?
-    nixpkgs.config.permittedInsecurePackages = [
-        "nodejs-16.20.2"
-    ];
     services.openssh = {
         enable = true;
         settings.PasswordAuthentication = false;
