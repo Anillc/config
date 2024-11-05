@@ -56,7 +56,6 @@ in {
         script = config.sops.secrets.school-network.path;
         serviceConfig = {
             Type = "oneshot";
-            RemainAfterExit = true;
             Restart = "on-failure";
             RestartSec = "5m";
         };
