@@ -54,6 +54,7 @@ with lib;
             wantedBy = [ "multi-user.target" ];
             wants = [ "network-online.target" ];
             after = [ "network-online.target" ];
+            unitConfig.StartLimitBurst = "0";
             serviceConfig.Restart = "always";
             path = with pkgs; [ jq udp2raw dig ];
             script = mkMerge ((mapWgi ({ x, uClient, uServer, ... }: ''
