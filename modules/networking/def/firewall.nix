@@ -13,12 +13,12 @@ in {
             default = true;
         };
         publicTCPPorts = mkOption {
-            type = types.listOf types.port;
+            type = types.listOf (types.oneOf [ types.port types.str ]);
             description = "public tcp port";
             default = [];
         };
         publicUDPPorts = mkOption {
-            type = types.listOf types.port;
+            type = types.listOf (types.oneOf [ types.port types.str ]);
             description = "public udp port";
             default = [];
         };

@@ -29,15 +29,6 @@ rec {
                 SIGNUPS_ALLOWED = false;
             };
         };
-        services.ntfy-sh = {
-            enable = true;
-            settings = {
-                behind-proxy = true;
-                listen-http = ":8080";
-                base-url = "https://ntfy.anil.lc";
-                auth-default-access = "deny-all";
-            };
-        };
         cfg.sync = [
             "/var/lib/bitwarden_rs"
         ];
@@ -52,14 +43,6 @@ rec {
                     locations."/" = {
                         proxyWebsockets = true;
                         proxyPass = "http://127.0.0.1:8000";
-                    };
-                };
-                "ntfy.anil.lc" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://127.0.0.1:8080";
                     };
                 };
             };

@@ -50,6 +50,7 @@ in {
         };
     };
     systemd.services.connect = {
+        enable = false;
         wantedBy = [ "multi-user.target" ];
         restartIfChanged = true;
         path = with pkgs; [ curl ];
