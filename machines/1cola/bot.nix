@@ -83,6 +83,7 @@ in {
         "d /var/lib/wxhelper  0700 root root"
     ];
     systemd.services.chronocat = {
+        enable = false;
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
             WorkingDirectory = "/var/lib/chronocat";

@@ -1,5 +1,6 @@
 rec {
     meta = {
+        enable = false;
         id = 8;
         name = "r";
         wg-public-key = "2YSajirzbCUK4h3NbuBgpZPOypjrhtrLnT5pJp2K9HU=";
