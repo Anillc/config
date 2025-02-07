@@ -127,7 +127,6 @@ in {
         bindMounts."/run/mysqld/mysqld.sock" = {};
         config = {
             system.stateVersion = "22.05";
-            security.pki.certificates = mkForce config.security.pki.certificates;
             documentation.enable = false;
             networking.firewall.enable = false;
             i18n.defaultLocale = "zh_CN.UTF-8";

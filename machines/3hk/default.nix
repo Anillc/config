@@ -10,7 +10,6 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./ca
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
