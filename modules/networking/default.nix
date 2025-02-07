@@ -7,7 +7,6 @@ with lib;
     imports = [
         ./def
         ./bird
-        ./frr
         ./wg.nix
     ];
     services.resolved.enable = false;
@@ -16,9 +15,6 @@ with lib;
         "net.ipv4.ip_forward" = 1;
         "net.ipv6.conf.all.forwarding" = 1;
         "net.ipv4.conf.all.rp_filter" = 0;
-    };
-    systemd.services.systemd-networkd-wait-online = {
-        serviceConfig.ExecStart = mkForce [ "" "${pkgs.coreutils}/bin/true" ];
     };
     systemd.network = {
         enable = true;
@@ -34,9 +30,6 @@ with lib;
             ];
         };
     };
-    cfg.firewall.extraPostroutingFilterRules = ''
-        meta iifname br11 meta mark set 0x114
-    '';
     services.bird2.config = ''
         protocol static {
             route ${config.cfg.meta.v4}/32 via "dmy11";
