@@ -1,6 +1,5 @@
 rec {
     meta = {
-        enable = false;
         id = 8;
         name = "r";
         wg-public-key = "2YSajirzbCUK4h3NbuBgpZPOypjrhtrLnT5pJp2K9HU=";
@@ -11,13 +10,8 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./flow.nix
         ];
-        sops = {
-            defaultSopsFile = ./secrets.yaml;
-            secrets.school-network.mode = "0511";
-            secrets.dnsmasq-static-map = {};
-        };
+        sops.defaultSopsFile = ./secrets.yaml;
         nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
     };
 }

@@ -10,7 +10,6 @@ rec {
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./flow.nix
         ];
         sops.defaultSopsFile = ./secrets.yaml;
         nix.settings.substituters = lib.mkBefore [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];

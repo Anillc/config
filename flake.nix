@@ -8,6 +8,7 @@
     inputs.koinix.url = "github:Anillc/koinix";
     inputs.chronocat-nix.url = "github:Anillc/chronocat.nix";
     inputs.wxhelper-nix.url = "github:Anillc/wxhelper-nix";
+    inputs.nur.url = "github:nix-community/NUR";
     inputs.sops-nix = {
         url = "github:Mic92/sops-nix";
         inputs.nixpkgs.follows = "nixpkgs";
@@ -26,7 +27,7 @@
     };
 
     outputs = inputs@{
-        self, nixpkgs, flake-utils, flake-parts,
+        self, nixpkgs, flake-utils, flake-parts, nur,
         sops-nix, deploy-rs, anillc, wxhelper-nix, ...
     }: let
         machines = import ./machines nixpkgs.lib;
@@ -71,6 +72,7 @@
             specialArgs = { inherit inputs; };
             modules = [
                 sops-nix.nixosModules.sops
+                nur.modules.nixos.default
                 anillc.nixosModules.${meta.system}.default
                 modules
                 machine.configuration
