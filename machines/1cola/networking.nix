@@ -18,6 +18,18 @@ in {
         matchConfig.Name = "ens192";
         DHCP = "ipv4";
     };
+    cfg.wg.backup = {
+        endpoint = "forum.koishi.xyz:38170";
+        publicKey = "Deqb6JR7Z4AI4eg+IMGjr56Gf4MgvFwZ5MfpLcjz3kg=";
+    };
+    systemd.network.networks.backup = {
+        matchConfig.Name = "backup";
+        networkConfig.Address = "fe80::2/64";
+    };
+    # allow restic requests
+    cfg.firewall.extraInputRules = ''
+        iifname "backup" tcp dport 8081 accept
+    '';
     # TODO: fix this (optional endpoint)
     # wg.phone = {
     #     listen = 16810;

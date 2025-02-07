@@ -29,7 +29,7 @@ rec {
         services.influxdb2.enable = true;
         services.restic.server = {
             enable = true;
-            listenAddress = "0.0.0.0:8081";
+            listenAddress = "8081";
             extraFlags = [ "--no-auth" ];
             dataDir = "/backup/restic";
         };

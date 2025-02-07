@@ -19,12 +19,14 @@ in {
                     description = "public key";
                 };
                 endpoint = mkOption {
-                    type = types.str;
+                    type = types.nullOr types.str;
                     description = "endpoint";
+                    default = null;
                 };
                 listen = mkOption {
-                    type = types.port;
+                    type = types.nullOr types.port;
                     description = "listen port";
+                    default = null;
                 };
                 mtu = mkOption {
                     type = types.int;
@@ -47,14 +49,16 @@ in {
             };
             wireguardConfig = {
                 PrivateKeyFile = value.privateKeyFile;
+            } // lib.optionalAttrs (value.listen != null) {
                 ListenPort = value.listen;
             };
             wireguardPeers = [{
                 wireguardPeerConfig = {
                     PublicKey = value.publicKey;
-                    Endpoint = value.endpoint;
                     PersistentKeepalive = 25;
                     AllowedIPs = [ "0.0.0.0/0" "::/0" ];
+                } // lib.optionalAttrs (value.endpoint != null) {
+                    Endpoint = value.endpoint;
                 };
             }];
         }) cfg;
