@@ -3,6 +3,8 @@
 
     inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     inputs.nixpkgs-meilisearch.url = "github:NixOS/nixpkgs/d2003f2223cbb8cd95134e4a0541beea215c1073";
+    # TODO: remove when bumped
+    inputs.nixpkgs-new.url = "github:NixOS/nixpkgs/nixos-unstable";
     inputs.flake-utils.url = "github:numtide/flake-utils";
     inputs.anillc.url = "github:Anillc/flakes";
     inputs.koinix.url = "github:Anillc/koinix";

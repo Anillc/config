@@ -1,5 +1,6 @@
-{ config, pkgs, lib, ... }: let
+{ config, pkgs, lib, inputs, ... }: let
   cfg = config.cfg.access;
+  inherit (import inputs.nixpkgs-new { inherit (pkgs) system; }) sing-box;
   sing-box-config = pkgs.writeText "config.json" (lib.generators.toJSON {} {
     route.rule_set = [
       {
@@ -26,6 +27,7 @@
         { tag = "s_local"; address = "10.11.1.2"; detour = "s_direct"; }
       ];
       rules = [
+        { domain_suffix = ".a"; server = "s_local"; }
         { outbound = "s_select"; server = "s_google"; }
         { outbound = "any"; server = "s_local"; }
       ];
@@ -35,13 +37,12 @@
       {
         type = "tun";
         tag = "s_tun-in";
-        inet4_address = "10.114.0.1/30";
+        address = [ "10.114.0.1/30" ];
         auto_route = true;
       }
     ];
 
     outbounds = [
-      { type = "dns"; tag = "s_dns"; }
       { type = "direct"; tag = "s_direct"; }
       {
         type = "selector";
@@ -53,11 +54,11 @@
 
     route = {
       rules = [
-        {
-          rule_set = [ "s_geoip-cn" "s_geosite-cn" ];
-          ip_is_private = true;
-          outbound = "s_direct";
-        }
+        { action = "sniff"; }
+        { action =  "hijack-dns"; protocol = "dns"; }
+        { rule_set = "s_geoip-cn"; outbound = "s_direct"; }
+        { rule_set = "s_geosite-cn"; outbound = "s_direct"; }
+        { ip_is_private = true; outbound = "s_direct"; }
       ];
       final = "s_select";
       auto_detect_interface = true;
@@ -147,7 +148,10 @@ in {
           };
         };
 
-        services.sing-box.enable = true;
+        services.sing-box = {
+          enable = true;
+          package = sing-box;
+        };
         systemd.services.sing-box = {
           serviceConfig.LoadCredential = "ap:${config.sops.secrets.sing-box-secret.path}";
           path = with pkgs; [ jq ];
