@@ -23,14 +23,19 @@
 
     dns = {
       servers = [
-        { tag = "s_google"; address = "tls://8.8.8.8"; }
+        { tag = "s_fakeip"; address = "fakeip"; }
         { tag = "s_local"; address = "10.11.1.2"; detour = "s_direct"; }
       ];
       rules = [
         { domain_suffix = ".a"; server = "s_local"; }
-        { outbound = "s_select"; server = "s_google"; }
-        { outbound = "any"; server = "s_local"; }
+        { query_type = [ "A" "AAAA" ]; server = "s_fakeip"; }
       ];
+      final = "s_local";
+      fakeip = {
+        enabled = true;
+        inet4_range = "198.18.0.0/15";
+        inet6_range =  "fc00::/18";
+      };
     };
 
     inbounds = [
