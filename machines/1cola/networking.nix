@@ -30,28 +30,8 @@ in {
         iifname "backup" tcp dport 8081 accept
     '';
     # TODO: fix this (optional endpoint)
-    # wg.phone = {
+    # cfg.wg.phone = {
     #     listen = 16810;
-    #     publicKey = "Pm7l051569YlVKkaCItUR8TmeAp7m6od3RhSkOGPriA=";
-    # };
-    # systemd.network.networks.phone = {
-    #     matchConfig.Name = "phone";
-    # };
-    # bgp = {
-    #     enable = true;
-    #     extraBirdConfig = ''
-    #         protocol static {
-    #             route 10.11.1.4/32 via "phone";
-    #             ipv4 {
-    #                 table igp_v4;
-    #             };
-    #         }
-    #         protocol static {
-    #             route fd11:1::4/128 via "phone";
-    #             ipv6 {
-    #                 table igp_v6;
-    #             };
-    #         }
-    #     '';
+    #     publicKey = "lZENdaGTl/kRnclal+Bbkn9LGXlYQ9K5P1hO92WTYU8=";
     # };
 }
