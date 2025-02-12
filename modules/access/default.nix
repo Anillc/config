@@ -1,74 +1,7 @@
 { config, pkgs, lib, inputs, ... }: let
   cfg = config.cfg.access;
   inherit (import inputs.nixpkgs-new { inherit (pkgs) system; }) sing-box;
-  sing-box-config = pkgs.writeText "config.json" (lib.generators.toJSON {} {
-    route.rule_set = [
-      {
-        type = "local";
-        tag = "s_geoip-cn";
-        format = "binary";
-        path = "${pkgs.sing-geoip}/share/sing-box/rule-set/geoip-cn.srs";
-      }
-      {
-        type = "local";
-        tag = "s_geosite-cn";
-        format = "binary";
-        path = "${pkgs.sing-geosite}/share/sing-box/rule-set/geosite-cn.srs";
-      }
-    ];
-    experimental.clash_api = {
-      external_controller = "0.0.0.0:9090";
-      external_ui = pkgs.nur.repos.linyinfeng.yacd;
-    };
-
-    dns = {
-      servers = [
-        { tag = "s_fakeip"; address = "fakeip"; }
-        { tag = "s_local"; address = "10.11.1.2"; detour = "s_direct"; }
-      ];
-      rules = [
-        { domain_suffix = ".a"; server = "s_local"; }
-        { query_type = [ "A" "AAAA" ]; server = "s_fakeip"; }
-      ];
-      final = "s_local";
-      fakeip = {
-        enabled = true;
-        inet4_range = "198.18.0.0/15";
-        inet6_range =  "fc00::/18";
-      };
-    };
-
-    inbounds = [
-      {
-        type = "tun";
-        tag = "s_tun-in";
-        address = [ "10.114.0.1/30" ];
-        auto_route = true;
-      }
-    ];
-
-    outbounds = [
-      { type = "direct"; tag = "s_direct"; }
-      {
-        type = "selector";
-        tag = "s_select";
-        default = "select";
-        outbounds = [ "select" "s_direct" ];
-      }
-    ];
-
-    route = {
-      rules = [
-        { action = "sniff"; }
-        { action =  "hijack-dns"; protocol = "dns"; }
-        { rule_set = "s_geoip-cn"; outbound = "s_direct"; }
-        { rule_set = "s_geosite-cn"; outbound = "s_direct"; }
-        { ip_is_private = true; outbound = "s_direct"; }
-      ];
-      final = "s_select";
-      auto_detect_interface = true;
-    };
-  });
+  sing-box-config = pkgs.callPackage ./sing-config.nix {};
 in {
   options.cfg.access = {
     enable = lib.mkEnableOption "access";
@@ -80,7 +13,26 @@ in {
       type = lib.types.str;
       description = "ip address of container";
     };
+    forwards = lib.mkOption {
+      type = lib.types.listOf (lib.types.submodule {
+        options.ip = lib.mkOption {
+          type = lib.types.str;
+          description = "ip";
+        };
+        options.from-port = lib.mkOption {
+          type = lib.types.port;
+          description = "from port";
+        };
+        options.to-port = lib.mkOption {
+          type = lib.types.port;
+          description = "to port";
+        };
+      });
+      description = "forwards";
+      default = [];
+    };
   };
+
   config = lib.mkIf cfg.enable {
     sops.secrets.sing-box-secret = {
       sopsFile = ./sing-box-secret;
@@ -97,12 +49,15 @@ in {
         };
       }
     '';
+
     # for masquerade
     systemd.network.networks = lib.mergeAttrsList (lib.map ({ name, ... }: {
       "i${name}" = {
         address = [ "${config.cfg.meta.v4}/32" "${config.cfg.meta.v6}/128" ];
       };
     }) config.cfg.wgi);
+
+    systemd.services."container@access".after = [ "sing-box.service" ];
     containers.access = {
       autoStart = true;
       privateNetwork = true;
@@ -117,26 +72,80 @@ in {
         documentation.enable = false;
 
         networking.firewall.enable = false;
-        networking.interfaces.access.ipv4.addresses = [{ address = cfg.ip; prefixLength = 32; }];
-        networking.interfaces.${cfg.interface}.ipv4.addresses = [{ address = "192.168.1.1"; prefixLength = 24; }];
-        networking.defaultGateway  = { address = config.cfg.meta.v4; interface = "access"; };
+        networking.useNetworkd = true;
+        systemd.network.networks.access = {
+          matchConfig.Name = "access";
+          networkConfig = {
+            Address = "${cfg.ip}/32";
+            ConfigureWithoutCarrier = "yes";
+          };
+          routes = [ { routeConfig = {
+            Gateway = config.cfg.meta.v4;
+            GatewayOnLink = "yes";
+          }; } ];
+        };
+        systemd.network.networks.${cfg.interface} = {
+          matchConfig.Name = cfg.interface;
+          networkConfig = {
+            Address = "192.168.1.1/24";
+            ConfigureWithoutCarrier = "yes";
+          };
+        };
+        systemd.network.networks.proxy = {
+          matchConfig.Name = "lo";
+          routes = [ { routeConfig = {
+            Destination = "0.0.0.0/0";
+            Type = "local";
+            Table = 233;
+          }; } ];
+          # TODO:
+          extraConfig = ''
+            [RoutingPolicyRule]
+            FirewallMark=233
+            Table=233
+          '';
+        };
+
+        cfg.firewall.enableSourceFilter = false;
+        cfg.firewall.publicTCPPorts = [ 53 9090 ];
+        cfg.firewall.publicUDPPorts = [ 53 ];
         cfg.firewall.extraInputRules = ''
           # dhcp
           ip saddr 0.0.0.0/32 accept
-          meta iifname "tun0" accept
+          meta mark 233 accept
         '';
-        cfg.firewall.publicTCPPorts = [ 53 9090 ];
-        cfg.firewall.publicUDPPorts = [ 53 ];
-        cfg.firewall.enableSourceFilter = false;
-        # masquerade packets that aren't proxied by sing-box
+        cfg.firewall.extraPreroutingFilterRules = lib.mkAfter ''
+          # proxy dns
+          ip daddr $RESERVED_IP udp dport != 53 return
+          ip daddr $RESERVED_IP tcp dport != 53 return
+          # masquerade in extraPostroutingRules
+          ${lib.concatMapStrings (forward: ''
+            iifname "access" tcp sport ${toString forward.to-port} return
+            iifname "access" udp sport ${toString forward.to-port} return
+          '') cfg.forwards}
+          ip protocol { tcp, udp } meta mark set 233 tproxy ip to 127.0.0.1:9898
+        '';
+        cfg.firewall.extraOutputRouteRules = lib.mkAfter ''
+          # proxy dns
+          ip daddr $RESERVED_IP udp dport != 53 return
+          ip daddr $RESERVED_IP tcp dport != 53 return
+          ip protocol { tcp, udp } meta mark set 233
+        '';
+        cfg.firewall.extraPreroutingRules = lib.concatMapStrings (forward: ''
+          iifname "access" tcp dport ${toString forward.from-port} dnat ip to ${forward.ip}:${toString forward.to-port}
+          iifname "access" udp dport ${toString forward.from-port} dnat ip to ${forward.ip}:${toString forward.to-port}
+        '') cfg.forwards;
         cfg.firewall.extraPostroutingFilterRules = ''
-            meta iifname "${cfg.interface}" oifname "access" meta mark set 0x114
+          meta iifname "${cfg.interface}" oifname "access" meta mark set 0x114
         '';
+
         boot.kernel.sysctl = {
             "net.ipv4.ip_forward" = 1;
             "net.ipv4.conf.all.rp_filter" = 0;
         };
 
+        networking.nameservers = [ "10.11.1.2" ];
+        networking.useHostResolvConf = false;
         networking.resolvconf.useLocalResolver = false;
         services.dnsmasq = {
           enable = true;
@@ -153,6 +162,7 @@ in {
           };
         };
 
+        # ctos -s 'xxx' gen | jq -s '[.[0].outbounds[] | select(.type | contains("vmess", "shadowsocks", "urltest"))]'
         services.sing-box = {
           enable = true;
           package = sing-box;
@@ -164,7 +174,9 @@ in {
           preStart = lib.mkForce ''
             umask 0077
             mkdir -p /etc/sing-box
-            cat ${sing-box-config} $CREDENTIALS_DIRECTORY/ap | jq -s -r '.[0].outbounds += .[1].outbounds | .[0]' > /etc/sing-box/config.json
+            cat ${sing-box-config} $CREDENTIALS_DIRECTORY/ap | jq -s -r '
+              .[0].outbounds += .[1] | .[0]
+            ' > /etc/sing-box/config.json
           '';
         };
 

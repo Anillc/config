@@ -73,6 +73,7 @@ with lib;
         systemd.network.networks = mkMerge (mapWgi ({ interface, ... }: {
             "${interface}" = {
                 matchConfig.Name = interface;
+                linkConfig.Multicast = "yes";
                 addresses = [
                     { addressConfig = { Address = "fe80::11${toHexString config.cfg.meta.id}/64"; }; } # TODO: to 0x1100 + id
                     { addressConfig = { Address = "169.254.11.${toString config.cfg.meta.id}/24"; Scope = "link"; }; }
@@ -87,7 +88,7 @@ with lib;
                 mtu = 1280;
             };
         }));
-        cfg.firewall.extraOutRules = mkMerge (mapWgi ({ x, ... }: ''
+        cfg.firewall.extraOutputRules = mkMerge (mapWgi ({ x, ... }: ''
             ${optionalString (x.listen != null) "tcp sport ${toString x.listen} tcp flags rst drop"}
             ${optionalString (x.peer != null)   "tcp dport ${toString x.peer}   tcp flags rst drop"}
         ''));

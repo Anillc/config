@@ -32,5 +32,10 @@ in {
         enable = true;
         interface = "ens19";
         ip = "10.11.1.5";
+        forwards = [ {
+            ip = "192.168.1.221";
+            from-port = 2333;
+            to-port = 80;
+        } ];
     };
 }
