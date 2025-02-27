@@ -13,5 +13,11 @@ rec {
         ];
         sops.defaultSopsFile = ./secrets.yaml;
         nix.settings.substituters = lib.mkForce [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
+        systemd.services.qbittorrent = {
+            wantedBy = [ "multi-user.target" ];
+            after = [ "network.target" ];
+            path = with pkgs; [ qbittorrent-nox ];
+            script = "qbittorrent-nox";
+        };
     };
 }
