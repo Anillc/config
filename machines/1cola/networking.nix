@@ -8,9 +8,7 @@ let
 in {
     cfg.wgi = with machines.set; [
         { inherit (product.meta) id name wg-public-key; listen = 16802;               cost = 630; }
-        { inherit (hk.meta)      id name wg-public-key; listen = 16803; peer = 11001; cost = 400;  }
         { inherit (lux.meta)     id name wg-public-key; listen = 16805; peer = 11001; cost = 2320; }
-        { inherit (nnhr.meta)    id name wg-public-key; listen = 16806;               cost = 380;  }
         { inherit (r.meta)       id name wg-public-key; listen = 16808;               cost = 200;  }
     ];
     systemd.network.networks.default-network = {

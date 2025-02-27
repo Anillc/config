@@ -23,10 +23,6 @@
         url = "github:kirelagin/dns.nix";
         inputs.nixpkgs.follows = "nixpkgs";
     };
-    inputs.china-ip = {
-        url = "github:gaoyifan/china-operator-ip/ip-lists";
-        flake = false;
-    };
 
     outputs = inputs@{
         self, nixpkgs, flake-utils, flake-parts, nur,

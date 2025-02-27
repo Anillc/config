@@ -19,23 +19,6 @@
         "type": "github"
       }
     },
-    "china-ip": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1719889380,
-        "narHash": "sha256-5pAoSRLdRH7gzL4F09zLevPPk81w2jURjDcrq2nnV+8=",
-        "owner": "gaoyifan",
-        "repo": "china-operator-ip",
-        "rev": "8bb7bd9670382942aebff870e77a6240b61a071e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gaoyifan",
-        "ref": "ip-lists",
-        "repo": "china-operator-ip",
-        "type": "github"
-      }
-    },
     "chronocat-nix": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -457,7 +440,6 @@
     "root": {
       "inputs": {
         "anillc": "anillc",
-        "china-ip": "china-ip",
         "chronocat-nix": "chronocat-nix",
         "deploy-rs": "deploy-rs",
         "dns": "dns",
