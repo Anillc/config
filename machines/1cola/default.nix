@@ -5,13 +5,12 @@ rec {
         wg-public-key = "82rDuI1+QXAXv+6HAf5aH2Ly0JXX/105Fsd61HmVnGE=";
         syncthingId = "3LP4IIZ-VEMIMAP-SGB7O7Q-JXRZZBM-DOYOGOK-P3K4BMK-YVA2KNL-TDR3UAI";
     };
-    configuration = { config, pkgs, lib, ... }: {
+    configuration = { config, pkgs, lib, inputs, ... }: {
         cfg.meta = meta;
         networking.hostName = "Anillc-linux";
         imports = [
             ./hardware.nix
             ./networking.nix
-            ./bot.nix
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
@@ -38,6 +37,17 @@ rec {
                 image = "docker.io/diygod/rsshub:chromium-bundled";
                 ports = [ "8082:1200" ];
                 environmentFiles = [ config.sops.secrets.rsshub.path ];
+            };
+        };
+        systemd.tmpfiles.rules = [
+            "d /var/lib/chronocat 0700 root root"
+        ];
+        systemd.services.chronocat = {
+            enable = false;
+            wantedBy = [ "multi-user.target" ];
+            serviceConfig = {
+                WorkingDirectory = "/var/lib/chronocat";
+                ExecStart = "${inputs.chronocat-nix.packages.x86_64-linux.default}/bin/chronocat";
             };
         };
     };
