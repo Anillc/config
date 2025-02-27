@@ -7,9 +7,7 @@
     inputs.nixpkgs-new.url = "github:NixOS/nixpkgs/nixos-unstable";
     inputs.flake-utils.url = "github:numtide/flake-utils";
     inputs.anillc.url = "github:Anillc/flakes";
-    inputs.koinix.url = "github:Anillc/koinix";
     inputs.chronocat-nix.url = "github:Anillc/chronocat.nix";
-    inputs.wxhelper-nix.url = "github:Anillc/wxhelper-nix";
     inputs.nur.url = "github:nix-community/NUR";
     inputs.sops-nix = {
         url = "github:Mic92/sops-nix";
@@ -26,7 +24,7 @@
 
     outputs = inputs@{
         self, nixpkgs, flake-utils, flake-parts, nur,
-        sops-nix, deploy-rs, anillc, wxhelper-nix, ...
+        sops-nix, deploy-rs, anillc, ...
     }: let
         machines = import ./machines nixpkgs.lib;
         modules = import ./modules;

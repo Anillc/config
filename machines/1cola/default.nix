@@ -15,7 +15,6 @@ rec {
         ];
         sops = {
             defaultSopsFile = ./secrets.yaml;
-            secrets.bot-secrets = {};
             secrets.rsshub = {};
         };
         nix.settings.substituters = lib.mkBefore [ "https://mirror.sjtu.edu.cn/nix-channels/store" ];
