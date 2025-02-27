@@ -11,40 +11,6 @@ rec {
             ./hardware.nix
             ./networking.nix
         ];
-        sops = {
-            defaultSopsFile = ./secrets.yaml;
-            secrets.vaultwarden = {};
-            secrets.ca-key = {};
-            secrets.bot-proxy-auth = {
-                owner = "nginx";
-                group = "nginx";
-            };
-        };
-        services.vaultwarden = {
-            enable = true;
-            environmentFile = config.sops.secrets.vaultwarden.path;
-            config = {
-                DOMAIN = "https://vw.anil.lc";
-                SIGNUPS_ALLOWED = false;
-            };
-        };
-        cfg.sync = [
-            "/var/lib/bitwarden_rs"
-        ];
-        cfg.firewall.publicTCPPorts = [ 80 443 ];
-        services.nginx = {
-            enable = true;
-            recommendedProxySettings = true;
-            virtualHosts = {
-                "vw.anil.lc" = {
-                    enableACME = true;
-                    forceSSL = true;
-                    locations."/" = {
-                        proxyWebsockets = true;
-                        proxyPass = "http://127.0.0.1:8000";
-                    };
-                };
-            };
-        };
+        sops.defaultSopsFile = ./secrets.yaml;
     };
 }

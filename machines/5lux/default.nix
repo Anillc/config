@@ -16,6 +16,7 @@ rec {
         sops = {
             defaultSopsFile = ./secrets.yaml;
             secrets = {
+                vaultwarden = {};
                 meilisearch = {};
                 rsshub = {};
             };
@@ -30,6 +31,14 @@ rec {
             listenAddress = "0.0.0.0:8081";
             extraFlags = [ "--no-auth" ];
             dataDir = "/data/restic";
+        };
+        services.vaultwarden = {
+            enable = true;
+            environmentFile = config.sops.secrets.vaultwarden.path;
+            config = {
+                DOMAIN = "https://vw.anil.lc";
+                SIGNUPS_ALLOWED = false;
+            };
         };
         security.acme.certs = lib.mkMerge [ (lib.genAttrs [
             "search.koishi.chat" "search.cordis.moe"
@@ -61,6 +70,14 @@ rec {
                     forceSSL = true;
                     locations."/" = {
                         proxyPass = "http://127.0.0.1:7700";
+                    };
+                };
+                "vw.anil.lc" = {
+                    enableACME = true;
+                    forceSSL = true;
+                    locations."/" = {
+                        proxyWebsockets = true;
+                        proxyPass = "http://127.0.0.1:8000";
                     };
                 };
             };
