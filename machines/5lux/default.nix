@@ -26,12 +26,6 @@ rec {
             package = pkgs-meilisearch.meilisearch;
             masterKeyEnvironmentFile = config.sops.secrets.meilisearch.path;
         };
-        services.restic.server = {
-            enable = true;
-            listenAddress = "0.0.0.0:8081";
-            extraFlags = [ "--no-auth" ];
-            dataDir = "/data/restic";
-        };
         services.vaultwarden = {
             enable = true;
             environmentFile = config.sops.secrets.vaultwarden.path;
