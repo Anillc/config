@@ -23,8 +23,6 @@ rec {
         };
         cfg.firewall.publicTCPPorts = [ 16801 80 ];
         services.openssh.ports = [ 16801 22 ];
-        # port: 8086
-        services.influxdb2.enable = true;
         services.restic.server = {
             enable = true;
             listenAddress = "8081";
