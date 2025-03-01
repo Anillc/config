@@ -7,7 +7,8 @@ let
     machines = import ./.. lib;
 in {
     cfg.wgi = with machines.set; [
-        { inherit (product.meta) id name wg-public-key; listen = 16802;               cost = 630; }
+        { inherit (product.meta) id name wg-public-key; listen = 16802;               cost = 630;  }
+        { inherit (sum.meta)     id name wg-public-key; listen = 16803; peer = 11001; cost = 560;  }
         { inherit (lux.meta)     id name wg-public-key; listen = 16805; peer = 11001; cost = 2320; }
         { inherit (r.meta)       id name wg-public-key; listen = 16808;               cost = 200;  }
     ];
