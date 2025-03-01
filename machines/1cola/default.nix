@@ -41,7 +41,7 @@ rec {
             "d /var/lib/chronocat 0700 root root"
         ];
         systemd.services.chronocat = {
-            enable = false;
+            enable = true;
             wantedBy = [ "multi-user.target" ];
             serviceConfig = {
                 WorkingDirectory = "/var/lib/chronocat";
